@@ -16,7 +16,7 @@ IndexedDB on the phone.
 | 4. Coach engine + tests + UI | Done (branch `stage-4-coach`, cut from stage 3) |
 | 5. Progress: week view, charts, PRs, body measurements | Done (branch `stage-5-progress`, cut from stage 4) |
 | 6. Plan editing, gyms/equipment editing, backup reminder | Done (branch `stage-6-editing`, cut from stage 5) |
-| 7. QA (393×852, both themes, offline, cold start, update with data), README, deploy | Done (branch `stage-7-qa`, cut from stage 6). Next: merge the stage branches into main (ask first), add the GitHub remote, push, enable Pages, then the README's iPhone checklist |
+| 7. QA (393×852, both themes, offline, cold start, update with data), README, deploy | Done. Stages 1–7 merged into `main` (fast-forward, 2026-10-14). Next: add the GitHub remote, push (ask first), enable Pages, then the README's iPhone checklist |
 
 ## Commands
 
