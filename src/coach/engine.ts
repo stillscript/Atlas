@@ -500,7 +500,7 @@ export function coachWeekly(input: CoachInput, now: number): WeeklyOutput {
       weekStart: toISODate(monday),
       planned: plannedSessionsPerWeek(input.program),
       done: lifting.length,
-      cardioMinutes: Math.round(week.reduce((s, x) => s + x.cardio.reduce((c, e) => c + (e.durationSec ?? 0), 0), 0) / 60),
+      workSets: lifting.reduce((n, s) => n + s.entries.reduce((m, e) => m + e.sets.filter((x) => x.kind === 'work' && x.reps > 0).length, 0), 0),
       streakWeeks: streakWeeks(input.program, p.input.sessions, now, input.profile.goal === 'general'),
       muscles,
       keyLifts,

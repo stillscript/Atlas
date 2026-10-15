@@ -1,7 +1,8 @@
-import type { Experience, Goal, Gym, Profile, Program } from '../db/types';
+import type { Experience, Goal, Gym, Profile, Program, Sex } from '../db/types';
 import { exerciseById } from './catalog';
 import { generateProgram, programFromTemplate, type BuiltProgram } from './generator';
 import { createGymFromCatalog, createGymFromPreset } from './gym';
+import { addGluteFocus, applyLegStyle, LEG_STYLE_FOR } from './legStyle';
 
 /** Everything the first-run questions collect. Pure data; turned into records by the functions below. */
 export interface OnboardingAnswers {
@@ -10,6 +11,8 @@ export interface OnboardingAnswers {
   /** Training weekdays, 0 = Monday. Its length is the days per week. */
   trainingDays: number[];
   sessionMinutes: number;
+  /** Sets the default leg exercises (machines for men, free weights with hip thrusts for women). */
+  sex: Sex;
   gym: { kind: 'preset'; presetId: string } | { kind: 'custom'; name: string; equipment: string[] };
   plan: 'auto' | 'pillar';
   startingLoads: Record<string, { load: number; reps: number }>;
@@ -22,10 +25,23 @@ export function buildGym(answers: Pick<OnboardingAnswers, 'gym'>, now = Date.now
 }
 
 /**
- * The plan for these answers. Pillar keeps its own five days; if the user picked exactly five
- * training days, Pillar's sessions move onto those days in order.
+ * The plan for these answers, with the leg style that fits the answer to "Man / Woman / Rather not
+ * say" (Plan settings can switch it later).
  */
 export function buildProgram(answers: OnboardingAnswers, gym: Gym, now = Date.now()): BuiltProgram {
+  const built = buildBaseProgram(answers, gym, now);
+  const ctx = { gym, experience: answers.experience };
+  const style = LEG_STYLE_FOR[answers.sex];
+  let program = answers.sex === 'female' ? addGluteFocus(built.program, ctx) : built.program;
+  program = applyLegStyle(program, style, ctx, now);
+  return { ...built, program };
+}
+
+/**
+ * Pillar keeps its own five days; if the user picked exactly five training days, Pillar's sessions
+ * move onto those days in order.
+ */
+function buildBaseProgram(answers: OnboardingAnswers, gym: Gym, now: number): BuiltProgram {
   const days = [...answers.trainingDays].sort((a, b) => a - b);
   if (answers.plan === 'pillar') {
     const built = programFromTemplate('pillar', gym, { experience: answers.experience, goal: answers.goal, now });
@@ -61,6 +77,7 @@ export function buildProfile(answers: OnboardingAnswers, program: Program, now =
     daysPerWeek: trainingDays.length,
     trainingDays,
     sessionMinutes: answers.sessionMinutes,
+    sex: answers.sex,
     startingLoads: Object.keys(startingLoads).length ? startingLoads : undefined,
     createdAt: now,
     updatedAt: now,

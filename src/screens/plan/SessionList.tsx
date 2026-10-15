@@ -1,7 +1,7 @@
 import type { Gym, Profile, ProgramDay, ProgramSlot } from '../../db/types';
 import { exerciseHistory } from '../../app/workout';
 import type { SessionPlan, SlotPlan } from '../../coach/types';
-import { requireExercise } from '../../domain/catalog';
+import { liftingExtras, requireExercise } from '../../domain/catalog';
 import { suggestFirstSet } from '../../domain/workout';
 import { haptic } from '../../lib/haptics';
 import { effortLabel, formatLoad, setsAndReps, uniformEffort } from '../../lib/training-format';
@@ -58,7 +58,7 @@ export function SessionList({ day, gym, profile, onOpen, showPurpose = false, pl
           })}
         </li>
       ))}
-      {(day.extras ?? []).map((extra) => (
+      {(liftingExtras(day.extras) ?? []).map((extra) => (
         <li key={extra.id} class="session-group">
           <div class="slot-row is-extra">
             <span class="slot-num" aria-hidden="true">

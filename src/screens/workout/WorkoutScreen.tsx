@@ -12,7 +12,7 @@ import { restLabel } from '../../lib/training-format';
 import { Button, IconButton } from '../../ui/controls';
 import { Icon } from '../../ui/Icon';
 import { Dial } from './Dial';
-import { FinishView, IntervalCard } from './Finishers';
+import { FinishView } from './Finishers';
 import {
   EFFORT_CHOICES,
   effortTag,
@@ -79,13 +79,6 @@ function Workout({ session, gym }: { session: Session; gym: Gym }) {
       </header>
 
       <ProgressStrip session={session} index={index} />
-
-      {/* Intervals started mid-workout stay on screen until they're saved or cancelled. */}
-      {entry && session.intervalTimer && (
-        <div class="wo-interval-slot">
-          <IntervalCard timer={session.intervalTimer} />
-        </div>
-      )}
 
       {entry ? (
         <EntryView key={entry.id} session={session} index={index} entry={entry} gym={gym} onOpen={setOpen} />

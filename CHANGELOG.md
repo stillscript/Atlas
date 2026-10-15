@@ -11,6 +11,20 @@ version with today's date.
 
 ## [Unreleased]
 ### Highlights
+- All strength: cardio logging is gone, so keep tracking it with your watch or Strava. Cardio you logged before stays in your history
+- Fix any past workout: open it from Progress › Workouts, tap Edit, and change a set, remove an exercise or delete the workout
+- A workout started by mistake can always be discarded
+- Setup asks who’s training to pick your leg exercises: machines (leg press, curls, extensions) or squats and deadlifts with hip thrusts
+- Switch your leg exercises anytime in Plan › Plan settings; switching back restores your plan exactly
+### Internal
+- Cardio removed: no cardio-only sessions, no cardio finishers (generator and Pillar), no interval timer. Old
+  data stays readable; cardio finishers saved in older plans are skipped (`liftingExtras`)
+- `domain/legStyle.ts`: machine swaps per pattern with a two-per-machine limit, `slot.freeWeight` to restore;
+  hip thrust pattern and exercises; leg press feet-high and single-leg variations
+- Finished workouts: `changePastSession` / `deletePastSession` with Undo; `removeEntry`; `EditSetSheet` shared
+
+## [1.0.0] - 2026-10-14
+### Highlights
 - Setup in under a minute: a plan built from your gym's real equipment. Pillar is built in, mapped to the Office machines
 - Workout mode: one exercise at a time, weight and reps filled in, one tap per set, and a rest timer that keeps time through a lock
 - Your first sessions find your working weights; rate each set by the reps you had left

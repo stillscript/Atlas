@@ -26,7 +26,7 @@ const CATEGORY_ORDER: { category: EquipmentCategory; title: string }[] = [
   { category: 'support', title: 'Benches and racks' },
   { category: 'bodyweight', title: 'Bodyweight' },
   { category: 'other', title: 'Other' },
-  { category: 'cardio', title: 'Cardio' },
+  // Cardio machines stay in the gym's data but aren't shown: Atlas doesn't log cardio.
 ];
 
 /** Plan exercises that would change if this item weren't here (for the remove warning). */
@@ -85,7 +85,7 @@ export function GymScreen() {
             }
           >
             {items.map((item) => {
-              const summary = item.load.kind === 'none' ? (item.cardioMetrics?.length ? 'Time, distance, calories and more' : '') : summarizeLoad(item.load, gym.units);
+              const summary = item.load.kind === 'none' ? '' : summarizeLoad(item.load, gym.units);
               const options = availableLoads(item.load).length;
               return (
                 <ListRow
@@ -133,7 +133,7 @@ function EquipmentSheet({ item, gym, onClose }: { item: EquipmentItem | null; gy
           {live.loadNote && <p class="sheet-copy">{live.loadNote}</p>}
           <LoadEditor item={live} units={gym.units} onDone={onClose} />
           {live.load.kind === 'none' && (
-            <p class="sheet-copy">{live.cardioMetrics?.length ? `Logs ${live.cardioMetrics.join(', ')}.` : 'No weights to set for this one.'}</p>
+            <p class="sheet-copy">No weights to set for this one.</p>
           )}
           <div class="danger-zone">
             <p class="field-hint">

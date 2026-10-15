@@ -17,6 +17,10 @@ export type Goal = 'muscle' | 'fat-loss' | 'strength' | 'general';
 export type Experience = 'beginner' | 'intermediate' | 'advanced';
 export type Units = 'lb' | 'kg';
 export type ThemePreference = 'system' | 'light' | 'dark';
+/** Asked at setup; only sets the plan's default leg exercises. */
+export type Sex = 'male' | 'female' | 'unspecified';
+/** Leg exercises: free weights (squats, deadlifts, lunges) or machines (leg press, curls, extensions). */
+export type LegStyle = 'free-weights' | 'machines';
 
 // ---------------------------------------------------------------- kv store
 
@@ -27,6 +31,7 @@ export interface Profile {
   /** Preferred training weekdays, 0 = Monday … 6 = Sunday. */
   trainingDays: number[];
   sessionMinutes: number;
+  sex?: Sex;
   bodyWeight?: number;
   /** Working sets the user knew at setup (exerciseId → weight × reps). Skipped lifts calibrate. */
   startingLoads?: Record<string, { load: number; reps: number }>;
@@ -154,6 +159,8 @@ export interface ProgramSlot {
   /** Slots sharing a superset id are done back to back. */
   superset?: string;
   notes?: string;
+  /** Set while machine legs replaced this slot's exercise: what it was, restored when switching back. */
+  freeWeight?: Pick<ProgramSlot, 'exerciseId' | 'pattern' | 'repsLow' | 'repsHigh' | 'rir' | 'restSec' | 'purpose'>;
 }
 
 export interface ProgramExtra {
@@ -168,7 +175,7 @@ export interface ProgramDay {
   name: string;
   subtitle?: string;
   slots: ProgramSlot[];
-  /** Optional cardio or finisher items. */
+  /** Optional finishers (abs, short circuits). Older plans may hold cardio ones, which are skipped. */
   extras?: ProgramExtra[];
 }
 
@@ -179,6 +186,8 @@ export interface Program {
   /** Gym the exercises were picked for. */
   gymId?: string;
   goal: Goal;
+  /** Missing on plans made before this setting existed: those are free weights. */
+  legStyle?: LegStyle;
   days: ProgramDay[];
   /** Mon..Sun → ProgramDay id, or null for rest. */
   schedule: (string | null)[];

@@ -2,10 +2,11 @@ import { useRef, useState } from 'preact/hooks';
 import { editProgram, gyms } from '../../app/edit';
 import { goBack, navigate } from '../../app/router';
 import { activeGym, activeProgram, profile } from '../../app/state';
-import type { Goal, ProgramDay, ProgramSlot } from '../../db/types';
+import type { Goal, LegStyle, ProgramDay, ProgramSlot } from '../../db/types';
 import { requireExercise, templateById } from '../../domain/catalog';
 import { estimateDayMinutes, goalName } from '../../domain/generator';
 import { remapDayForGym } from '../../domain/gymEdit';
+import { applyLegStyle, LEG_STYLE_NAMES, machineSwapCount } from '../../domain/legStyle';
 import {
   addDay,
   addSlot,
@@ -23,7 +24,7 @@ import { blockPosition, programDay, WEEKDAY_LONG } from '../../domain/schedule';
 import { haptic } from '../../lib/haptics';
 import { plural } from '../../lib/format';
 import { setsAndReps } from '../../lib/training-format';
-import { Button, IconButton } from '../../ui/controls';
+import { Button, IconButton, Segmented } from '../../ui/controls';
 import { EmptyState, Notice, showToast } from '../../ui/feedback';
 import { Icon } from '../../ui/Icon';
 import { ListGroup, ListRow } from '../../ui/List';
@@ -81,6 +82,7 @@ export function PlanScreen() {
           <span class="tag is-accent">{goalName(program.goal as Goal)}</span>
           {me && <span class="tag">{EXPERIENCE_NAMES[me.experience]}</span>}
           <span class="tag">{plural(trainingDays, 'day')} a week</span>
+          {program.legStyle === 'machines' && <span class="tag">Legs on machines</span>}
         </div>
         <p class="plan-desc">{description}</p>
         <p class="plan-desc">
@@ -137,10 +139,30 @@ export function PlanScreen() {
   );
 }
 
+/** Free weights ↔ machines for every leg exercise in the plan, saved right away with Undo. */
+function switchLegStyle(style: LegStyle): void {
+  const program = activeProgram.value;
+  const gym = activeGym.value;
+  const me = profile.value;
+  if (!program || !gym || !me || (program.legStyle ?? 'free-weights') === style) return;
+  const ctx = { gym, experience: me.experience };
+  const count = machineSwapCount(program, ctx);
+  if (style === 'machines' && count === 0) {
+    showToast(`${gym.name} has no leg machines to switch to`);
+    return;
+  }
+  haptic('tap');
+  void editProgram(
+    (p, now) => applyLegStyle(p, style, ctx, now),
+    style === 'machines' ? `Legs on machines: ${plural(count, 'exercise')} changed` : 'Squats, deadlifts and lunges are back',
+  );
+}
+
 function PlanSettingsSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
   const program = activeProgram.value!;
   const name = useRef<HTMLInputElement>(null);
   const [weeks, setWeeks] = useState(program.block.lengthWeeks);
+  const legStyle = program.legStyle ?? 'free-weights';
   const save = async () => {
     const value = name.current?.value ?? '';
     const ok = await editProgram((p, now) => setBlockLength(renameProgram(p, value, now), weeks, now));
@@ -163,6 +185,23 @@ function PlanSettingsSheet({ open, onClose }: { open: boolean; onClose: () => vo
           <span class="field-label">Name</span>
           <input ref={name} class="field-input" type="text" maxLength={40} defaultValue={program.name} autoComplete="off" />
         </label>
+        <div class="field">
+          <span class="field-label">Leg exercises</span>
+          <Segmented
+            label="Leg exercises"
+            options={[
+              { value: 'free-weights', label: LEG_STYLE_NAMES['free-weights'] },
+              { value: 'machines', label: LEG_STYLE_NAMES.machines },
+            ]}
+            value={legStyle}
+            onChange={switchLegStyle}
+          />
+          <p class="field-hint">
+            {legStyle === 'machines'
+              ? 'Leg press, leg curls, extensions and cable pull-throughs in place of squats, deadlifts and lunges. Changes right away.'
+              : 'Squats, deadlifts and lunges. Machines swaps them for leg press, curls and extensions, right away.'}
+          </p>
+        </div>
         <Dial
           label="Lighter week every"
           value={weeks}

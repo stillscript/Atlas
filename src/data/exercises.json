@@ -666,6 +666,32 @@
       "watch": ["Going so deep that your lower back rounds off the pad.", "Loading it up and doing short reps."]
     }
   },
+  {
+    "id": "leg-press-high-feet", "name": "Leg press, feet high", "aka": ["high foot leg press"],
+    "pattern": "leg-press", "primary": ["glutes", "hamstrings"], "secondary": ["quads", "adductors"],
+    "requires": ["leg-press-machine"], "loadFrom": "leg-press-machine", "loadMode": "total",
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 55, "ratio": 0.95,
+    "start": { "beginner": 80, "intermediate": 150, "advanced": 230 },
+    "stresses": ["hip", "lower-back"], "settings": ["Foot position"],
+    "form": {
+      "setup": "Feet high on the platform, a little wider than your hips, toes slightly out. Back and hips flat against the pad.",
+      "cues": ["Lower until your hips are deeply bent, before your lower back lifts.", "Push through your heels.", "Stop just short of locking your knees."],
+      "watch": ["Heels lifting off the platform.", "Your lower back rounding off the pad at the bottom."]
+    }
+  },
+  {
+    "id": "single-leg-press", "name": "Single-leg leg press",
+    "pattern": "single-leg", "primary": ["quads", "glutes"], "secondary": ["adductors"],
+    "requires": ["leg-press-machine"], "loadFrom": "leg-press-machine", "loadMode": "total", "unilateral": true,
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 55, "ratio": 3,
+    "start": { "beginner": 40, "intermediate": 80, "advanced": 120 },
+    "stresses": ["knee", "hip"], "settings": ["Foot position"],
+    "form": {
+      "setup": "One foot in the middle of the platform, the other resting on the floor or the frame. Back and hips flat against the pad.",
+      "cues": ["Lower until your knee is near 90°.", "Drive through your whole foot.", "Finish all the reps on one leg, then switch."],
+      "watch": ["Your hips twisting or lifting off the seat.", "The knee caving in."]
+    }
+  },
 
   {
     "id": "db-bulgarian-split-squat", "name": "Bulgarian split squat", "aka": ["rear foot elevated split squat"],
@@ -783,6 +809,46 @@
       "setup": "Rope on the low pulley. Face away, rope between your legs, walk out two steps.",
       "cues": ["Push your hips back, letting the rope pull between your legs.", "Snap your hips forward and squeeze your glutes.", "Arms are just hooks."],
       "watch": ["Squatting instead of hinging.", "Leaning back at the top."]
+    }
+  },
+
+  {
+    "id": "barbell-hip-thrust", "name": "Hip thrust", "aka": ["barbell hip thrust", "glute bridge"],
+    "pattern": "hip-thrust", "primary": ["glutes"], "secondary": ["hamstrings"],
+    "requires": ["barbell", "flat-bench"], "loadFrom": "barbell", "loadMode": "total",
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 90, "ratio": 1,
+    "start": { "beginner": 65, "intermediate": 135, "advanced": 185 },
+    "stresses": ["hip", "lower-back"], "settings": ["Bench position"],
+    "form": {
+      "setup": "Upper back against the side of a bench, bar over your hip crease with a pad. Feet flat, about hip width, shins vertical at the top.",
+      "cues": ["Tuck your chin and keep your ribs down.", "Drive through your heels until your hips are level with your knees.", "Squeeze your glutes hard for a second at the top."],
+      "watch": ["Arching your lower back to get the hips higher.", "Feet so far out that your hamstrings take over."]
+    }
+  },
+  {
+    "id": "smith-hip-thrust", "name": "Smith machine hip thrust",
+    "pattern": "hip-thrust", "primary": ["glutes"], "secondary": ["hamstrings"],
+    "requires": ["smith", "flat-bench"], "loadFrom": "smith", "loadMode": "total",
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 85, "ratio": 0.95,
+    "start": { "beginner": 35, "intermediate": 95, "advanced": 135 },
+    "stresses": ["hip", "lower-back"], "settings": ["Bench position", "Bar hook height"],
+    "form": {
+      "setup": "Bench across the Smith machine, upper back against it, bar over your hip crease with a pad. Feet flat, shins vertical at the top.",
+      "cues": ["Unhook at the top, then lower your hips under control.", "Drive through your heels until your hips are level with your knees.", "Squeeze your glutes for a second before lowering."],
+      "watch": ["Arching your lower back at the top.", "The bar sliding toward your belly."]
+    }
+  },
+  {
+    "id": "db-hip-thrust", "name": "Dumbbell hip thrust",
+    "pattern": "hip-thrust", "primary": ["glutes"], "secondary": ["hamstrings"],
+    "requires": ["dumbbells", "flat-bench"], "loadFrom": "dumbbells", "loadMode": "total",
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 60, "ratio": 0.35,
+    "start": { "beginner": 20, "intermediate": 40, "advanced": 60 },
+    "stresses": ["hip"],
+    "form": {
+      "setup": "Upper back against the side of a bench, one dumbbell held across your hips. Feet flat, about hip width.",
+      "cues": ["Hold the dumbbell steady with both hands.", "Drive through your heels until your hips are level with your knees.", "Pause and squeeze at the top."],
+      "watch": ["Arching your lower back instead of moving at the hips.", "Rushing the lowering half."]
     }
   },
 

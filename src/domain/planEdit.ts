@@ -103,7 +103,8 @@ export function replaceExercise(program: Program, dayId: string, slotId: string,
         const wasTimed = requireExercise(s.exerciseId).metric === 'time';
         const isTimed = exercise.metric === 'time';
         const reps = wasTimed === isTimed ? {} : isTimed ? { repsLow: 30, repsHigh: 45 } : { repsLow: 8, repsHigh: 12 };
-        return { ...s, exerciseId, pattern: exercise.pattern, ...reps };
+        // A hand-picked exercise stays, even if machine legs are switched off later.
+        return { ...s, exerciseId, pattern: exercise.pattern, ...reps, freeWeight: undefined };
       }),
     }),
     now,

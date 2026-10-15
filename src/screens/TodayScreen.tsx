@@ -58,13 +58,13 @@ export function TodayScreen() {
   const [pickerOpen, setPickerOpen] = useState(false);
   const [shortOpen, setShortOpen] = useState(false);
 
-  /** Start a session: the quick check-in first if it's switched on (never for cardio only). */
-  const begin = (chosen: ProgramDay | null, options: PlanOptions = {}) => {
+  /** Start a session: the quick check-in first if it's switched on. */
+  const begin = (chosen: ProgramDay, options: PlanOptions = {}) => {
     primeAudio();
     setPickerOpen(false);
     setShortOpen(false);
-    if (chosen && settings.value.readinessCheck) setCheckIn({ open: true, day: chosen, options });
-    else void startWorkout(chosen, undefined, chosen ? planFor(chosen, options) : null);
+    if (settings.value.readinessCheck) setCheckIn({ open: true, day: chosen, options });
+    else void startWorkout(chosen, undefined, planFor(chosen, options));
   };
 
   // "Do it today" from the Coach tab lands here.
@@ -125,7 +125,6 @@ export function TodayScreen() {
               <strong>{session.dayName ?? 'Workout'} done</strong>
               <span class="num">
                 {stats.workSets ? `${plural(stats.workSets, 'set')} · ` : ''}
-                {stats.cardioMinutes ? `${stats.cardioMinutes} min cardio · ` : ''}
                 {stats.minutes} min
               </span>
             </span>
@@ -171,9 +170,6 @@ export function TodayScreen() {
             <div class="today-rest-actions">
               <Button size="sm" icon="dumbbell" onClick={() => setPickerOpen(true)}>
                 {plannedDone ? 'Train again' : 'Train anyway'}
-              </Button>
-              <Button size="sm" variant="ghost" icon="pulse" onClick={() => begin(null)}>
-                Cardio
               </Button>
             </div>
           )}

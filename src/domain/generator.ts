@@ -1,7 +1,7 @@
 import type { Experience, Goal, Gym, ISODate, Program, ProgramDay, ProgramExtra, ProgramSlot, SlotRole } from '../db/types';
 import { newId } from '../lib/ids';
 import { toISODate } from '../lib/format';
-import { BLUEPRINTS, PROGRAMMING, exerciseById, patternById, requireExercise, templateById } from './catalog';
+import { BLUEPRINTS, PROGRAMMING, exerciseById, liftingExtras, patternById, requireExercise, templateById } from './catalog';
 import { canDoExercise, gymTags, loadSourceFor } from './gym';
 import { candidatesForPattern, resolvePattern } from './resolver';
 import type { ExerciseDef, MuscleId } from './types';
@@ -130,7 +130,7 @@ export function estimateDayMinutes(day: ProgramDay): number {
       seconds += estimateSlotSeconds(slot);
     }
   }
-  return Math.round(PROGRAMMING.timing.warmupMin + seconds / 60 + (day.extras?.length ?? 0) * EXTRA_MINUTES);
+  return Math.round(PROGRAMMING.timing.warmupMin + seconds / 60 + (liftingExtras(day.extras)?.length ?? 0) * EXTRA_MINUTES);
 }
 
 /**
@@ -213,7 +213,7 @@ export function shortenDay(
     slots: day.slots
       .filter((slot) => !options.keyLiftsOnly || slot.role === 'main' || slot.role === 'secondary')
       .map((slot) => ({ ...slot })),
-    extras: options.keyLiftsOnly ? [] : day.extras?.map((x) => ({ ...x })),
+    extras: options.keyLiftsOnly ? [] : liftingExtras(day.extras),
   };
   if (!copy.slots.length) copy.slots = day.slots.slice(0, 1).map((slot) => ({ ...slot }));
   fitDay(copy, gym, budgetMinutes);
@@ -411,7 +411,6 @@ export function generateProgram(input: GenerateInput, gym: Gym, now = Date.now()
   };
 
   balanceVolume(program, experience, budget);
-  if (goal === 'fat-loss') addCardioFinishers(program, gym, budget);
   return { program, report: report(program, experience, notes) };
 }
 
@@ -460,22 +459,6 @@ function balanceVolume(program: Program, experience: Experience, budgetMinutes: 
       }
     }
     if (!changed) break;
-  }
-}
-
-/** For fat loss, a 10-minute easy cardio finisher on days that have room for it. */
-function addCardioFinishers(program: Program, gym: Gym, budgetMinutes: number): void {
-  const cardio = resolvePattern('cardio', gym);
-  if (!cardio) return;
-  let added = 0;
-  for (const day of program.days) {
-    if (added >= 3) break;
-    if (estimateDayMinutes(day) + EXTRA_MINUTES > budgetMinutes) continue;
-    day.extras = [
-      ...(day.extras ?? []),
-      { id: `${day.id}-cardio`, exerciseId: cardio.id, label: '10 minutes easy cardio', detail: 'Conversational pace' },
-    ];
-    added++;
   }
 }
 

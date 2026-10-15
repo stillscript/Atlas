@@ -101,7 +101,7 @@ export type Change =
   /** Nothing to apply: information, a win, or a safety note. */
   | { kind: 'info' };
 
-export type SessionVariant = 'lighter' | 'short' | 'cardio';
+export type SessionVariant = 'lighter' | 'short';
 
 export type Decision = 'applied' | 'dismissed' | 'used' | 'kept';
 
@@ -226,7 +226,8 @@ export interface WeeklyReview {
   weekStart: string;
   planned: number;
   done: number;
-  cardioMinutes: number;
+  /** Working sets logged this week. */
+  workSets: number;
   streakWeeks: number;
   muscles: { muscle: MuscleId; planned: number; done: number; band: [number, number] }[];
   keyLifts: { exerciseId: string; e1rm: number; change: number | null; exposures: number }[];

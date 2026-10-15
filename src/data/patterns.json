@@ -15,6 +15,7 @@
   { "id": "single-leg", "name": "Lunge or split squat", "vector": "legs", "fallbacks": ["squat"] },
   { "id": "hinge", "name": "Hip hinge", "vector": "legs", "fallbacks": ["deadlift"] },
   { "id": "deadlift", "name": "Deadlift", "vector": "legs", "fallbacks": ["hinge"] },
+  { "id": "hip-thrust", "name": "Hip thrust", "vector": "legs", "fallbacks": ["hinge"] },
   { "id": "leg-curl", "name": "Leg curl", "vector": "legs", "fallbacks": ["hinge"] },
   { "id": "leg-extension", "name": "Leg extension", "vector": "legs", "fallbacks": ["single-leg", "squat"] },
   { "id": "calves", "name": "Calves", "vector": "legs", "fallbacks": [] },

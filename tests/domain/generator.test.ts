@@ -114,9 +114,9 @@ describe('generated programs follow the approved rules', () => {
     expect(new Set(rows).size).toBe(rows.length);
   });
 
-  it('adds short cardio finishers for fat loss when there is time', () => {
+  it('never adds cardio, even for fat loss (cardio is tracked outside Atlas)', () => {
     const { program } = generateProgram({ goal: 'fat-loss', experience: 'intermediate', daysPerWeek: 3, sessionMinutes: 75 }, office, 0);
-    expect(program.days.some((d) => d.extras?.some((x) => x.label.includes('cardio')))).toBe(true);
+    expect(program.days.flatMap((d) => d.extras ?? [])).toEqual([]);
   });
 
   it('uses the training days you picked', () => {

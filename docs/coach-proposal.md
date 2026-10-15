@@ -366,6 +366,14 @@ Numbers are illustrative (Office equipment; real stack steps get confirmed durin
 
 ---
 
+## Changes after v1.0
+
+- **v1.1, strength only (user decision):** Atlas no longer logs cardio; the user tracks it with a
+  wearable and Strava. C2 offers only the 30-minute key-lifts version (no "easy cardio instead"),
+  H4/H5 cardio counting no longer applies to new data, and the weekly review shows working sets
+  instead of cardio minutes. The evidence above on concurrent training still holds; it just lives
+  outside the app.
+
 ## Build notes (stage 4)
 
 Clarifications made while building, found by scenario tests and a walkthrough with realistic data:

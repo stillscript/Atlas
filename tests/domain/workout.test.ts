@@ -6,7 +6,6 @@ import {
   addEntry,
   addSet,
   buildHistory,
-  createCardioSession,
   createSession,
   deleteCardio,
   deleteSet,
@@ -14,15 +13,15 @@ import {
   endRest,
   extendRest,
   finishSession,
-  intervalState,
+  hasLoggedWork,
   jumpTo,
   liftingDone,
-  logCardio,
   logSet,
   nextEntryIndex,
   postponeEntry,
   prefill,
   rateSet,
+  removeEntry,
   restAfter,
   skipEntry,
   suggestFirstSet,
@@ -42,6 +41,7 @@ const answers: OnboardingAnswers = {
   experience: 'intermediate',
   trainingDays: [0, 1, 2, 3, 4],
   sessionMinutes: 75,
+  sex: 'unspecified',
   gym: { kind: 'preset', presetId: 'office' },
   plan: 'pillar',
   startingLoads: {},
@@ -419,18 +419,15 @@ describe('Station taken? swaps', () => {
   });
 });
 
-// ---------------------------------------------------------------- cardio
+// ---------------------------------------------------------------- finishers and fixing a workout
 
-describe('cardio', () => {
-  it('logging a finisher marks it done; deleting it un-marks it', () => {
-    let s = start('lower-b');
-    const extra = s.extras![0]!;
-    s = logCardio(s, { exerciseId: extra.exerciseId, extraId: extra.id, durationSec: 600, distanceM: 2000 }, T0 + 50 * MIN);
-    expect(s.extrasDone).toEqual([extra.id]);
-    expect(s.cardio[0]).toMatchObject({ durationSec: 600, distanceM: 2000, at: T0 + 50 * MIN });
-    s = deleteCardio(s, s.cardio[0]!.id, T0 + 51 * MIN);
-    expect(s.cardio).toEqual([]);
-    expect(s.extrasDone).toEqual([]);
+describe('finishers', () => {
+  it('Pillar has no cardio finishers, and old plans’ cardio finishers are skipped', () => {
+    expect(program.days.flatMap((d) => d.extras ?? []).every((x) => !['treadmill-incline-walk', 'bike', 'stair-climber'].includes(x.exerciseId))).toBe(true);
+    // A plan saved by an older version still holds a cardio finisher next to an abs one.
+    const old = { ...day('upper-a'), extras: [{ id: 'bike', exerciseId: 'bike', label: '12 minutes bike intervals' }, ...(day('upper-a').extras ?? [])] };
+    const s = createSession({ program, day: old, gym: office, profile, history: empty, now: T0 });
+    expect(s.extras?.map((x) => x.id)).toEqual(['upper-a-finisher']);
   });
 
   it('non-cardio finishers toggle', () => {
@@ -440,20 +437,34 @@ describe('cardio', () => {
     expect(s.extrasDone).toEqual([]);
   });
 
-  it('the interval timer works from its start time, so a locked phone stays right', () => {
-    const timer = { exerciseId: 'bike', workSec: 30, restSec: 30, rounds: 3, startedAt: T0 };
-    expect(intervalState(timer, T0)).toEqual({ phase: 'work', round: 1, remainingSec: 30, elapsedSec: 0 });
-    expect(intervalState(timer, T0 + 45_000)).toMatchObject({ phase: 'rest', round: 1, remainingSec: 15 });
-    expect(intervalState(timer, T0 + 61_000)).toMatchObject({ phase: 'work', round: 2, remainingSec: 29 });
-    // No rest after the last round: 3 × 30 work + 2 × 30 rest = 150 s.
-    expect(intervalState(timer, T0 + 149_000)).toMatchObject({ phase: 'work', round: 3, remainingSec: 1 });
-    expect(intervalState(timer, T0 + 400_000)).toEqual({ phase: 'done', round: 3, remainingSec: 0, elapsedSec: 150 });
+  it('cardio logged by an older version can be removed', () => {
+    let s: Session = { ...start('upper-a'), cardio: [{ id: 'car-1', exerciseId: 'bike', extraId: 'old', durationSec: 600, at: T0 }], extrasDone: ['old'] };
+    expect(hasLoggedWork(s)).toBe(true);
+    s = deleteCardio(s, 'car-1', T0 + MIN);
+    expect(s.cardio).toEqual([]);
+    expect(s.extrasDone).toEqual([]);
+    expect(hasLoggedWork(s)).toBe(false);
+  });
+});
+
+describe('fixing a workout', () => {
+  it('removing an exercise takes its sets with it and keeps the cursor valid', () => {
+    let s = logPrefilled(start('lower-b'), 2);
+    const count = s.entries.length;
+    s = jumpTo(s, count - 1, T0);
+    s = removeEntry(s, count - 1, T0 + MIN);
+    expect(s.entries).toHaveLength(count - 1);
+    expect(s.cursor!.entryIndex).toBeLessThan(count - 1);
+    s = removeEntry(s, 0, T0 + 2 * MIN);
+    expect(s.entries.every((e) => e.sets.length === 0)).toBe(true);
+    expect(hasLoggedWork(s)).toBe(false);
   });
 
-  it('a cardio-only session starts empty', () => {
-    const s = createCardioSession({ gym: office, now: T0 });
-    expect(s).toMatchObject({ status: 'active', entries: [], cardio: [], dayName: 'Cardio' });
-    expect(liftingDone(s)).toBe(true);
+  it('a finished workout stays without a cursor', () => {
+    const done = finishSession(logPrefilled(start('lower-b'), 2), undefined, T0 + 50 * MIN);
+    const fixed = removeEntry(done, 1, T0 + 60 * MIN);
+    expect(fixed.cursor).toBeUndefined();
+    expect(fixed.status).toBe('completed');
   });
 });
 

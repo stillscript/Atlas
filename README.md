@@ -7,11 +7,15 @@ no accounts, no servers, no tracking.
 - **Setup in under a minute.** Goal, days, session length and gym; Atlas builds a plan from the
   equipment your gym really has. Pillar is built in, mapped to the Office machines.
 - **Workouts.** One exercise at a time, weight and reps filled in, one tap per set, a rest timer,
-  machine settings remembered per machine, swaps when a station is taken or something hurts, cardio.
+  machine settings remembered per machine, swaps when a station is taken or something hurts. Atlas is
+  strength only: cardio stays with your watch or Strava.
+- **Your legs, your way.** Machines (leg press, curls, extensions) or squats, deadlifts and hip
+  thrusts, set at setup and switchable in Plan settings.
 - **Coach.** Suggests the next weight, spots plateaus, balances weekly volume and plans lighter
   weeks, from published training research. Every suggestion has a **Why?** and nothing changes
   your plan until you tap Apply.
-- **Progress.** Week calendar and streak, per-exercise charts and records, body measurements.
+- **Progress.** Week calendar and streak, per-exercise charts and records, body measurements, and
+  every past workout, which you can fix or delete.
 
 ## Use it on iPhone
 

@@ -33,9 +33,6 @@
         { "id": "leg-curl", "pattern": "leg-curl", "prefer": ["machine-leg-curl", "trx-hamstring-curl"], "role": "accessory", "sets": 3, "reps": [12, 15], "purpose": "Hamstrings." },
         { "id": "calves", "pattern": "calves", "prefer": ["machine-calf-raise", "smith-calf-raise", "leg-press-calf-press"], "role": "accessory", "sets": 3, "reps": [15, 20], "purpose": "Calves (standing)." },
         { "id": "abs", "pattern": "abs", "prefer": ["cable-crunch"], "role": "accessory", "sets": 3, "reps": [12, 15], "purpose": "Abs, trained like a muscle so they show when the fat comes off." }
-      ],
-      "extras": [
-        { "id": "finisher", "prefer": ["treadmill-incline-walk", "stair-climber", "elliptical"], "label": "10 minutes easy cardio", "detail": "After the crunches" }
       ]
     },
     {
@@ -62,9 +59,6 @@
         { "id": "bss", "pattern": "single-leg", "prefer": ["db-bulgarian-split-squat", "smith-split-squat"], "role": "accessory", "sets": 3, "reps": [8, 10], "purpose": "Glutes and quads, each side." },
         { "id": "leg-ext", "pattern": "leg-extension", "prefer": ["machine-leg-extension"], "role": "accessory", "sets": 3, "reps": [12, 15], "purpose": "Quads: the teardrop above the knee." },
         { "id": "calves", "pattern": "calves", "prefer": ["leg-press-calf-press", "machine-calf-raise", "smith-calf-raise"], "role": "accessory", "sets": 3, "reps": [15, 20], "purpose": "Calves (bent-knee or press variation)." }
-      ],
-      "extras": [
-        { "id": "finisher", "prefer": ["bike", "rower"], "label": "12 minutes bike intervals", "detail": "30 s hard, 60 s easy" }
       ]
     },
     {

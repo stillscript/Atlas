@@ -14,6 +14,7 @@ const answers = (overrides: Partial<OnboardingAnswers> = {}): OnboardingAnswers 
   experience: 'intermediate',
   trainingDays: [0, 2, 4],
   sessionMinutes: 60,
+  sex: 'unspecified',
   gym: { kind: 'preset', presetId: 'office' },
   plan: 'auto',
   startingLoads: {},

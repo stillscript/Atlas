@@ -1,7 +1,7 @@
 {
   "id": "office",
   "name": "Office",
-  "description": "Precor machines, FTS cable trainer, Smith machine, dumbbells to 65 lb, TRX zone and cardio",
+  "description": "Precor machines, FTS cable trainer, Smith machine, dumbbells to 65 lb and a TRX zone",
   "units": "lb",
   "equipment": [
     { "catalogId": "precor-resolute-converging-chest-press" },

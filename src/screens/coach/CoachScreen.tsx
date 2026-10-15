@@ -125,8 +125,8 @@ function WeekCard({ review }: { review: WeeklyReview }) {
           <p class="week-stat-label">Week streak</p>
         </div>
         <div>
-          <p class="week-stat-value num">{review.cardioMinutes}</p>
-          <p class="week-stat-label">Cardio min</p>
+          <p class="week-stat-value num">{review.workSets}</p>
+          <p class="week-stat-label">Sets</p>
         </div>
       </div>
 

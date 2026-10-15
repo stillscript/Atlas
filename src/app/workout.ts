@@ -2,6 +2,7 @@ import { computed, effect, signal } from '@preact/signals';
 import {
   beginSession,
   closeSession,
+  deleteSession,
   discardSession,
   loadActiveSession,
   loadCompletedSessions,
@@ -14,7 +15,7 @@ import {
 import type { SessionPlan } from '../coach/types';
 import type { AtlasDB } from '../db/schema';
 import type { AppMeta, CheckOut, EquipmentItem, MachineSetting, ProgramDay, ReadinessCheck, Session } from '../db/types';
-import { buildHistory, createCardioSession, createSession, finishSession } from '../domain/workout';
+import { buildHistory, createSession, finishSession } from '../domain/workout';
 import { cancelChime, primeAudio, scheduleChime } from '../lib/chime';
 import { haptic } from '../lib/haptics';
 import { setKeepAwake } from '../lib/wakeLock';
@@ -86,17 +87,14 @@ export function changeSession(change: (session: Session, now: number) => Session
 // ---------------------------------------------------------------- start, finish, discard
 
 /** Starts a workout. `plan` is the Coach's plan for the day (app/coach `planFor`). */
-export async function startWorkout(day: ProgramDay | null, readiness?: ReadinessCheck, plan?: SessionPlan | null): Promise<void> {
+export async function startWorkout(day: ProgramDay, readiness?: ReadinessCheck, plan?: SessionPlan | null): Promise<void> {
   primeAudio();
   const program = activeProgram.value;
   const gym = activeGym.value;
   const me = profile.value;
-  if (!gym || !me || activeSession.value) return;
+  if (!program || !gym || !me || activeSession.value) return;
   const now = Date.now();
-  const session =
-    day && program
-      ? createSession({ program, day, gym, profile: me, history: exerciseHistory.value, now, readiness, plan })
-      : createCardioSession({ gym, now });
+  const session = createSession({ program, day, gym, profile: me, history: exerciseHistory.value, now, readiness, plan });
   await enqueue(async () => {
     appMeta.value = await beginSession(getDb(), session);
     activeSession.value = session;
@@ -125,6 +123,52 @@ export async function discardWorkout(): Promise<void> {
     appMeta.value = await discardSession(getDb(), current.id);
     activeSession.value = null;
     navigate('today', { replace: true });
+  });
+}
+
+// ---------------------------------------------------------------- fixing finished workouts
+
+/**
+ * Saves a fix to a finished workout (a set's weight or reps, a removed exercise). Records, charts
+ * and the Coach all read `pastSessions`, so they follow the fix right away.
+ */
+export function changePastSession(sessionId: string, change: (session: Session, now: number) => Session): Promise<void> {
+  return enqueue(async () => {
+    const current = pastSessions.value.find((s) => s.id === sessionId);
+    if (!current) return;
+    const changed = change(current, Date.now());
+    if (changed === current) return;
+    // A finished workout has no live position or rest timer.
+    const next: Session = { ...changed, cursor: undefined, rest: undefined };
+    await saveSession(getDb(), next);
+    pastSessions.value = pastSessions.value.map((s) => (s.id === sessionId ? next : s));
+  }).catch((error: unknown) => {
+    console.error('[atlas] could not save the workout', error);
+    showToast('Couldn’t save that. Try again.', 'danger');
+  });
+}
+
+/** Deletes a finished workout, with Undo. */
+export function deletePastSession(sessionId: string): Promise<void> {
+  return enqueue(async () => {
+    const removed = pastSessions.value.find((s) => s.id === sessionId);
+    if (!removed) return;
+    await deleteSession(getDb(), sessionId);
+    pastSessions.value = pastSessions.value.filter((s) => s.id !== sessionId);
+    completedSessions.value = Math.max(0, completedSessions.value - 1);
+    showToast('Workout deleted', 'neutral', 6000, {
+      label: 'Undo',
+      onClick: () =>
+        void enqueue(async () => {
+          await saveSession(getDb(), removed);
+          pastSessions.value = [...pastSessions.value, removed].sort((a, b) => a.startedAt - b.startedAt);
+          completedSessions.value += 1;
+          showToast('Restored');
+        }),
+    });
+  }).catch((error: unknown) => {
+    console.error('[atlas] could not delete the workout', error);
+    showToast('Couldn’t delete that. Try again.', 'danger');
   });
 }
 

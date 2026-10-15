@@ -42,13 +42,10 @@ export function ReadinessSheet({ day, options = {}, open, onClose }: { day: Prog
   }, [open]);
 
   const go = async (readiness?: ReadinessCheck, variant?: SessionVariant) => {
+    if (!day) return;
     primeAudio();
     setStarting(true);
-    if (variant === 'cardio') {
-      await startWorkout(null, readiness);
-      return;
-    }
-    await startWorkout(day, readiness, day ? planFor(day, variant ? { ...options, variant } : options) : null);
+    await startWorkout(day, readiness, planFor(day, variant ? { ...options, variant } : options));
   };
 
   const answered = sleep !== null && energy !== null && soreness !== null;
@@ -81,11 +78,6 @@ export function ReadinessSheet({ day, options = {}, open, onClose }: { day: Prog
             void go(offer.check, action === 'use' ? offer.offer.variant : undefined);
           }}
         />
-        {!lighter && (
-          <button type="button" class="link-button" disabled={starting} onClick={() => void go(offer.check, 'cardio')}>
-            <Icon name="pulse" size={16} /> Easy cardio instead
-          </button>
-        )}
       </Sheet>
     );
   }
@@ -141,7 +133,7 @@ export function ReadinessSheet({ day, options = {}, open, onClose }: { day: Prog
   );
 }
 
-/** Pick any session from the plan (or cardio only), for rest days or a change of plan. */
+/** Pick any session from the plan, for rest days or a change of plan. */
 export function DayPickerSheet({
   program,
   open,
@@ -151,7 +143,7 @@ export function DayPickerSheet({
   program: Program;
   open: boolean;
   onClose: () => void;
-  onPick: (day: ProgramDay | null) => void;
+  onPick: (day: ProgramDay) => void;
 }) {
   return (
     <Sheet open={open} onClose={onClose} title="Pick a session">
@@ -167,13 +159,6 @@ export function DayPickerSheet({
             <Icon name="chevron-right" size={18} />
           </button>
         ))}
-        <button type="button" class="swap-option" onClick={() => onPick(null)}>
-          <span class="swap-text">
-            <span class="swap-name">Cardio only</span>
-            <span class="swap-meta">Log a session on a cardio machine</span>
-          </span>
-          <Icon name="pulse" size={18} />
-        </button>
       </div>
     </Sheet>
   );

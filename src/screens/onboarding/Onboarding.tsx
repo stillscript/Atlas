@@ -11,7 +11,7 @@ import {
   redoingSetup,
   settings,
 } from '../../app/state';
-import type { Experience, Goal, Gym } from '../../db/types';
+import type { Experience, Goal, Gym, Sex } from '../../db/types';
 import { EQUIPMENT, GYM_PRESETS, PROGRAMMING, requireExercise, templateById } from '../../domain/catalog';
 import { estimateDayMinutes, type BuiltProgram } from '../../domain/generator';
 import { loadSourceFor } from '../../domain/gym';
@@ -28,9 +28,9 @@ import { Icon } from '../../ui/Icon';
 import { Logo } from '../../ui/Logo';
 import './onboarding.css';
 
-type StepId = 'welcome' | 'goal' | 'days' | 'length' | 'experience' | 'gym' | 'equipment' | 'plan' | 'weights' | 'done';
+type StepId = 'welcome' | 'goal' | 'days' | 'length' | 'experience' | 'about' | 'gym' | 'equipment' | 'plan' | 'weights' | 'done';
 
-const QUESTION_STEPS: StepId[] = ['goal', 'days', 'length', 'experience', 'gym', 'plan', 'weights'];
+const QUESTION_STEPS: StepId[] = ['goal', 'days', 'length', 'experience', 'about', 'gym', 'plan', 'weights'];
 
 const GOALS: { value: Goal; title: string; description: string; icon: 'dumbbell' | 'flame' | 'barbell' | 'pulse' }[] = [
   { value: 'muscle', title: 'Build muscle', description: 'Grow size and shape with steady progress.', icon: 'dumbbell' },
@@ -53,6 +53,13 @@ const LEVELS: { value: Experience; title: string; description: string; icon: 'sp
   { value: 'advanced', title: 'Experienced', description: 'Two years or more, and you know your numbers.', icon: 'mountain' },
 ];
 
+/** Only sets the starting leg exercises (domain/legStyle). */
+const SEXES: { value: Sex; title: string; description: string }[] = [
+  { value: 'male', title: 'Man', description: 'Legs on machines: leg press, curls and extensions.' },
+  { value: 'female', title: 'Woman', description: 'Squats, deadlifts and lunges, plus hip thrusts for glutes.' },
+  { value: 'unspecified', title: 'Rather not say', description: 'Squats, deadlifts and lunges.' },
+];
+
 const CATEGORY_NAMES: Record<string, string> = {
   'free-weight': 'Free weights',
   support: 'Benches and racks',
@@ -60,7 +67,6 @@ const CATEGORY_NAMES: Record<string, string> = {
   cable: 'Cables',
   bodyweight: 'Bodyweight',
   other: 'Other',
-  cardio: 'Cardio',
 };
 
 const MIN_DAYS = 2;
@@ -87,6 +93,7 @@ export function Onboarding() {
   const [trainingDays, setTrainingDays] = useState<number[]>(PROGRAMMING.defaultTrainingDays['3']!);
   const [minutes, setMinutes] = useState<number | null>(null);
   const [experience, setExperience] = useState<Experience | null>(null);
+  const [sex, setSex] = useState<Sex | null>(null);
   const [gymChoice, setGymChoice] = useState<string | null>(null); // preset id or 'custom'
   const [customName, setCustomName] = useState('');
   const [customEquipment, setCustomEquipment] = useState<string[]>([]);
@@ -97,7 +104,7 @@ export function Onboarding() {
   const [daysError, setDaysError] = useState('');
   const advanceTimer = useRef<number>(0);
 
-  const flow: StepId[] = ['welcome', 'goal', 'days', 'length', 'experience', 'gym', ...(gymChoice === 'custom' ? (['equipment'] as StepId[]) : []), 'plan', 'weights', 'done'];
+  const flow: StepId[] = ['welcome', 'goal', 'days', 'length', 'experience', 'about', 'gym', ...(gymChoice === 'custom' ? (['equipment'] as StepId[]) : []), 'plan', 'weights', 'done'];
   const index = flow.indexOf(step);
   const questionIndex = QUESTION_STEPS.indexOf(step === 'equipment' ? 'gym' : step);
 
@@ -142,8 +149,8 @@ export function Onboarding() {
   }, [gymChoice, customName, customEquipment.join(',')]);
 
   const answersFor = (choice: 'auto' | 'pillar'): OnboardingAnswers | null =>
-    goal && experience && minutes && gymAnswer
-      ? { goal, experience, trainingDays, sessionMinutes: minutes, gym: gymAnswer, plan: choice, startingLoads }
+    goal && experience && minutes && sex && gymAnswer
+      ? { goal, experience, trainingDays, sessionMinutes: minutes, sex, gym: gymAnswer, plan: choice, startingLoads }
       : null;
 
   const plans = useMemo(() => {
@@ -152,7 +159,7 @@ export function Onboarding() {
     const pillar = answersFor('pillar');
     if (!auto || !pillar) return null;
     return { auto: buildProgram(auto, gym), pillar: buildProgram(pillar, gym) };
-  }, [gym, goal, experience, minutes, trainingDays.join(',')]);
+  }, [gym, goal, experience, minutes, sex, trainingDays.join(',')]);
 
   const chosen = plans && plan ? plans[plan] : null;
   const lifts = chosen ? keyLifts(chosen.program) : [];
@@ -370,6 +377,25 @@ export function Onboarding() {
       );
       break;
 
+    case 'about':
+      body = (
+        <>
+          <StepTitle title="Who’s training?" lead="This only sets your starting leg exercises. You can switch them anytime in Plan settings." />
+          <div class="choice-list" role="radiogroup" aria-label="Who’s training">
+            {SEXES.map((s) => (
+              <ChoiceCard
+                key={s.value}
+                title={s.title}
+                description={s.description}
+                selected={sex === s.value}
+                onSelect={() => chooseAndAdvance(() => setSex(s.value))}
+              />
+            ))}
+          </div>
+        </>
+      );
+      break;
+
     case 'gym':
       body = (
         <>
@@ -580,7 +606,7 @@ function EquipmentChecklist({
     list.push(item);
     groups.set(item.category, list);
   }
-  const order = ['free-weight', 'support', 'machine', 'cable', 'bodyweight', 'other', 'cardio'];
+  const order = ['free-weight', 'support', 'machine', 'cable', 'bodyweight', 'other'];
   return (
     <>
       <StepTitle title="What’s in your gym?" lead="Tick everything that’s there. You can change it later." />

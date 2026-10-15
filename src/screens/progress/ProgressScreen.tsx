@@ -7,7 +7,8 @@ import { streakWeeks } from '../../coach/measures';
 import { renderWin } from '../../coach/render';
 import { bodySeries, bodySummary, exerciseSummaries, recordHistory, weekHistory, type WeekSummary } from '../../domain/progress';
 import { WEEKDAY_LETTER } from '../../domain/schedule';
-import { formatMonthDay } from '../../lib/format';
+import { summarize } from '../../domain/workout';
+import { formatMonthDay, plural } from '../../lib/format';
 import { Sparkline } from '../../ui/Chart';
 import { Button, IconButton } from '../../ui/controls';
 import { EmptyState } from '../../ui/feedback';
@@ -18,6 +19,7 @@ import './progress.css';
 
 const RECORDS_SHOWN = 4;
 const LIFTS_SHOWN = 8;
+const WORKOUTS_SHOWN = 4;
 
 export function ProgressScreen() {
   const sessions = pastSessions.value;
@@ -27,6 +29,8 @@ export function ProgressScreen() {
   const [logOpen, setLogOpen] = useState(false);
   const [allRecords, setAllRecords] = useState(false);
   const [allLifts, setAllLifts] = useState(false);
+  const [allWorkouts, setAllWorkouts] = useState(false);
+  const workouts = useMemo(() => [...sessions].reverse(), [sessions]);
 
   const weeks = useMemo(() => (program ? weekHistory(program, sessions, now, 8) : []), [program, sessions]);
   const records = useMemo(() => recordHistory(sessions), [sessions]);
@@ -46,6 +50,31 @@ export function ProgressScreen() {
         <>
           <StreakCard streak={streak} week={weeks[weeks.length - 1]} />
           <Calendar weeks={weeks} />
+
+          <section class="progress-section">
+            <p class="ex-section-title">Workouts</p>
+            <div class="record-list">
+              {(allWorkouts ? workouts : workouts.slice(0, WORKOUTS_SHOWN)).map((session) => {
+                const stats = summarize(session);
+                return (
+                  <button key={session.id} type="button" class="record-row" onClick={() => navigate({ name: 'summary', sessionId: session.id })}>
+                    <span class="record-row-text">
+                      <span class="record-row-title">{session.dayName ?? 'Workout'}</span>
+                      <span class="record-row-date num">
+                        {formatMonthDay(session.date)} · {plural(stats.workSets, 'set')} · {stats.minutes} min
+                      </span>
+                    </span>
+                    <Icon name="chevron-right" size={16} />
+                  </button>
+                );
+              })}
+              {!allWorkouts && workouts.length > WORKOUTS_SHOWN && (
+                <button type="button" class="progress-more" onClick={() => setAllWorkouts(true)}>
+                  Show all {workouts.length}
+                </button>
+              )}
+            </div>
+          </section>
 
           {records.length > 0 && (
             <section class="progress-section">

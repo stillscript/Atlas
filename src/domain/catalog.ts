@@ -14,7 +14,7 @@ import type {
   PatternDef,
   TemplateDef,
 } from './types';
-import type { Experience, Goal } from '../db/types';
+import type { Experience, Goal, ProgramExtra } from '../db/types';
 
 /**
  * Typed access to the shipped catalogs. The JSON files are the source of truth; tests in
@@ -70,6 +70,15 @@ export function requireExercise(id: string): ExerciseDef {
   const exercise = exerciseIndex.get(id);
   if (!exercise) throw new Error(`Unknown exercise "${id}"`);
   return exercise;
+}
+
+/**
+ * A day's finishers worth doing in Atlas: abs and short circuits. Cardio finishers saved in older
+ * plans are left out (cardio is tracked elsewhere), without changing the saved plan.
+ */
+export function liftingExtras(extras: ProgramExtra[] | undefined): ProgramExtra[] | undefined {
+  const kept = (extras ?? []).filter((x) => exerciseIndex.get(x.exerciseId)?.kind !== 'cardio').map((x) => ({ ...x }));
+  return kept.length ? kept : undefined;
 }
 
 export function equipmentDefById(id: string): EquipmentDef | undefined {

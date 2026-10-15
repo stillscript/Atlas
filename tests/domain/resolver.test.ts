@@ -44,7 +44,6 @@ describe('Pillar at the Office', () => {
       'lower-a-leg-curl': 'machine-leg-curl',
       'lower-a-calves': 'smith-calf-raise',
       'lower-a-abs': 'cable-crunch',
-      'lower-a-finisher': 'stair-climber',
       'pull-vertical-pull': 'pull-up',
       'pull-cs-row': 'chest-supported-db-row',
       'pull-face-pull': 'cable-face-pull',
@@ -57,7 +56,6 @@ describe('Pillar at the Office', () => {
       'lower-b-bss': 'db-bulgarian-split-squat',
       'lower-b-leg-ext': 'machine-leg-extension',
       'lower-b-calves': 'leg-press-calf-press',
-      'lower-b-finisher': 'bike',
       'upper-b-ohp': 'machine-shoulder-press',
       'upper-b-dips': 'close-grip-smith-press',
       'upper-b-wide-row': 'chest-supported-wide-row',
@@ -82,7 +80,6 @@ describe('Pillar at the Office', () => {
     expect(slots['upper-b-ohp']).toBe('barbell-overhead-press');
     expect(slots['upper-b-dips']).toBe('dip');
     expect(slots['pull-curl']).toBe('barbell-curl');
-    expect(slots['lower-a-finisher']).toBe('treadmill-incline-walk');
   });
 });
 

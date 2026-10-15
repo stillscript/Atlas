@@ -45,6 +45,11 @@ export async function discardSession(db: AtlasDB, sessionId: string): Promise<Ap
   return app;
 }
 
+/** Deletes a finished workout (the user chose to; the app offers Undo, which saves it back). */
+export async function deleteSession(db: AtlasDB, sessionId: string): Promise<void> {
+  await db.delete('sessions', sessionId);
+}
+
 /** The workout in progress, if the app meta points at one that is still active. */
 export async function loadActiveSession(db: AtlasDB, app: AppMeta): Promise<Session | null> {
   if (!app.activeSessionId) return null;

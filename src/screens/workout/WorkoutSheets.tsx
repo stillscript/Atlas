@@ -34,7 +34,6 @@ import { FormNotes } from '../plan/ExerciseSheet';
 import { CheckoutSheet } from './Checkout';
 import { Dial } from './Dial';
 import { EquipmentCheckSheet } from './EquipmentCheck';
-import { CardioSheet } from './Finishers';
 import { EFFORT_CHOICES, loadContext, loadDetail, loadText, loadUnit, repOptions, setText, supersetLabels } from './helpers';
 
 export type OpenSheet =
@@ -48,8 +47,7 @@ export type OpenSheet =
   | { kind: 'add' }
   | { kind: 'note' }
   | { kind: 'checkout' }
-  | { kind: 'discard' }
-  | { kind: 'cardio'; extraId?: string; exerciseId?: string };
+  | { kind: 'discard' };
 
 interface SheetsProps {
   open: OpenSheet | null;
@@ -72,7 +70,6 @@ export function WorkoutSheets({ open, onClose, onOpen, session, gym }: SheetsPro
   const entry = useLast(current ?? null);
   const kind = open?.kind;
   const edit = useLast(open?.kind === 'edit' ? open : null);
-  const cardio = useLast(open?.kind === 'cardio' ? open : null);
   const swapPain = open?.kind === 'swap' && open.pain === true;
 
   return (
@@ -95,17 +92,9 @@ export function WorkoutSheets({ open, onClose, onOpen, session, gym }: SheetsPro
         </>
       )}
       <MoreSheet open={kind === 'more'} onClose={onClose} onOpen={onOpen} index={index} entry={current} gym={gym} />
-      {edit && <EditSetSheet open={kind === 'edit'} onClose={onClose} session={session} target={edit} gym={gym} />}
+      {edit && <EditSetSheet open={kind === 'edit'} onClose={onClose} session={session} target={edit} gym={gym} apply={(change) => void changeSession(change)} />}
       <AddExerciseSheet open={kind === 'add'} onClose={onClose} session={session} gym={gym} />
       <CheckoutSheet open={kind === 'checkout'} onClose={onClose} session={session} />
-      <CardioSheet
-        open={kind === 'cardio'}
-        onClose={onClose}
-        session={session}
-        gym={gym}
-        extraId={cardio?.extraId}
-        exerciseId={cardio?.exerciseId}
-      />
       <Sheet
         open={kind === 'discard'}
         onClose={onClose}
@@ -199,9 +188,6 @@ function OverviewSheet({ open, onClose, onOpen, session, gym }: { open: boolean;
       <div class="ov-actions">
         <Button icon="plus" block onClick={() => onOpen({ kind: 'add' })}>
           Add an exercise
-        </Button>
-        <Button icon="pulse" block onClick={() => onOpen({ kind: 'cardio' })}>
-          Log cardio
         </Button>
       </div>
     </Sheet>
@@ -422,7 +408,6 @@ function MoreSheet({
       )}
       <ListGroup>
         <ListRow icon="plus" label="Add an exercise" onClick={() => onOpen({ kind: 'add' })} />
-        <ListRow icon="pulse" label="Log cardio" onClick={() => onOpen({ kind: 'cardio' })} />
       </ListGroup>
       <ListGroup>
         <ListRow icon="check" tone="good" label="Finish workout" onClick={() => onOpen({ kind: 'checkout' })} />
@@ -469,29 +454,49 @@ function NoteSheet({ open, onClose, index, entry }: { open: boolean; onClose: ()
 
 // ---------------------------------------------------------------- edit a set
 
-function EditSetSheet({
+/** A change to a workout, saved by whoever owns it (the live workout, or a finished one in history). */
+export type ApplyChange = (change: (session: Session, now: number) => Session) => void;
+
+/** Edit or delete one logged set. Used during a workout and when fixing a finished one. */
+export function EditSetSheet({
   open,
   onClose,
   session,
   target,
   gym,
+  apply,
 }: {
   open: boolean;
   onClose: () => void;
   session: Session;
   target: { entryIndex: number; setId: string };
   gym: Gym;
+  apply: ApplyChange;
 }) {
   const entry = session.entries[target.entryIndex];
   const set = entry?.sets.find((s) => s.id === target.setId);
   return (
     <Sheet open={open} onClose={onClose} title="Edit set">
-      {entry && set && <EditSetForm key={set.id} entry={entry} entryIndex={target.entryIndex} setId={set.id} gym={gym} onDone={onClose} />}
+      {entry && set && <EditSetForm key={set.id} entry={entry} entryIndex={target.entryIndex} setId={set.id} gym={gym} apply={apply} onDone={onClose} />}
     </Sheet>
   );
 }
 
-function EditSetForm({ entry, entryIndex, setId, gym, onDone }: { entry: ExerciseEntry; entryIndex: number; setId: string; gym: Gym; onDone: () => void }) {
+function EditSetForm({
+  entry,
+  entryIndex,
+  setId,
+  gym,
+  apply,
+  onDone,
+}: {
+  entry: ExerciseEntry;
+  entryIndex: number;
+  setId: string;
+  gym: Gym;
+  apply: ApplyChange;
+  onDone: () => void;
+}) {
   const set = entry.sets.find((s) => s.id === setId)!;
   const ctx = loadContext(entry, gym);
   const hasLoad = ctx.options.length > 0;
@@ -500,7 +505,7 @@ function EditSetForm({ entry, entryIndex, setId, gym, onDone }: { entry: Exercis
   const [rir, setRir] = useState<RepsInReserve | undefined>(set.rir);
   const save = () => {
     const stored = !hasLoad || (ctx.model?.kind === 'bodyweight' && load === 0) ? null : load;
-    void changeSession((s, now) => editSet(s, entryIndex, setId, { load: stored, reps, rir }, now));
+    apply((s, now) => editSet(s, entryIndex, setId, { load: stored, reps, rir }, now));
     onDone();
   };
   return (
@@ -537,7 +542,7 @@ function EditSetForm({ entry, entryIndex, setId, gym, onDone }: { entry: Exercis
           block
           icon="trash"
           onClick={() => {
-            void changeSession((s, now) => deleteSet(s, entryIndex, setId, now));
+            apply((s, now) => deleteSet(s, entryIndex, setId, now));
             showToast('Set deleted');
             onDone();
           }}

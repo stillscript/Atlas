@@ -55,18 +55,6 @@ export function cancelChime(): void {
   scheduled = [];
 }
 
-/** A short beep right now, for interval changes. Higher for "go", lower for "rest". */
-export function beep(kind: 'go' | 'rest' | 'done'): void {
-  if (!context || context.state !== 'running') return;
-  const at = context.currentTime + 0.01;
-  if (kind === 'done') {
-    tone(context, 784, at, 0.4, 0.2);
-    tone(context, 1175, at + 0.18, 0.6, 0.18);
-    return;
-  }
-  tone(context, kind === 'go' ? 1046 : 659, at, 0.25, 0.2);
-}
-
 /** Schedules a soft two-note chime `delayMs` from now (replacing any pending one). */
 export function scheduleChime(delayMs: number): void {
   cancelChime();

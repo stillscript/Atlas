@@ -16,7 +16,11 @@ IndexedDB on the phone.
 | 4. Coach engine + tests + UI | Done (branch `stage-4-coach`, cut from stage 3) |
 | 5. Progress: week view, charts, PRs, body measurements | Done (branch `stage-5-progress`, cut from stage 4) |
 | 6. Plan editing, gyms/equipment editing, backup reminder | Done (branch `stage-6-editing`, cut from stage 5) |
-| 7. QA (393×852, both themes, offline, cold start, update with data), README, deploy | Done. Stages 1–7 merged into `main` (fast-forward, 2026-10-14). Next: add the GitHub remote, push (ask first), enable Pages, then the README's iPhone checklist |
+| 7. QA (393×852, both themes, offline, cold start, update with data), README, deploy | Done. v1.0.0 live at https://stillscript.github.io/Atlas/ (Pages via Actions, remote `origin` = github.com/stillscript/Atlas) |
+| v1.1 strength focus: cardio removed, fix/delete past workouts, leg style (gender default, Plan settings switch) | Built on branch `v1.1-strength-focus`; not merged or released yet (ask first) |
+
+Pushing: this shell can't sign in to GitHub; run `git push` in the user's Terminal panel (Git
+Credential Manager opens the browser sign-in). Always ask before pushing.
 
 ## Commands
 
@@ -46,7 +50,7 @@ src/
   app/                  App shell (gates: Home Screen guide → setup → tabs), router (hash routes with
                         params: #/plan/day/<id>, #/plan/gym), state signals, repo (load/save training data)
   screens/              Today, Settings, Recovery, InstallGuide, onboarding/, plan/ (Plan, day, gym,
-                        SessionList, ExerciseSheet), workout/ (focus mode, sheets, finishers/cardio,
+                        SessionList, ExerciseSheet), workout/ (focus mode, sheets, finishers,
                         check-in/check-out, summary, WorkoutCoach), coach/ (Coach tab, CoachCard, Why?),
                         progress/ (Progress tab, exercise detail, Body, MeasurementSheet)
   ui/                   Design system: Icon, Logo, controls (Button/Toggle/Segmented), List, Sheet, feedback
@@ -142,13 +146,23 @@ Rules:
 
 - **Engine** (`domain/workout.ts`, pure, tested in `tests/domain/workout.test.ts`): every action is
   `(session, …, now) → session` (`logSet`, `rateSet`, `swapEntry`, `skipEntry`, `postponeEntry`,
-  `logCardio`, `finishSession`…). No clock reads inside; `now` is passed in.
+  `removeEntry`, `finishSession`…). No clock reads inside; `now` is passed in.
+- **Strength only** (v1.1): no cardio logging, cardio-only sessions, cardio finishers or interval
+  timer; the user tracks cardio with a wearable/Strava. Old data stays readable (`session.cardio`,
+  `cardioSummary`); cardio finishers in saved plans are skipped by `catalog.liftingExtras`, and old
+  cardio entries can be removed (`deleteCardio`). Cardio machines stay in gym data but are hidden.
+  An active workout can always be discarded, even with nothing to lift (the finish view has Discard).
+- **Fixing finished workouts**: `#/summary/<id>` (from Today, or Progress › Workouts) has Edit: tap a
+  set (`EditSetSheet`, shared with the live workout via an `apply` callback), remove an exercise, or
+  delete the workout. `app/workout.changePastSession` / `deletePastSession` save and offer Undo;
+  records, charts and the Coach read `pastSessions`, so they follow. "Next time" Coach notes show
+  only right after finishing.
 - **Store** (`app/workout.ts`): `activeSession` signal. Every change goes through `changeSession`,
   which saves to IndexedDB *first*, then updates the screen, one change at a time in order. Start,
   finish and discard also set/clear `appMeta.activeSessionId` in the same transaction
   (`db/sessions.ts`). While it's set, updates never apply and What's new waits.
-- **Resume**: the session stores its cursor and the rest timer as timestamps (`rest.endsAt`,
-  `intervalTimer.startedAt`), so a reload, crash, lock or update resumes exactly. On launch a
+- **Resume**: the session stores its cursor and the rest timer as timestamps (`rest.endsAt`), so a
+  reload, crash, lock or update resumes exactly. On launch a
   workout touched in the last 3 hours reopens `#/workout`; older ones show Resume on Today.
 - **First weights**: `suggestFirstSet` = last time's top working weight (history), the set entered
   at setup (known), or a light catalog guess (calibrate). `calibrating` (no history, a swap
@@ -192,6 +206,15 @@ Rules:
   fallbacks) and switching back restores everything. Switching gyms is blocked during a workout.
 - Redo setup with a preset you already have reuses that gym, keeping confirmed weights and machine
   settings.
+- **Leg style** (`domain/legStyle.ts`, `tests/domain/legStyle.test.ts`): `program.legStyle` is
+  `free-weights` (how templates and the generator build plans) or `machines`. Setup asks "Who's
+  training?" (`profile.sex`, used for nothing else): Man → machines, Woman → free weights plus a hip
+  thrust in place of leg extensions (`addGluteFocus`), Rather not say → free weights. Machines swaps
+  squat/hinge/deadlift/single-leg/hip-thrust slots for machine stand-ins (`MACHINE_SWAPS`: hack squat,
+  leg press, leg press feet high, single-leg press, cable pull-through, curls, extensions), at most
+  two leg exercises per machine per day, re-prescribed for the new exercise; the old slot is kept
+  in `slot.freeWeight` so switching back (Plan settings, with Undo) restores it exactly. A hand
+  replacement (`replaceExercise`) clears `freeWeight`, so it survives switching back.
 - Equipment weights: `LoadEditor` in `screens/workout/EquipmentCheck.tsx` (stack, plates, dumbbell
   or fixed lists, bodyweight add-ons). Gym units (lb/kg) are fixed at creation.
 - Backup reminder (`domain/reminders.backupStatus`): first after 3 workouts with no backup, then
@@ -305,5 +328,6 @@ the UI must ask the user to confirm the real steps on first use.
 across the week) → prescribe sets/reps/reps-left/rest from `programming.json` by goal, experience
 and role → fit the session length (supersets of non-competing accessories on different stations,
 then drop lowest-priority exercises, then trim sets) → balance weekly sets per muscle into the
-experience band → fat-loss cardio finishers. After changing catalogs or the generator, regenerate
+experience band (no cardio, for any goal). Setup then applies the leg style (see "Leg style").
+After changing catalogs or the generator, regenerate
 `docs/program-samples.md` and read it like a coach would.

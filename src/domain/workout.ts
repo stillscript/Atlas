@@ -1,5 +1,4 @@
 import type {
-  CardioEntry,
   CheckOut,
   ExerciseEntry,
   Gym,
@@ -16,7 +15,7 @@ import type {
 import type { SessionPlan, SlotPlan } from '../coach/types';
 import { toISODate } from '../lib/format';
 import { newId } from '../lib/ids';
-import { PROGRAMMING, requireExercise } from './catalog';
+import { liftingExtras, PROGRAMMING, requireExercise } from './catalog';
 import { loadSourceFor } from './gym';
 import { remapDayForGym } from './gymEdit';
 import { snapLoad, stepLoad } from './loads';
@@ -277,11 +276,11 @@ export function createSession(input: {
     programId: program.id,
     dayId: day.id,
     dayName: day.name,
-    variant: variant === 'cardio' ? undefined : variant,
+    variant,
     startedAt: now,
     entries: day.slots.map((slot) => entryFromSlot(slot, ctx, plan?.slots[slot.id])),
     cardio: [],
-    extras: day.extras?.length ? day.extras.map((x) => ({ ...x })) : undefined,
+    extras: liftingExtras(day.extras),
     extrasDone: [],
     readiness: input.readiness,
     cursor: { entryIndex: 0, setIndex: 0 },
@@ -295,22 +294,6 @@ export function createSession(input: {
   return { ...session, cursor: { entryIndex: 0, setIndex: 0 } };
 }
 
-/** A session with no lifting, for cardio on a rest day. */
-export function createCardioSession(input: { gym: Gym; now: number }): Session {
-  return {
-    id: newId('ses'),
-    date: toISODate(new Date(input.now)),
-    status: 'active',
-    gymId: input.gym.id,
-    dayName: 'Cardio',
-    startedAt: input.now,
-    entries: [],
-    cardio: [],
-    extrasDone: [],
-    cursor: { entryIndex: 0, setIndex: 0 },
-    updatedAt: input.now,
-  };
-}
 
 // ---------------------------------------------------------------- progress and order
 
@@ -643,14 +626,9 @@ export function addEntry(session: Session, exerciseId: string, ctx: Context, now
   return { ...next, cursor: cursorAt(next, next.entries.length - 1) };
 }
 
-// ---------------------------------------------------------------- cardio
+// ---------------------------------------------------------------- fixing what was logged
 
-export function logCardio(session: Session, input: Omit<CardioEntry, 'id' | 'at'>, now: number): Session {
-  const entry: CardioEntry = { ...input, id: newId('car'), at: now };
-  const extrasDone = input.extraId && !session.extrasDone?.includes(input.extraId) ? [...(session.extrasDone ?? []), input.extraId] : session.extrasDone;
-  return { ...session, cardio: [...session.cardio, entry], extrasDone, intervalTimer: undefined, updatedAt: now };
-}
-
+/** Removes cardio logged by an older version of Atlas (cardio is no longer logged here). */
 export function deleteCardio(session: Session, cardioId: string, now: number): Session {
   const removed = session.cardio.find((c) => c.id === cardioId);
   const cardio = session.cardio.filter((c) => c.id !== cardioId);
@@ -659,35 +637,18 @@ export function deleteCardio(session: Session, cardioId: string, now: number): S
   return { ...session, cardio, extrasDone, updatedAt: now };
 }
 
-export type IntervalTimer = NonNullable<Session['intervalTimer']>;
-
-export function startIntervals(session: Session, timer: Omit<IntervalTimer, 'startedAt'>, now: number): Session {
-  return { ...session, intervalTimer: { ...timer, startedAt: now }, updatedAt: now };
+/** Takes an exercise out of a workout, with everything logged on it. */
+export function removeEntry(session: Session, entryIndex: number, now: number): Session {
+  if (!session.entries[entryIndex]) return session;
+  const entries = session.entries.filter((_, i) => i !== entryIndex);
+  const next = { ...session, entries, updatedAt: now };
+  if (!session.cursor) return next;
+  return { ...next, cursor: entries.length ? cursorAt(next, Math.min(session.cursor.entryIndex, entries.length - 1)) : { entryIndex: 0, setIndex: 0 } };
 }
 
-export function stopIntervals(session: Session, now: number): Session {
-  return { ...session, intervalTimer: undefined, updatedAt: now };
-}
-
-export interface IntervalState {
-  phase: 'work' | 'rest' | 'done';
-  /** 1-based. */
-  round: number;
-  remainingSec: number;
-  elapsedSec: number;
-}
-
-/** Where an interval timer is at `now`, worked out from its start time (correct after a lock). */
-export function intervalState(timer: IntervalTimer, now: number): IntervalState {
-  const elapsed = Math.max(0, (now - timer.startedAt) / 1000);
-  const cycle = timer.workSec + timer.restSec;
-  // The last round has no rest after it.
-  const total = timer.rounds * cycle - timer.restSec;
-  if (elapsed >= total) return { phase: 'done', round: timer.rounds, remainingSec: 0, elapsedSec: Math.round(total) };
-  const round = Math.floor(elapsed / cycle) + 1;
-  const into = elapsed - (round - 1) * cycle;
-  if (into < timer.workSec) return { phase: 'work', round, remainingSec: Math.ceil(timer.workSec - into), elapsedSec: Math.floor(elapsed) };
-  return { phase: 'rest', round, remainingSec: Math.ceil(cycle - into), elapsedSec: Math.floor(elapsed) };
+/** Whether a workout has anything logged at all (a finished workout with nothing left is better deleted). */
+export function hasLoggedWork(session: Session): boolean {
+  return session.entries.some((e) => workSets(e).length > 0) || session.cardio.length > 0;
 }
 
 export function toggleExtraDone(session: Session, extraId: string, now: number): Session {

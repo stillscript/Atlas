@@ -214,7 +214,7 @@
     "C2.short": {
       "title": ["A short version today?", "Low on everything: a 30-minute version?"],
       "body": ["Sleep {sleep}, energy {energy}, {soreness}.", "All three check-in answers are low."],
-      "action": ["Key lifts only, about 30 minutes. Or easy cardio. Never forced."]
+      "action": ["Key lifts only, about 30 minutes. Never forced."]
     },
     "D.technique": {
       "title": ["{exercise} has held at about {e1rm} {unit} for {sessions} sessions"],
