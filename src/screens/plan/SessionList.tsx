@@ -1,5 +1,6 @@
 import type { Gym, Profile, ProgramDay, ProgramSlot } from '../../db/types';
 import { exerciseHistory } from '../../app/workout';
+import type { SessionPlan, SlotPlan } from '../../coach/types';
 import { requireExercise } from '../../domain/catalog';
 import { suggestFirstSet } from '../../domain/workout';
 import { haptic } from '../../lib/haptics';
@@ -14,10 +15,12 @@ interface SessionListProps {
   onOpen: (slot: ProgramSlot) => void;
   /** Show each exercise's purpose line (Plan) or keep rows compact (Today). */
   showPurpose?: boolean;
+  /** The Coach's plan for this day (Today), so the weights shown are the ones the session will use. */
+  plan?: SessionPlan | null;
 }
 
 /** A day's exercises in order, with supersets grouped and first-session weights. */
-export function SessionList({ day, gym, profile, onOpen, showPurpose = false }: SessionListProps) {
+export function SessionList({ day, gym, profile, onOpen, showPurpose = false, plan }: SessionListProps) {
   // When the whole day shares one effort target, the parent says it once instead of on each row.
   const showEffort = uniformEffort(day.slots.filter((s) => requireExercise(s.exerciseId).metric === 'reps')) === undefined;
   const groups: ProgramSlot[][] = [];
@@ -49,6 +52,7 @@ export function SessionList({ day, gym, profile, onOpen, showPurpose = false }: 
                 showPurpose={showPurpose}
                 showEffort={showEffort}
                 onOpen={onOpen}
+                slotPlan={plan?.slots[slot.id]}
               />
             );
           })}
@@ -83,6 +87,7 @@ function SlotRow({
   showPurpose,
   showEffort,
   onOpen,
+  slotPlan,
 }: {
   number: number;
   slot: ProgramSlot;
@@ -91,12 +96,16 @@ function SlotRow({
   showPurpose: boolean;
   showEffort: boolean;
   onOpen: (slot: ProgramSlot) => void;
+  slotPlan?: SlotPlan;
 }) {
   const exercise = requireExercise(slot.exerciseId);
-  // The same weight the workout will pre-fill: last time's, the one entered at setup, or a light guess.
+  // The same weight the workout will pre-fill: the Coach's (applied, or a lighter week), last
+  // time's, the one entered at setup, or a light guess.
   const suggestion = profile ? suggestFirstSet(slot.exerciseId, slot, { gym, profile, history: exerciseHistory.value }) : null;
-  const load = suggestion?.load ?? null;
-  const light = suggestion?.reason === 'calibrate';
+  const coachLoad =
+    slotPlan?.auto?.load !== undefined ? slotPlan.auto.load : slotPlan?.offer?.decided === 'applied' ? slotPlan.offer.load : undefined;
+  const load = coachLoad !== undefined ? coachLoad : (suggestion?.load ?? null);
+  const light = coachLoad === undefined && suggestion?.reason === 'calibrate';
   return (
     <button
       type="button"

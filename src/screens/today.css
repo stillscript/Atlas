@@ -227,6 +227,59 @@
   cursor: pointer;
 }
 
+.today-links {
+  display: flex;
+  border-top: 1px solid var(--line);
+  margin-top: var(--space-1);
+}
+
+.today-links .today-switch {
+  flex: 1;
+  margin-top: 0;
+  border-top: 0;
+}
+
+.today-links .today-switch + .today-switch {
+  border-left: 1px solid var(--line);
+}
+
+.today-coach {
+  margin-top: var(--space-4);
+}
+
+.change-list {
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.change-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: 40px;
+  padding: 6px 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: none;
+  color: var(--ink);
+  font-size: var(--text-md);
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.change-list li:last-child .change-row {
+  border-bottom: 0;
+}
+
+.change-row .icon {
+  flex: none;
+  color: var(--ink-3);
+}
+
 .today-rest-actions {
   display: flex;
   flex-wrap: wrap;

@@ -1196,6 +1196,14 @@ button.wo-set {
   font-size: var(--text-sm);
 }
 
+.summary-coach {
+  margin-top: var(--space-5);
+}
+
+.summary-coach > .ex-section-title {
+  margin-bottom: var(--space-2);
+}
+
 .summary-list {
   margin-top: var(--space-4);
   padding: 2px var(--space-4);

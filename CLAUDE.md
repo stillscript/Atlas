@@ -13,8 +13,8 @@ IndexedDB on the phone.
 | 1. Catalogs: equipment, exercises (with form notes), Office gym preset, Pillar template, program generator | Done (branch `stage-1-catalogs`) |
 | 2. Onboarding (Home Screen guide first), Today, read-only Plan view | Done (branch `stage-2-onboarding`, cut from stage 1) |
 | 3. Workout: focus mode, rest timer, machine settings (incl. confirming `verifyLoad` stack steps), swaps, cardio, resume, check-in | Done (branch `stage-3-workout`, cut from stage 2) |
-| 4. Coach engine + tests + UI | Next. Hook points: readiness on the session (C1/C2), in-session offers (B1/B2) next to the set logger, progression (A2–A5) into `suggestFirstSet` |
-| 5. Progress: week view, charts, PRs, body measurements | |
+| 4. Coach engine + tests + UI | Done (branch `stage-4-coach`, cut from stage 3) |
+| 5. Progress: week view, charts, PRs, body measurements | Next. Body-weight entry feeds the Coach's fat-loss rules (H3), which already read `measurements` |
 | 6. Plan editing, gyms/equipment editing, backup reminder | |
 | 7. QA (393×852, both themes, offline, cold start, update with data), README, deploy | |
 
@@ -25,7 +25,7 @@ IndexedDB on the phone.
 | `npm run dev` | Dev server (no service worker in dev) |
 | `npm run build` | Production build into `dist/`, plus generated `dist/sw.js` |
 | `npm run preview` | Serve `dist/` on :4173 (service worker active: use this to test offline/updates) |
-| `npm test` | Vitest: data layer, migrations, backups, changelog, service worker guards, catalogs, loads, resolver, generator (and later the Coach) |
+| `npm test` | Vitest: data layer, migrations, backups, changelog, service worker guards, catalogs, loads, resolver, generator, workout engine, Coach (synthetic histories in `tests/coach/`) |
 | `$env:ATLAS_PREVIEW="1"; npx vitest run tests/domain/preview.test.ts` | Regenerates `docs/program-samples.md` (Pillar at the Office + generated plans) for a human review |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run icons` | Re-render app icons from the mark in `scripts/icons.mjs` |
@@ -47,7 +47,7 @@ src/
                         params: #/plan/day/<id>, #/plan/gym), state signals, repo (load/save training data)
   screens/              Today, Settings, Recovery, InstallGuide, onboarding/, plan/ (Plan, day, gym,
                         SessionList, ExerciseSheet), workout/ (focus mode, sheets, finishers/cardio,
-                        check-in/check-out, summary)
+                        check-in/check-out, summary, WorkoutCoach), coach/ (Coach tab, CoachCard, Why?)
   ui/                   Design system: Icon, Logo, controls (Button/Toggle/Segmented), List, Sheet, feedback
   styles/tokens.css     Colors (light + two identical dark blocks), type scale, spacing, motion
   db/                   IndexedDB: types, schema, migrations, open, snapshots, backups, kv settings
@@ -60,7 +60,7 @@ src/
                         capability tags), loads (equipment-aware load math), strength (e1RM),
                         resolver (pattern → exercise, swaps, start loads), generator, volume,
                         workout (session engine)
-  (coming) coach/       Pure-function Coach engine; knowledge + phrases JSON in data/coach/
+  coach/                Pure-function Coach engine (see "Coach" below); knowledge + phrases JSON in data/coach/
 vite-plugins/atlas-pwa.ts  Generates dist/sw.js + dist/version.json after each build
 tests/                  Vitest; tests/db/fixtures/vN.json = sample data for every schema version
 docs/coach-proposal.md  Evidence-based Coach rules with sources (approved)
@@ -181,14 +181,47 @@ Single source of truth: `package.json` `version` (injected as `__APP_VERSION__`,
 5. `git add -A && git commit -m "Release vX.Y.Z" && git tag vX.Y.Z && git push --follow-tags`.
    The GitHub Action builds, tests and deploys to Pages.
 
-## Coach (not built yet)
+## Coach
 
-See `docs/coach-proposal.md`. Planned shape: pure functions in `src/coach/`, `evaluateCoach(input,
-{now, moment}) → { recommendations[], todayPlan?, inSession?, review?, wins[] }`, rules and
-thresholds in `src/data/coach/knowledge.json` (each with sources), wording in
-`src/data/coach/phrases.json`, rendering separate from the engine so an AI layer can replace it.
-Readiness check is optional and must stay one tap to switch off (check-in sheet: "Don't ask before
-workouts"; Settings › Workouts) and back on; the wearable score is off by default.
+Rules: `docs/coach-proposal.md` (approved). Everything is pure and testable; nothing writes to the
+database except the app store recording "shown" marks and decisions.
+
+```
+src/coach/
+  types.ts        CoachInput → Recommendation { id (rule.variant:subject:fingerprint), change, facts,
+                  confidence, basis, actions }, Win, SessionPlan, WeeklyReview
+  knowledge.ts    Typed access to data/coach/knowledge.json: every threshold, rule principle, source
+  measures.ts     Exposures + estimated max (ratings inferred when missing), confidence, return-from-
+                  break state, fatigue signals (F1), weekly sets done, streaks, weight trend
+  progression.ts  Next time per exercise: A1–A6, D range reset, J1 pain (overrides), holds
+  inSession.ts    B1/B2 offers after a set, B3 rest advice
+  readiness.ts    C1/C2 (only when the check-in is on)
+  program.ts      Plan-level: D plateaus (≤2 at once, key lifts first), E volume/balance (one change
+                  per muscle per week), F2 lighter weeks, G1 missed, G3 return, H3 fat loss, J2 pain
+  wins.ts         K: records, trends, streaks, fat-loss holds, comebacks
+  engine.ts       planSession (the day's plan the workout is built from), coachToday, coachInSession,
+                  coachReview (L1), coachWeekly (L2), evaluateCoach (one entry point)
+  memory.ts       Decisions, no-repetition (3 sessions / 7 days unless the facts moved), demotion
+                  after 3 "Not now"s, phrasing rotation (avoid the last 5)
+  render.ts       Wording from data/coach/phrases.json; the only place sentences are made, so an AI
+                  layer could replace it
+  apply.ts        What Apply does to the plan (sets, rep range, swap, lighter week)
+```
+
+- **Flow:** `app/coach.ts` computes Today/weekly outputs from the saved data (one store, every
+  screen reads it). Starting a workout builds the session from `planFor(day)`: decided suggestions
+  are applied, undecided ones ride along as `entry.coachOffer` (Use/Keep on the exercise), lighter
+  weeks and return ramps apply automatically. After each set, `inSessionFor` may offer B1/B2.
+- **Nothing changes the plan without Apply.** Session-level changes are decisions read when the
+  session is built; plan edits go through `applyToProgram`.
+- **Recommendation ids are stable** for the same situation, so a decision sticks until the facts
+  change (a new session of that lift gives a new id).
+- **Adding or changing a rule:** thresholds in `knowledge.json`; wording in `phrases.json` (every
+  message needs one of the user's numbers, except safety lines); a scenario in `tests/coach/`.
+  `tests/coach/render.test.ts` renders every phrasing of every message from real scenarios and fails
+  if a message is unreachable, a placeholder is unfilled, or a number is missing.
+- Readiness check is optional and must stay one tap to switch off (check-in sheet: "Don't ask
+  before workouts"; Settings › Workouts) and back on; the wearable score is off by default.
 
 ## Catalogs: equipment, exercises, templates
 

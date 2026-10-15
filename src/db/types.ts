@@ -182,7 +182,11 @@ export interface Program {
   days: ProgramDay[];
   /** Mon..Sun → ProgramDay id, or null for rest. */
   schedule: (string | null)[];
-  block: { startDate: ISODate; lengthWeeks: number };
+  /**
+   * Training blocks: `lengthWeeks` normal weeks, then a lighter week. The Coach moves `startDate`
+   * to take the lighter week early, and records a one-time push-back in `postponedWeeks`.
+   */
+  block: { startDate: ISODate; lengthWeeks: number; postponedWeeks?: number };
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
@@ -217,8 +221,8 @@ export interface SetLog {
   at: Timestamp;
 }
 
-/** Why a weight was suggested, so the UI (and later the Coach) can explain it. */
-export type SuggestionReason = 'history' | 'known' | 'calibrate' | 'swap' | 'bodyweight' | 'none';
+/** Why a weight was suggested, so the UI (and the Coach) can explain it. */
+export type SuggestionReason = 'history' | 'known' | 'calibrate' | 'swap' | 'bodyweight' | 'none' | 'coach' | 'lighter-week' | 'return';
 
 export interface ExerciseEntry {
   id: string;
@@ -243,10 +247,16 @@ export interface ExerciseEntry {
     reason?: SuggestionReason;
     /** First exposures (Coach rule A1): each set's rating sets the next set's weight. */
     calibrating?: boolean;
+    /** The Coach recommendation this target came from, if any. */
+    coachId?: string;
   };
   sets: SetLog[];
   skipped?: boolean;
   notes?: string;
+  /** A Coach suggestion not yet decided: shown on the exercise with Use / Keep. */
+  coachOffer?: { recommendationId: string; load: number | null; repsLow: number; repsHigh: number; swapTo?: string };
+  /** Accepted in-session adjustment (B1/B2): the next set's weight and reps. Cleared once used. */
+  nextSet?: { load: number | null; reps: number };
 }
 
 export type CardioMetric = 'duration' | 'distance' | 'calories' | 'watts' | 'level' | 'floors' | 'pace' | 'intervals';
@@ -316,6 +326,10 @@ export interface Session {
   rest?: { startedAt: Timestamp; endsAt: Timestamp; durationSec: number };
   /** Coach recommendation ids applied to this session. */
   coachApplied?: string[];
+  /** In-session Coach prompts already shown (one per exercise, rule B1/B2). */
+  coachPrompts?: string[];
+  /** A different version of the day: lighter (readiness), short (time or readiness), lighter week, return ramp. */
+  variant?: 'lighter' | 'short' | 'cardio' | 'lighter-week' | 'return';
   updatedAt: Timestamp;
 }
 

@@ -1,5 +1,8 @@
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { exportBackup } from '../app/backupActions';
+import { coachTodayState, pendingStartDay, planFor } from '../app/coach';
+import type { PlanOptions } from '../coach/engine';
+import { ShortOnTimeSheet, TodayCoach } from './coach/TodayCoach';
 import { navigate } from '../app/router';
 import { activeGym, activeProgram, appMeta, completedSessions, getDb, patchAppMeta, profile, settings } from '../app/state';
 import { activeSession, pastSessions, startWorkout } from '../app/workout';
@@ -54,18 +57,29 @@ export function TodayScreen() {
   const [openSlot, setOpenSlot] = useState<ProgramSlot | null>(null);
   const [installOpen, setInstallOpen] = useState(false);
   const [backingUp, setBackingUp] = useState(false);
-  const [checkIn, setCheckIn] = useState<{ open: boolean; day: ProgramDay | null }>({ open: false, day: null });
+  const [checkIn, setCheckIn] = useState<{ open: boolean; day: ProgramDay | null; options: PlanOptions }>({ open: false, day: null, options: {} });
   const [pickerOpen, setPickerOpen] = useState(false);
-
-  if (!program || !gym) return null;
+  const [shortOpen, setShortOpen] = useState(false);
 
   /** Start a session: the quick check-in first if it's switched on (never for cardio only). */
-  const begin = (chosen: ProgramDay | null) => {
+  const begin = (chosen: ProgramDay | null, options: PlanOptions = {}) => {
     primeAudio();
     setPickerOpen(false);
-    if (chosen && settings.value.readinessCheck) setCheckIn({ open: true, day: chosen });
-    else void startWorkout(chosen);
+    setShortOpen(false);
+    if (chosen && settings.value.readinessCheck) setCheckIn({ open: true, day: chosen, options });
+    else void startWorkout(chosen, undefined, chosen ? planFor(chosen, options) : null);
   };
+
+  // "Do it today" from the Coach tab lands here.
+  useEffect(() => {
+    const dayId = pendingStartDay.value;
+    if (!dayId || !program) return;
+    pendingStartDay.value = null;
+    const target = program.days.find((d) => d.id === dayId);
+    if (target && !activeSession.value) begin(target);
+  }, [pendingStartDay.value]);
+
+  if (!program || !gym) return null;
 
   const now = new Date();
   const day = sessionOn(program, now);
@@ -136,14 +150,31 @@ export function TodayScreen() {
         );
       })}
 
+      {!inProgress && (
+        <TodayCoach
+          showSessionChanges={showStart}
+          onStartDay={(dayId) => {
+            const target = program.days.find((d) => d.id === dayId);
+            if (target) begin(target);
+          }}
+        />
+      )}
+
       {day && !plannedDone ? (
         <section class="today-card" aria-label="Today’s session">
           <p class="today-card-meta num">{dayMeta(day)}</p>
-          <SessionList day={day} gym={gym} profile={me} onOpen={setOpenSlot} />
+          <SessionList day={day} gym={gym} profile={me} onOpen={setOpenSlot} plan={coachTodayState.value?.plan} />
           {!inProgress && (
-            <button type="button" class="today-switch" onClick={() => setPickerOpen(true)}>
-              Do a different session
-            </button>
+            <div class="today-links">
+              <button type="button" class="today-switch" onClick={() => setPickerOpen(true)}>
+                Do a different session
+              </button>
+              {estimateDayMinutes(day) > 35 && (
+                <button type="button" class="today-switch" onClick={() => setShortOpen(true)}>
+                  Short on time?
+                </button>
+              )}
+            </div>
           )}
         </section>
       ) : (
@@ -236,8 +267,9 @@ export function TodayScreen() {
       )}
 
       <ExerciseSheet slot={openSlot} gym={gym} onClose={() => setOpenSlot(null)} />
-      <ReadinessSheet day={checkIn.day} open={checkIn.open} onClose={() => setCheckIn({ ...checkIn, open: false })} />
-      <DayPickerSheet program={program} open={pickerOpen} onClose={() => setPickerOpen(false)} onPick={begin} />
+      <ReadinessSheet day={checkIn.day} options={checkIn.options} open={checkIn.open} onClose={() => setCheckIn({ ...checkIn, open: false })} />
+      <DayPickerSheet program={program} open={pickerOpen} onClose={() => setPickerOpen(false)} onPick={(d) => begin(d)} />
+      {day && <ShortOnTimeSheet day={day} open={shortOpen} onClose={() => setShortOpen(false)} onPick={(minutes) => begin(day, { minutes })} />}
       <Sheet open={installOpen} onClose={() => setInstallOpen(false)} title="Add Atlas to your Home Screen">
         <InstallGuide variant="sheet" />
       </Sheet>

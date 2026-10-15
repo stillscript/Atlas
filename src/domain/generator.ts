@@ -192,6 +192,31 @@ function fitDay(day: ProgramDay, gym: Gym, budget: number): void {
   }
 }
 
+/**
+ * A shorter version of a day for today only ("short on time", rule G2): the same fitting steps as
+ * the generator, on a copy. Key lifts keep their sets; accessories pair up, then the lowest
+ * priority ones drop. `keyLiftsOnly` keeps just main and secondary lifts (rule C2).
+ */
+export function shortenDay(
+  day: ProgramDay,
+  gym: Gym,
+  budgetMinutes: number,
+  options: { keyLiftsOnly?: boolean } = {},
+): { day: ProgramDay; dropped: ProgramSlot[]; minutes: number } {
+  const copy: ProgramDay = {
+    ...day,
+    slots: day.slots
+      .filter((slot) => !options.keyLiftsOnly || slot.role === 'main' || slot.role === 'secondary')
+      .map((slot) => ({ ...slot })),
+    extras: options.keyLiftsOnly ? [] : day.extras?.map((x) => ({ ...x })),
+  };
+  if (!copy.slots.length) copy.slots = day.slots.slice(0, 1).map((slot) => ({ ...slot }));
+  fitDay(copy, gym, budgetMinutes);
+  if (estimateDayMinutes(copy) > budgetMinutes) copy.extras = [];
+  const kept = new Set(copy.slots.map((s) => s.id));
+  return { day: copy, dropped: day.slots.filter((s) => !kept.has(s.id)), minutes: estimateDayMinutes(copy) };
+}
+
 // ---------------------------------------------------------------- shared helpers
 
 function mondayOf(date: Date): Date {

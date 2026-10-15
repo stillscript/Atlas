@@ -5,6 +5,7 @@ import './styles/base.css';
 import { App } from './app/App';
 import { loadTrainingState } from './app/repo';
 import { navigate } from './app/router';
+import { loadCoachState, startCoachClock } from './app/coach';
 import { loadWorkoutState, shouldResumeOnLaunch, startWorkoutEffects } from './app/workout';
 import {
   APP_VERSION,
@@ -76,13 +77,14 @@ async function boot(): Promise<void> {
   completedSessions.value = training.completedSessions;
   applyTheme(loadedSettings.theme);
   setHapticsEnabled(loadedSettings.haptics);
-  await loadWorkoutState(db, meta, loadedSettings.activeGymId);
+  await Promise.all([loadWorkoutState(db, meta, loadedSettings.activeGymId), loadCoachState(db)]);
 
   if (await applyWaitingUpdateOnColdStart(Boolean(meta.activeSessionId))) return;
 
   // A workout that was open when the app closed (or updated) reopens exactly where it was.
   if (shouldResumeOnLaunch()) navigate('workout', { replace: true });
   startWorkoutEffects();
+  startCoachClock();
   render(<App />, root);
 
   void startServiceWorker();

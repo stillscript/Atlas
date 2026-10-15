@@ -11,6 +11,7 @@ import {
   saveMachineSetting,
   saveSession,
 } from '../db/sessions';
+import type { SessionPlan } from '../coach/types';
 import type { AtlasDB } from '../db/schema';
 import type { AppMeta, CheckOut, EquipmentItem, MachineSetting, ProgramDay, ReadinessCheck, Session } from '../db/types';
 import { buildHistory, createCardioSession, createSession, finishSession } from '../domain/workout';
@@ -83,7 +84,8 @@ export function changeSession(change: (session: Session, now: number) => Session
 
 // ---------------------------------------------------------------- start, finish, discard
 
-export async function startWorkout(day: ProgramDay | null, readiness?: ReadinessCheck): Promise<void> {
+/** Starts a workout. `plan` is the Coach's plan for the day (app/coach `planFor`). */
+export async function startWorkout(day: ProgramDay | null, readiness?: ReadinessCheck, plan?: SessionPlan | null): Promise<void> {
   primeAudio();
   const program = activeProgram.value;
   const gym = activeGym.value;
@@ -92,7 +94,7 @@ export async function startWorkout(day: ProgramDay | null, readiness?: Readiness
   const now = Date.now();
   const session =
     day && program
-      ? createSession({ program, day, gym, profile: me, history: exerciseHistory.value, now, readiness })
+      ? createSession({ program, day, gym, profile: me, history: exerciseHistory.value, now, readiness, plan })
       : createCardioSession({ gym, now });
   await enqueue(async () => {
     appMeta.value = await beginSession(getDb(), session);

@@ -1,0 +1,205 @@
+{
+  "_about": "The Coach's numbers and reasons, from docs/coach-proposal.md (approved 2026-10-14). The engine reads every threshold from here, so tuning one never means touching logic. Each rule's principle is what the Why? button shows, with its sources.",
+  "thresholds": {
+    "confidence": { "mediumExposures": 3, "highExposures": 6, "lowRatedShare": 0.5, "highRatedShare": 0.75, "staleDays": 21 },
+    "progression": {
+      "bigJump": 0.1,
+      "stretchReps": 4,
+      "easyMargin": 2,
+      "maxJumpBeginnerOrLow": 0.1,
+      "maxJumpOther": 0.15,
+      "e1rmJump": 0.05,
+      "smallMissTotal": 0.9,
+      "fatigueDayShare": 0.4,
+      "strengthNotch": 2,
+      "minReps": 3
+    },
+    "inSession": { "harderDrop": 0.07, "easyMargin": 2, "expectedDropPerSet": 1, "restDropExtra": 2 },
+    "readiness": { "wearableMinEntries": 10, "wearableLowShare": 0.2 },
+    "plateau": { "exposures": 3, "sameRangeExposures": 6, "tolerance": 0.005, "beginnerTechniqueFirst": true },
+    "volume": { "minProgramDays": 14, "maxSets": 20, "rampLimit": 0.2, "pushPullRatio": 1.25, "addSets": 1 },
+    "fatigue": {
+      "windowDays": 14,
+      "effortCreepLifts": 3,
+      "dipPercent": 0.04,
+      "dipShare": 0.4,
+      "dipMinLifts": 3,
+      "readinessLowCount": 3,
+      "readinessWindow": 5,
+      "checkoutLowCount": 2,
+      "checkoutWindow": 3,
+      "painLifts": 2,
+      "signalsForLighterWeek": 2,
+      "minWeeksSinceLighter": 3,
+      "minDataDays": 14,
+      "minLifts": 3
+    },
+    "lighterWeek": { "setFactor": 0.6, "minSets": 1, "loadFactor": 0.9, "rir": 3, "maxPostponeWeeks": 2 },
+    "return": [
+      { "fromDays": 8, "loads": [1], "setsDrop": 0, "noIncrease": true },
+      { "fromDays": 14, "loads": [0.9, 0.95], "setsDrop": 1, "rir": 3 },
+      { "fromDays": 28, "loads": [0.8, 0.85, 0.9, 0.95], "setsDrop": 1, "rir": 3 },
+      { "fromDays": 56, "loads": [0.7, 0.8, 0.9], "setsDrop": 1, "rir": 3, "recalibrate": true }
+    ],
+    "weight": { "fastPerWeek": 0.01, "weeksFast": 2, "flatWeeks": 3, "flatPerWeek": 0.002, "minEntries": 4, "proteinGramsPerKg": 1.6, "proteinTipDays": 30 },
+    "pain": { "loadFactor": 0.8, "rir": 3, "repeatDays": 21 },
+    "memory": { "suppressDays": 7, "suppressSessions": 3, "variantHistory": 5, "dismissalsToDemote": 3, "cueRepeatDays": 28 },
+    "wins": { "trendMinExposures": 4, "trendMinGain": 0.03, "streakMinWeeks": 2, "comebackGapDays": 14 }
+  },
+  "rules": {
+    "A1": {
+      "name": "Finding your weight",
+      "principle": "Rating how many reps you had left is a practical way to set the weight, so the first sessions start light and let each set's rating pick the next one. People tend to underestimate what's left by about a rep, which is why calibration aims a rep softer.",
+      "sources": [14, 15, 13]
+    },
+    "A2": {
+      "name": "Double progression",
+      "principle": "Reps climb inside a range; once you own the top of it, the weight goes up and the reps reset. It's the most reliable way to keep adding challenge without guessing.",
+      "sources": [2, 12]
+    },
+    "A3": {
+      "name": "Too easy: move faster",
+      "principle": "When every set lands at the top with plenty left, one small step would still be easy, so the weight jumps to what should land mid-range. Jumps stay within about 10% for newer lifters, in line with the classic 2–10% guidance.",
+      "sources": [2, 14]
+    },
+    "A4": {
+      "name": "Missed reps",
+      "principle": "For size, muscle grows across a wide range of weights as long as the sets are hard, so a slightly lighter weight with every set in range wins. For strength, the heavy weight itself is the stimulus, so the weight stays and the rep target drops a notch.",
+      "sources": [10, 11, 1]
+    },
+    "A5": {
+      "name": "Big equipment jumps",
+      "principle": "When the next weight on a machine is a big jump, adding reps first works too: progressing reps builds muscle about as well as progressing load, and the weight range for growth is wide.",
+      "sources": [12, 11]
+    },
+    "B1": {
+      "name": "Harder than expected",
+      "principle": "Adjusting the weight from how hard sets feel works about as well as fixed percentages, so a set that came out much harder than planned resets the rest to a weight that lands in range.",
+      "sources": [14, 16]
+    },
+    "B2": {
+      "name": "Easier than expected",
+      "principle": "A set at the top of the range with lots left means the planned weight is light today. One step up keeps the remaining sets close to the target effort.",
+      "sources": [14, 16]
+    },
+    "B3": {
+      "name": "Rest",
+      "principle": "Longer rests preserve reps across sets, and on heavy compound lifts around 2–3 minutes beats short rests for strength and size.",
+      "sources": [18, 19, 20, 21]
+    },
+    "C1": {
+      "name": "Lower readiness",
+      "principle": "Short sleep lowers performance by about 8% on average, and how you feel tracks training stress well. A lighter day is offered, never forced.",
+      "sources": [34, 35]
+    },
+    "C2": {
+      "name": "Very low readiness",
+      "principle": "On a really rough day, a short session of the key lifts keeps strength and the habit going at a fraction of the fatigue.",
+      "sources": [34, 29]
+    },
+    "D": {
+      "name": "Plateaus",
+      "principle": "When the same stimulus stops working, a planned change usually restarts progress: a lighter week if fatigue is the cause, a new rep range, or a close variation. Size and strength respond across many rep ranges, so a change costs little.",
+      "sources": [22, 10, 11, 17]
+    },
+    "E1": {
+      "name": "Weekly sets",
+      "principle": "Muscle growth rises with weekly hard sets, roughly 10 or more per muscle, with diminishing returns near 20. Counting sets per muscle keeps every muscle in a productive band.",
+      "sources": [1, 3, 4, 5]
+    },
+    "E3": {
+      "name": "Push and pull balance",
+      "principle": "Lifters who push much more than they pull often show shoulder strength imbalances. The link to shoulder problems is an association, not proven cause, so this is a low-priority suggestion.",
+      "sources": [40, 41]
+    },
+    "F2": {
+      "name": "Lighter weeks",
+      "principle": "A planned lighter week (fewer sets, lighter, easy effort) clears fatigue. Lifters report doing one about every 5–6 weeks; a full week off can cost strength, so it's lighter, not off.",
+      "sources": [22, 23, 24]
+    },
+    "G1": {
+      "name": "Missed sessions",
+      "principle": "Training each muscle at least twice a week matters more than the exact day, so a missed session can move rather than disappear.",
+      "sources": [1, 6]
+    },
+    "G2": {
+      "name": "Short on time",
+      "principle": "Keeping the big multi-joint lifts and pairing accessories as supersets roughly halves session time at similar volume.",
+      "sources": [36, 29]
+    },
+    "G3": {
+      "name": "Coming back",
+      "principle": "Strength fades first after a break and comes back fast: in one study, ten weeks off were made up in about five. Easing in costs almost nothing and avoids a week of soreness.",
+      "sources": [25, 26, 27]
+    },
+    "G4": {
+      "name": "Consistency",
+      "principle": "Progress comes from weeks stacked on weeks. A missed week is a restart, not a failure.",
+      "sources": [1]
+    },
+    "H3": {
+      "name": "Fat loss",
+      "principle": "In a calorie deficit strength is largely kept while muscle gains slow. Losing about 0.5–1% of body weight a week best protects muscle; keeping the weights heavy is what holds on to it.",
+      "sources": [28, 30, 31, 29]
+    },
+    "H3P": {
+      "name": "Protein",
+      "principle": "Gains from extra protein level off around 1.6 g per kg of body weight a day. Atlas doesn't track food; this is a once-a-month pointer.",
+      "sources": [43]
+    },
+    "J1": {
+      "name": "Pain",
+      "principle": "Training through an injury can make it worse. A lift that hurts gets swapped or lightened, and symptoms that persist deserve a professional's look.",
+      "sources": [42]
+    },
+    "T": {
+      "name": "Technique",
+      "principle": "Cues come from each exercise's own form notes. One cue at a time, rotated so the same one doesn't come back for a month.",
+      "sources": []
+    },
+    "K": {
+      "name": "Records",
+      "principle": "Estimated max uses the Epley formula with the reps you actually did; it's most accurate up to about 10 reps.",
+      "sources": [38, 39]
+    }
+  },
+  "sources": {
+    "1": { "short": "ACSM 2026", "cite": "Currier BS et al. ACSM Position Stand: Resistance Training Prescription for Muscle Function, Hypertrophy, and Physical Performance in Healthy Adults. Med Sci Sports Exerc. 2026;58(4):851–872.", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12965823" },
+    "2": { "short": "ACSM 2009", "cite": "Ratamess NA et al. ACSM Position Stand: Progression models in resistance training for healthy adults. Med Sci Sports Exerc. 2009;41(3):687–708." },
+    "3": { "short": "Pelland 2026", "cite": "Pelland JC et al. The Resistance Training Dose Response: Meta-Regressions Exploring the Effects of Weekly Volume and Frequency on Muscle Hypertrophy and Strength Gains. Sports Med. 2026;56(2):481–505." },
+    "4": { "short": "Schoenfeld 2017", "cite": "Schoenfeld BJ, Ogborn D, Krieger JW. Dose-response relationship between weekly resistance training volume and increases in muscle mass. J Sports Sci. 2017;35(11):1073–1082." },
+    "5": { "short": "Baz-Valle 2022", "cite": "Baz-Valle E et al. A Systematic Review of the Effects of Different Resistance Training Volumes on Muscle Hypertrophy. J Hum Kinet. 2022;81:199–210." },
+    "6": { "short": "Schoenfeld 2019", "cite": "Schoenfeld BJ, Grgic J, Krieger J. How many times per week should a muscle be trained to maximize muscle hypertrophy? J Sports Sci. 2019;37(11):1286–1295." },
+    "10": { "short": "Schoenfeld 2021", "cite": "Schoenfeld BJ et al. Loading Recommendations for Muscle Strength, Hypertrophy, and Local Endurance: A Re-Examination of the Repetition Continuum. Sports. 2021;9(2):32." },
+    "11": { "short": "Schoenfeld 2017b", "cite": "Schoenfeld BJ et al. Strength and hypertrophy adaptations between low- vs. high-load resistance training. J Strength Cond Res. 2017;31(12):3508–3523." },
+    "12": { "short": "Plotkin 2022", "cite": "Plotkin D et al. Progressive overload without progressing load? The effects of load or repetition progression on muscular adaptations. PeerJ. 2022;10:e14142." },
+    "13": { "short": "Halperin 2022", "cite": "Halperin I et al. Accuracy in Predicting Repetitions to Task Failure in Resistance Exercise. Sports Med. 2022;52(2):377–390." },
+    "14": { "short": "Helms 2016", "cite": "Helms ER et al. Application of the Repetitions in Reserve-Based Rating of Perceived Exertion Scale for Resistance Training. Strength Cond J. 2016;38(4):42–49." },
+    "15": { "short": "Zourdos 2016", "cite": "Zourdos MC et al. Novel Resistance Training–Specific Rating of Perceived Exertion Scale Measuring Repetitions in Reserve. J Strength Cond Res. 2016;30(1):267–275." },
+    "16": { "short": "Hickmott 2022", "cite": "Hickmott LM et al. The Effect of Load and Volume Autoregulation on Muscular Strength and Hypertrophy. Sports Med Open. 2022;8:9." },
+    "17": { "short": "Kassiano 2022", "cite": "Kassiano W et al. Does Varying Resistance Exercises Promote Superior Muscle Hypertrophy and Strength Gains? J Strength Cond Res. 2022;36(6):1753–1762." },
+    "18": { "short": "Schoenfeld 2016", "cite": "Schoenfeld BJ et al. Longer Interset Rest Periods Enhance Muscle Strength and Hypertrophy in Resistance-Trained Men. J Strength Cond Res. 2016;30(7):1805–1812." },
+    "19": { "short": "Grgic 2017", "cite": "Grgic J et al. The effects of short versus long inter-set rest intervals in resistance training on measures of muscle hypertrophy. Eur J Sport Sci. 2017;17(8):983–993." },
+    "20": { "short": "Singer 2024", "cite": "Singer A et al. Give it a rest: a systematic review with Bayesian meta-analysis on the effect of inter-set rest interval duration on muscle hypertrophy. Front Sports Act Living. 2024;6:1429789." },
+    "21": { "short": "Willardson 2006", "cite": "Willardson JM. A brief review: factors affecting the length of the rest interval between resistance exercise sets. J Strength Cond Res. 2006;20(4):978–984." },
+    "22": { "short": "Bell 2023", "cite": "Bell L et al. Integrating Deloading into Strength and Physique Sports Training Programmes: An International Delphi Consensus Approach. Sports Med Open. 2023;9:87." },
+    "23": { "short": "Rogerson 2024", "cite": "Rogerson D et al. Deloading Practices in Strength and Physique Sports: A Cross-sectional Survey. Sports Med Open. 2024;10:26." },
+    "24": { "short": "Coleman 2024", "cite": "Coleman M et al. Gaining more from doing less? The effects of a one-week deload period during supervised resistance training on muscular adaptations. PeerJ. 2024;12:e16777." },
+    "25": { "short": "Bosquet 2013", "cite": "Bosquet L et al. Effect of training cessation on muscular performance: a meta-analysis. Scand J Med Sci Sports. 2013;23(3):e140–e149." },
+    "26": { "short": "Halonen 2024", "cite": "Halonen EJ et al. Does Taking a Break Matter: Adaptations in Muscle Strength and Size Between Continuous and Periodic Resistance Training. Scand J Med Sci Sports. 2024;34(10):e14739." },
+    "27": { "short": "Seaborne 2018", "cite": "Seaborne RA et al. Human Skeletal Muscle Possesses an Epigenetic Memory of Hypertrophy. Sci Rep. 2018;8:1898." },
+    "28": { "short": "Murphy 2022", "cite": "Murphy C, Koehler K. Energy deficiency impairs resistance training gains in lean mass but not strength: a meta-analysis and meta-regression. Scand J Med Sci Sports. 2022;32(1):125–137." },
+    "29": { "short": "Spiering 2021", "cite": "Spiering BA et al. Maintaining Physical Performance: The Minimal Dose of Exercise Needed to Preserve Endurance and Strength Over Time. J Strength Cond Res. 2021;35(5):1449–1458." },
+    "30": { "short": "Helms 2014", "cite": "Helms ER, Aragon AA, Fitschen PJ. Evidence-based recommendations for natural bodybuilding contest preparation: nutrition and supplementation. J Int Soc Sports Nutr. 2014;11:20." },
+    "31": { "short": "Garthe 2011", "cite": "Garthe I et al. Effect of two different weight-loss rates on body composition and strength and power-related performance in elite athletes. Int J Sport Nutr Exerc Metab. 2011;21(2):97–104." },
+    "34": { "short": "Craven 2022", "cite": "Craven J et al. Effects of Acute Sleep Loss on Physical Performance: A Systematic and Meta-Analytical Review. Sports Med. 2022;52(11):2669–2690." },
+    "35": { "short": "Saw 2016", "cite": "Saw AE, Main LC, Gastin PB. Monitoring the athlete training response: subjective self-reported measures trump commonly used objective measures. Br J Sports Med. 2016;50(5):281–291." },
+    "36": { "short": "Iversen 2021", "cite": "Iversen VM et al. No Time to Lift? Designing Time-Efficient Training Programs for Strength and Hypertrophy. Sports Med. 2021;51(10):2079–2095." },
+    "38": { "short": "Reynolds 2006", "cite": "Reynolds JM, Gordon TJ, Robergs RA. Prediction of one repetition maximum strength from multiple repetition maximum testing and anthropometry. J Strength Cond Res. 2006;20(3):584–592." },
+    "39": { "short": "Epley 1985", "cite": "Epley B. Poundage Chart. Boyd Epley Workout, 1985." },
+    "40": { "short": "Kolber 2009", "cite": "Kolber MJ et al. Characteristics of shoulder impingement in the recreational weight-training population. J Strength Cond Res. 2009." },
+    "41": { "short": "Negrete 2013", "cite": "Negrete RJ et al. Upper body push and pull strength ratio in recreationally active adults. Int J Sports Phys Ther. 2013;8(2):138–144.", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3625793" },
+    "42": { "short": "NHS", "cite": "nidirect (NHS Northern Ireland). Sports injuries.", "url": "https://nidirect.gov.uk/conditions/sports-injuries" },
+    "43": { "short": "Morton 2018", "cite": "Morton RW et al. A systematic review, meta-analysis and meta-regression of the effect of protein supplementation on resistance training-induced gains in muscle mass and strength in healthy adults. Br J Sports Med. 2018;52(6):376–384." }
+  }
+}

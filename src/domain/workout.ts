@@ -13,6 +13,7 @@ import type {
   SetLog,
   SuggestionReason,
 } from '../db/types';
+import type { SessionPlan, SlotPlan } from '../coach/types';
 import { toISODate } from '../lib/format';
 import { newId } from '../lib/ids';
 import { PROGRAMMING, requireExercise } from './catalog';
@@ -179,18 +180,65 @@ export function prefill(session: Session, entryIndex: number, gym: Gym): { load:
   const done = workSets(entry);
   const target = entry.target;
   const middle = target ? Math.round((target.repsLow + target.repsHigh) / 2) : 10;
+  if (entry.nextSet) return entry.nextSet;
   const previous = done[done.length - 1];
   if (!previous) return { load: target?.load ?? null, reps: target?.firstReps ?? middle };
   if (target?.calibrating) return calibratedNext(entry, previous, gym);
-  // Otherwise the next set repeats the last one; changing it is the Coach's call (B1/B2, stage 4).
+  // Otherwise the next set repeats the last one; the Coach changes it only through a Use (B1/B2).
   return { load: previous.load, reps: previous.reps };
 }
 
 // ---------------------------------------------------------------- creating a session
 
-function entryFromSlot(slot: ProgramSlot, ctx: Context): ExerciseEntry {
+/**
+ * One exercise of a new session. The Coach's plan (if any) adjusts it: decided suggestions are
+ * applied, undecided ones ride along as an offer shown on the exercise, and lighter weeks or
+ * return ramps change sets, weight and effort automatically.
+ */
+function entryFromSlot(slot: ProgramSlot, ctx: Context, plan?: SlotPlan): ExerciseEntry {
   const exercise = requireExercise(slot.exerciseId);
   const suggestion = suggestFirstSet(slot.exerciseId, slot, ctx);
+  const target: NonNullable<ExerciseEntry['target']> = {
+    sets: slot.sets,
+    repsLow: slot.repsLow,
+    repsHigh: slot.repsHigh,
+    rir: calibrationRir(slot.rir, suggestion.calibrating),
+    load: suggestion.load,
+    firstReps: suggestion.reps,
+    restSec: slot.restSec,
+    reason: suggestion.reason,
+    calibrating: suggestion.calibrating || undefined,
+  };
+  let coachOffer: ExerciseEntry['coachOffer'];
+  if (plan?.beat !== undefined && suggestion.reason === 'history') target.firstReps = plan.beat;
+  const offer = plan?.offer;
+  if (offer?.decided === 'applied') {
+    Object.assign(target, {
+      load: offer.load,
+      repsLow: offer.repsLow,
+      repsHigh: offer.repsHigh,
+      rir: offer.rir ?? slot.rir,
+      firstReps: offer.beat ?? Math.round((offer.repsLow + offer.repsHigh) / 2),
+      reason: 'coach',
+      coachId: offer.recommendationId,
+      calibrating: undefined,
+    });
+  } else if (offer && !offer.decided) {
+    coachOffer = { recommendationId: offer.recommendationId, load: offer.load, repsLow: offer.repsLow, repsHigh: offer.repsHigh, swapTo: offer.swapTo };
+  }
+  const auto = plan?.auto;
+  if (auto) {
+    if (auto.sets !== undefined) target.sets = auto.sets;
+    if (auto.rir !== undefined) target.rir = auto.rir;
+    if (auto.repsLow !== undefined) target.repsLow = auto.repsLow;
+    if (auto.repsHigh !== undefined) target.repsHigh = auto.repsHigh;
+    if (auto.load !== undefined) {
+      target.load = auto.load;
+      target.firstReps = Math.round((target.repsLow + target.repsHigh) / 2);
+      target.reason = auto.reason === 'lighter-week' || auto.reason === 'return' ? auto.reason : 'coach';
+    }
+    if (auto.calibrate) target.calibrating = true;
+  }
   return {
     id: newId('ent'),
     slotId: slot.id,
@@ -198,18 +246,9 @@ function entryFromSlot(slot: ProgramSlot, ctx: Context): ExerciseEntry {
     equipmentId: loadSourceFor(exercise, ctx.gym)?.item.id,
     role: slot.role,
     superset: slot.superset,
-    target: {
-      sets: slot.sets,
-      repsLow: slot.repsLow,
-      repsHigh: slot.repsHigh,
-      rir: calibrationRir(slot.rir, suggestion.calibrating),
-      load: suggestion.load,
-      firstReps: suggestion.reps,
-      restSec: slot.restSec,
-      reason: suggestion.reason,
-      calibrating: suggestion.calibrating || undefined,
-    },
+    target,
     sets: [],
+    coachOffer,
   };
 }
 
@@ -221,10 +260,14 @@ export function createSession(input: {
   history: ExerciseHistory;
   now: number;
   readiness?: ReadinessCheck;
+  /** The Coach's plan for this session (coach/engine `planSession`). */
+  plan?: SessionPlan | null;
 }): Session {
-  const { program, day, gym, profile, history, now } = input;
+  const { program, gym, profile, history, now, plan } = input;
+  const day = plan?.day ?? input.day;
   const ctx = { gym, profile, history };
-  return {
+  const variant: Session['variant'] = plan?.variant ?? (plan?.lighterWeek ? 'lighter-week' : plan && plan.returnTier >= 2 ? 'return' : undefined);
+  let session: Session = {
     id: newId('ses'),
     date: toISODate(new Date(now)),
     status: 'active',
@@ -232,8 +275,9 @@ export function createSession(input: {
     programId: program.id,
     dayId: day.id,
     dayName: day.name,
+    variant: variant === 'cardio' ? undefined : variant,
     startedAt: now,
-    entries: day.slots.map((slot) => entryFromSlot(slot, ctx)),
+    entries: day.slots.map((slot) => entryFromSlot(slot, ctx, plan?.slots[slot.id])),
     cardio: [],
     extras: day.extras?.length ? day.extras.map((x) => ({ ...x })) : undefined,
     extrasDone: [],
@@ -241,6 +285,12 @@ export function createSession(input: {
     cursor: { entryIndex: 0, setIndex: 0 },
     updatedAt: now,
   };
+  // J1 · A swap chosen ahead of time ("Swap to …" on a pain card).
+  session.entries.forEach((entry, index) => {
+    const offer = plan?.slots[entry.slotId ?? '']?.offer;
+    if (offer?.decided === 'used' && offer.swapTo) session = swapEntry(session, index, offer.swapTo, ctx, now);
+  });
+  return { ...session, cursor: { entryIndex: 0, setIndex: 0 } };
 }
 
 /** A session with no lifting, for cardio on a rest day. */
@@ -351,7 +401,7 @@ export function logSet(
     restTakenSec: previousAt !== null ? Math.round((now - previousAt) / 1000) : undefined,
     at: now,
   };
-  let next = withEntry(session, entryIndex, { ...entry, sets: [...entry.sets, set] }, now);
+  let next = withEntry(session, entryIndex, { ...entry, sets: [...entry.sets, set], nextSet: undefined, coachOffer: undefined }, now);
   const nextIndex = nextEntryIndex(next, entryIndex);
   next = { ...next, cursor: cursorAt(next, nextIndex) };
 
@@ -393,6 +443,53 @@ export function deleteSet(session: Session, entryIndex: number, setId: string, n
   if (!entry) return session;
   const next = withEntry(session, entryIndex, { ...entry, sets: entry.sets.filter((s) => s.id !== setId) }, now);
   return { ...next, cursor: cursorAt(next, entryIndex) };
+}
+
+// ---------------------------------------------------------------- Coach offers in the workout
+
+/** "Use" on a Coach suggestion shown on an exercise before its first set. */
+export function useCoachOffer(session: Session, entryIndex: number, now: number): Session {
+  const entry = session.entries[entryIndex];
+  const offer = entry?.coachOffer;
+  if (!entry?.target || !offer) return session;
+  const target = {
+    ...entry.target,
+    load: offer.load,
+    repsLow: offer.repsLow,
+    repsHigh: offer.repsHigh,
+    firstReps: Math.round((offer.repsLow + offer.repsHigh) / 2),
+    reason: 'coach' as const,
+    coachId: offer.recommendationId,
+    calibrating: undefined,
+  };
+  const next = withEntry(session, entryIndex, { ...entry, target, coachOffer: undefined }, now);
+  return { ...next, coachApplied: [...(session.coachApplied ?? []), offer.recommendationId] };
+}
+
+/** "Keep" on a Coach suggestion: the plan stays as it was. */
+export function keepCoachOffer(session: Session, entryIndex: number, now: number): Session {
+  const entry = session.entries[entryIndex];
+  if (!entry?.coachOffer) return session;
+  return withEntry(session, entryIndex, { ...entry, coachOffer: undefined }, now);
+}
+
+/** "Use" on an in-session offer (B1/B2): the next set's weight and reps. */
+export function useNextSets(session: Session, entryIndex: number, next: { load: number | null; reps: number }, recId: string, now: number): Session {
+  const entry = session.entries[entryIndex];
+  if (!entry) return session;
+  const updated = withEntry(session, entryIndex, { ...entry, nextSet: next }, now);
+  return {
+    ...updated,
+    coachPrompts: [...new Set([...(session.coachPrompts ?? []), entry.id])],
+    coachApplied: [...(session.coachApplied ?? []), recId],
+  };
+}
+
+/** Marks an exercise as prompted (B1/B2 show at most once per exercise per session). */
+export function markPrompted(session: Session, entryIndex: number, now: number): Session {
+  const entry = session.entries[entryIndex];
+  if (!entry || session.coachPrompts?.includes(entry.id)) return session;
+  return { ...session, coachPrompts: [...(session.coachPrompts ?? []), entry.id], updatedAt: now };
 }
 
 export function setEntryNote(session: Session, entryIndex: number, note: string, now: number): Session {

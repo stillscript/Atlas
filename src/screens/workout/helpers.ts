@@ -123,6 +123,12 @@ export function reasonLine(entry: ExerciseEntry, history: ExerciseHistory, sessi
       const from = entry.swappedFromExerciseId ? requireExercise(entry.swappedFromExerciseId).name : 'the original exercise';
       return `A careful estimate from ${from}. Rate set 1 and Atlas adjusts.`;
     }
+    case 'coach':
+      return lastText ? `${lastText}. Today's weight is the Coach's.` : "Today's weight is the Coach's.";
+    case 'lighter-week':
+      return 'Lighter week: fewer sets, about 10% lighter, stopping 3 or more reps short.';
+    case 'return':
+      return t.calibrating ? 'Back after a long break: start light and rate each set.' : 'Easing back in after your break, a little lighter than before.';
     default:
       return lastText;
   }

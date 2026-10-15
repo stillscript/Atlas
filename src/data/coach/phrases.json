@@ -1,0 +1,403 @@
+{
+  "_about": "Coach wording. Each message is composed from interchangeable parts: a title, an evidence sentence and an action sentence. The renderer picks one of each, avoiding the parts used in your last 5 messages of the same kind, and keeps the same phrasing for the same insight once shown. Placeholders: {fact}, {fact|one|many} for plurals, {fact:clock} for seconds as m:ss. {unit} is lb or kg. Every message carries at least one of your numbers, except safety lines.",
+  "confidence": { "low": "Early read", "medium": "Fairly sure", "high": "Confident" },
+  "basis": "{basis|session|sessions}",
+  "basisWeeks": "{basis|week|weeks} of data",
+  "fragments": {
+    "creep": "{creep} felt harder at the same weights",
+    "dip": "your estimated max dipped on {dipCount} lifts",
+    "readinessLow": "your check-ins were low on most recent days",
+    "checkoutLow": "you logged a rough session or low energy more than once lately",
+    "pain": "pain came up on {painCount} lifts"
+  },
+  "messages": {
+    "A1.found": {
+      "title": ["Found it: {found} {unit} for {foundReps} on {exercise}", "{exercise}: {found} {unit} is your starting weight", "Your {exercise} weight is set: {found} {unit}"],
+      "body": [
+        "Your sets went {lastSets} at {lastLoad} {unit}.",
+        "That's {lastSets} at {lastLoad} {unit} on your first session.",
+        "First session done: {lastSets} at {lastLoad} {unit}."
+      ],
+      "action": ["Next time, same weight, aiming for {beat} reps a set.", "We'll build from here: beat {beat} reps next time.", "Stay at {to} {unit} and push for {beat}s."]
+    },
+    "A2.beat": {
+      "title": ["{exercise}: {lastLoad} {unit} again, aim for {beat}s", "Same {lastLoad} {unit} on {exercise}, beat {beat}", "{exercise} stays at {lastLoad} {unit} for now", "Next {exercise} target: {beat} reps at {lastLoad} {unit}"],
+      "body": [
+        "Last time you got {lastSets} in a {range} range.",
+        "You did {lastSets} on {lastDay}; the range is {range}.",
+        "{lastSets} last session, so there's room before the top of {range}.",
+        "Reps went {lastSets}. Once every set reaches {repsHigh}, the weight goes up."
+      ],
+      "action": ["Add a rep where you can.", "One more rep on any set counts as progress.", "Reps first, then weight.", ""]
+    },
+    "A2.beat.beginner": {
+      "title": ["Beat {lastLoad} {unit} × {beat} on {exercise}", "{exercise}: one number to beat, {lastLoad} × {beat}", "Next {exercise}: {lastLoad} {unit} for {beat}"],
+      "body": ["Last time: {lastSets}.", "You did {lastSets} on {lastDay}.", "Your sets went {lastSets}."],
+      "action": ["Hit {repsHigh} on every set and the weight goes up.", "Same weight, one more rep.", ""]
+    },
+    "A2.bw-beat": {
+      "title": ["{exercise}: aim for {beat} reps", "Beat {beat} on {exercise}", "{exercise} target: {beat} a set"],
+      "body": ["Last time: {lastSets}.", "You did {lastSets} on {lastDay}.", "{lastSets} last session."],
+      "action": ["Clean reps only; stop when form slips.", "One more rep is progress.", ""]
+    },
+    "A2.up": {
+      "title": ["{exercise}: {lastLoad} → {to} {unit}", "{exercise} goes to {to} {unit}", "Time to move up on {exercise}: {to} {unit}", "{exercise} gets heavier: {to} {unit}", "Up to {to} {unit} on {exercise}"],
+      "body": [
+        "You owned {lastLoad} {unit} on {lastDay}: {lastSets}, the top of your {range} range.",
+        "{lastSets} at {lastLoad} {unit} means the range is done.",
+        "Last session's {lastLoad} × {lastSets} was the top of {range}.",
+        "Every set hit {repsHigh} at {lastLoad} {unit} with reps to spare.",
+        "{lastSets} at {lastLoad} {unit}: that's the whole {range} range."
+      ],
+      "action": ["Expect {expectLow}–{expectHigh} reps at the new weight.", "Aim for {repsLow}+ and build back up.", "Reps reset to {repsLow}; climb from there.", "Start at {repsLow} reps and work back to {repsHigh}."]
+    },
+    "A2.up.beginner": {
+      "title": ["{exercise}: up to {to} {unit}", "{exercise} goes to {to} {unit}"],
+      "body": ["You beat {lastLoad} {unit} × {repsHigh}: {lastSets}.", "{lastSets} at {lastLoad} {unit}. That's the target done."],
+      "action": ["New number to beat: {to} × {repsLow}.", "Aim for {repsLow} reps at the new weight."]
+    },
+    "A2.found-up": {
+      "title": ["{exercise}: found it, and it's light, so {to} {unit} next", "{exercise} moves to {to} {unit} already"],
+      "body": ["Your first session ended at {lastLoad} {unit} with {lastSets}, the top of {range}.", "First session: {lastSets} at {lastLoad} {unit}."],
+      "action": ["Aim for {repsLow}+ next time.", "Expect {expectLow}–{expectHigh} reps."]
+    },
+    "A2.hold-hard": {
+      "title": ["{exercise}: hold {lastLoad} {unit} once more", "{exercise} stays at {lastLoad} {unit}", "One more session at {lastLoad} {unit} on {exercise}"],
+      "body": [
+        "You hit {lastSets}, the top of {range}, but it took more than the plan's effort.",
+        "{lastSets} at {lastLoad} {unit} reached the top, closer to your limit than planned.",
+        "The reps were there ({lastSets}), the effort was a notch too high."
+      ],
+      "action": ["Same reps, a little more comfortably, then it goes up.", "Own it at this weight and it moves next time.", "Aim for the same {repsHigh}s with a rep or two left."]
+    },
+    "A3.skip": {
+      "title": ["{exercise} jumps to {to} {unit}", "{exercise}: skipping ahead to {to} {unit}", "Bigger step on {exercise}: {lastLoad} → {to} {unit}"],
+      "body": [
+        "{lastSets} at {lastLoad} {unit} with plenty left every set.",
+        "Every set hit {repsHigh} at {lastLoad} {unit} and still felt easy.",
+        "Your estimated max jumped: {lastSets} at {lastLoad} {unit}."
+      ],
+      "action": ["One step would still be easy, so this is {steps|step|steps} up.", "Expect the middle of {range} at the new weight.", "It should land mid-range with a couple of reps left."]
+    },
+    "A3.push": {
+      "title": ["{exercise}: same {lastLoad} {unit}, push to {repsHigh}", "Push {exercise} to {repsHigh} reps", "{exercise} has more in it: {repsHigh}s at {lastLoad} {unit}"],
+      "body": ["You stopped at {lastSets} with 4 or more left each set.", "{lastSets} at {lastLoad} {unit}, and plenty in the tank.", "Every set ended with 4+ reps left."],
+      "action": ["Keep going until about 2 are left.", "Use the whole {range} range before adding weight.", ""]
+    },
+    "A4.small": {
+      "title": ["{exercise}: stay at {lastLoad} {unit}", "Keep {lastLoad} {unit} on {exercise}", "{exercise} holds at {lastLoad} {unit}"],
+      "body": ["Only the last set came up short: {lastSets}.", "{lastSets}, a small miss at the end.", "Close: {lastSets} against a {range} target."],
+      "action": ["Same target; it'll consolidate.", "Repeat it and the reps will come.", "Same weight, same target."]
+    },
+    "A4.lower": {
+      "title": ["{exercise}: {lastLoad} → {to} {unit} next time", "{exercise} comes down to {to} {unit}", "Lighter {exercise}: {to} {unit}, same {range} target"],
+      "body": [
+        "You got {lastSets} at {lastLoad} {unit}, below the {range} range.",
+        "{lastSets} at {lastLoad} {unit} missed the bottom of {range}.",
+        "The reps fell short at {lastLoad} {unit}: {lastSets}."
+      ],
+      "action": [
+        "A slightly lighter weight keeps every set in range, and muscle grows across a wide range of weights as long as sets are hard.",
+        "Quality reps in range beat grinding misses.",
+        "Every set in range at {to} {unit} does more than missed reps at {lastLoad}."
+      ]
+    },
+    "A4.second": {
+      "title": ["{exercise}: down to {to} {unit}", "Two misses in a row on {exercise}: {to} {unit} next"],
+      "body": ["{lastSets} at {lastLoad} {unit}, short of {range} again.", "Second session in a row below {range} at {lastLoad} {unit}."],
+      "action": ["Reset lower and build back.", "Rebuild from {to} {unit}."]
+    },
+    "A4.strength": {
+      "title": ["Keep {lastLoad} {unit} on {exercise}, aim for {newRange}", "{exercise}: same weight, {newRange} reps for two sessions"],
+      "body": ["You hit {lastSets}: the weight is right for strength work (about {pctMax}% of your estimated max), the rep target was a notch high.", "{lastSets} at {lastLoad} {unit} is heavy, near {pctMax}% of your estimated max."],
+      "action": ["Then we build back to {range}.", "Two sessions at {newRange}, then back up."]
+    },
+    "A4.strength-again": {
+      "title": ["{exercise}: one more at {newRange}", "{exercise} stays at {newRange} reps once more"],
+      "body": ["Last time at {lastLoad} {unit}: {lastSets}.", "{lastSets} at the lower target."],
+      "action": ["After this, back to {range}.", "Then the range builds back up."]
+    },
+    "A4.fatigue-day": {
+      "title": ["{exercise}: {lastLoad} {unit} again", "No change on {exercise}: {lastLoad} {unit}"],
+      "body": ["Most lifts came up short that day, which points to fatigue, not the weights.", "{lastSets} on a day when several lifts were down."],
+      "action": ["Same plan next time.", "Let's see it on a fresher day."]
+    },
+    "A5.stretch": {
+      "title": ["{exercise}: stay at {lastLoad} {unit}, go for {beat}", "More reps first on {exercise}", "{exercise}: {lastLoad} {unit} until you get {stretchTo}"],
+      "body": [
+        "The next weight is {next} {unit}, a big jump from {lastLoad}.",
+        "{lastSets} at {lastLoad} {unit}, and {next} is a big step up on this equipment.",
+        "The jump to {next} {unit} is too big to take yet."
+      ],
+      "action": ["Reach {stretchTo} clean reps, then jump.", "Once you get {stretchTo} reps, the weight goes up.", "Reps first, then the bigger weight."]
+    },
+    "A5.jump": {
+      "title": ["{exercise}: time for {to} {unit}", "{exercise} jumps to {to} {unit}"],
+      "body": ["You stretched it to {lastSets} at {lastLoad} {unit}.", "{lastSets} at {lastLoad} {unit}: enough to take the bigger step."],
+      "action": ["Reps reset to {repsLow}.", "Aim for {repsLow}+ at the new weight."]
+    },
+    "A5.maxed": {
+      "title": ["{exercise} is at the top of the stack: {lastLoad} {unit}", "{exercise}: {lastLoad} {unit} is as heavy as it goes"],
+      "body": ["{lastSets} at {lastLoad} {unit}.", "No heavier option on this equipment."],
+      "action": ["Add reps, slow the lowering, or try a harder variation.", "Keep adding reps up to {beat}."]
+    },
+    "held.fatigue": {
+      "title": ["{exercise}: hold {lastLoad} {unit} this week", "No weight increase on {exercise} this week: {lastLoad} {unit}"],
+      "body": ["{lastSets} last time would normally move it up.", "You're ready to move up ({lastSets}), but recovery looks a bit low."],
+      "action": ["Holding this week while recovery catches up.", "It goes up once things settle."]
+    },
+    "held.return": {
+      "title": ["{exercise}: {lastLoad} {unit}, no increase today", "{exercise} stays at {lastLoad} {unit} after the break"],
+      "body": ["First session back after a short break.", "Easing back in: {lastSets} last time."],
+      "action": ["Increases resume next session.", "Back to normal from next time."]
+    },
+    "held.pain-area": {
+      "title": ["{exercise}: holding at {lastLoad} {unit}", "No increase on {exercise} for now: {lastLoad} {unit}"],
+      "body": ["This lift loads an area you've flagged more than once.", "You've reported pain in an area this lift uses."],
+      "action": ["Progress pauses until it settles.", "We'll move it up once that area is quiet."]
+    },
+    "held.readiness": {
+      "title": ["{exercise}: {lastLoad} {unit} today", "No increase on {exercise} today: {lastLoad} {unit}"],
+      "body": ["Lighter day after your check-in.", "Today is a lighter day."],
+      "action": ["Increases resume next time.", ""]
+    },
+    "D.range-reset": {
+      "title": ["{exercise}: {to} {unit} for the new {range} range", "New range on {exercise}: {to} {unit} for {range}"],
+      "body": ["Reset from your estimated max after moving from {oldRange}.", "Worked out from your recent sets at {oldRange}."],
+      "action": ["Rate the first set and Atlas adjusts.", ""]
+    },
+    "J1.lighter": {
+      "title": ["{exercise}: lighter next time, {to} {unit}", "Go easy on {exercise}: {to} {unit}"],
+      "body": ["You flagged pain on it last time.", "Pain came up on {exercise} on {lastDay}."],
+      "action": ["Stop 3+ reps short and only use a range that doesn't hurt. If it hasn't improved in a week or two, or it's sharp, swollen or getting worse, see a doctor or physio."]
+    },
+    "J1.swap": {
+      "title": ["{exercise} hurt last time: try {swap}", "Swap {exercise} for {swap} next time"],
+      "body": ["You flagged pain on {exercise} on {lastDay}.", "Pain came up on it last session."],
+      "action": ["{swap} loads it differently. Or keep {exercise} at {to} {unit}, stopping 3+ reps short in a pain-free range. If it hasn't improved in a week or two, or it's sharp, swollen or getting worse, see a doctor or physio."]
+    },
+    "J1.repeat": {
+      "title": ["Your {area} has hurt in more than one session"],
+      "body": ["Progress pauses on lifts that load your {area}."],
+      "action": ["Stop any exercise that hurts. If it hasn't improved in a week or two, or it's sharp, swollen or getting worse, please see a doctor or physio."]
+    },
+    "B1.lower": {
+      "title": ["Next {remaining|set|sets}: {to} {unit} for {range}", "Drop to {to} {unit} for the rest", "{exercise}: {to} {unit} from here"],
+      "body": ["That set was much harder than planned: {reps} at {load} {unit} with {rir} left.", "{reps} reps at {load} {unit}, harder than expected.", "{load} × {reps} came in well below your usual."],
+      "action": ["", "It keeps the remaining sets in range."]
+    },
+    "B2.up": {
+      "title": ["Next set: {to} {unit}", "Go up to {to} {unit}", "{exercise}: try {to} {unit} next"],
+      "body": ["{reps} at {load} {unit} with {rir} left is lighter than planned.", "That was easy: {load} × {reps} with {rir} in the tank.", "{reps} reps and {rir} still left at {load} {unit}."],
+      "action": ["", "Keep the reps in range."]
+    },
+    "B2.reps": {
+      "title": ["Next set: go for {toReps}", "Aim for {toReps} reps next set"],
+      "body": ["{reps} at {load} {unit} with {rir} left.", "That set had plenty left: {load} × {reps}."],
+      "action": ["Same weight, two more reps.", ""]
+    },
+    "B3.session": {
+      "title": ["Rests on {exercise} ran short", "Take the full rest on {exercise}"],
+      "body": ["You rested about {taken:clock} between sets; the plan is {planned:clock}.", "Average rest was {taken:clock} against {planned:clock} planned."],
+      "action": ["Longer rests keep your reps up on heavy lifts.", "Full rests protect the later sets."]
+    },
+    "C1.answers": {
+      "title": ["Lighter day?", "Rough start today: a lighter version?"],
+      "body": ["Sleep {sleep}, energy {energy}, {soreness}.", "Your check-in: sleep {sleep}, energy {energy}."],
+      "action": ["Same exercises, one fewer set each, no weight increases today. Your call."]
+    },
+    "C1.wearable": {
+      "title": ["Lighter day?"],
+      "body": ["Your readiness score of {wearable} is low for you."],
+      "action": ["Same exercises, one fewer set each, no weight increases today. Your call."]
+    },
+    "C2.short": {
+      "title": ["A short version today?", "Low on everything: a 30-minute version?"],
+      "body": ["Sleep {sleep}, energy {energy}, {soreness}.", "All three check-in answers are low."],
+      "action": ["Key lifts only, about 30 minutes. Or easy cardio. Never forced."]
+    },
+    "D.technique": {
+      "title": ["{exercise} has held at about {e1rm} {unit} for {sessions} sessions"],
+      "body": ["Before changing anything, one form check.", "First, a technique check."],
+      "action": ["Next time: {cue}. Slow the lowering to about 3 seconds.", "Focus on this next session: {cue}."]
+    },
+    "D.lighter": {
+      "title": ["{exercise} has stalled at about {e1rm} {unit}", "{exercise}: no progress in {sessions} sessions"],
+      "body": ["Recovery signals are up too, and a plateau is often fatigue.", "With fatigue signs showing, the stall is likely tiredness."],
+      "action": ["Take your lighter week now, then push again.", "A lighter week first usually restarts progress."]
+    },
+    "D.range": {
+      "title": ["{exercise} has stalled at about {e1rm} {unit} for {sessions} sessions", "{exercise}: time for a new rep range"],
+      "body": ["You've trained {range} for a long stretch.", "The same {range} stimulus has stopped moving it."],
+      "action": ["For the next {weeks} weeks: {newRange} reps at about {newLoad} {unit}, then back to heavier sets fresher.", "Switch to {newRange} reps for a block; the weight resets from your estimated max."]
+    },
+    "D.swap": {
+      "title": ["{exercise} has stalled at about {e1rm} {unit}", "{exercise}: try {swap} for a block"],
+      "body": ["No new best in {sessions} sessions.", "Stuck for {sessions} sessions at a similar weight."],
+      "action": ["Swap to {swap} for a few weeks; your {exercise} history stays.", "A close variation often restarts progress."]
+    },
+    "D.sets-up": {
+      "title": ["{exercise}: one more set", "{exercise} goes from {from} to {to} sets"],
+      "body": ["It's stalled at about {e1rm} {unit}, and {muscle} is below its weekly target.", "Stalled for {sessions} sessions with {muscle} under-trained."],
+      "action": ["More weekly work for {muscle}.", ""]
+    },
+    "D.sets-down": {
+      "title": ["{exercise}: one fewer set", "{exercise} goes from {from} to {to} sets"],
+      "body": ["It's stalled at about {e1rm} {unit}, and {muscle} is above its weekly target.", "Stalled for {sessions} sessions with plenty of {muscle} work already."],
+      "action": ["Less volume often helps a stalled lift recover.", ""]
+    },
+    "E1.below": {
+      "title": ["{muscle}: {planned} sets a week, below {low}", "More {muscle} work: {exercise} to {to} sets"],
+      "body": ["Your plan gives {muscle} {planned} weekly sets; the target is {low}–{high}.", "{muscle} is at {planned} sets a week against {low}–{high}."],
+      "action": ["Add a set to {exercise} on {day} ({from} → {to}).", "{exercise} on {day} goes from {from} to {to} sets."]
+    },
+    "E1.above": {
+      "title": ["{muscle}: {planned} sets a week, above {high}", "Trim {muscle} work: {exercise} to {to} sets"],
+      "body": ["{muscle} gets {planned} weekly sets; the useful range is {low}–{high}.", "That's more {muscle} volume than recovery can use right now."],
+      "action": ["{exercise} on {day} goes from {from} to {to} sets.", "One set less on {exercise} ({day})."]
+    },
+    "E3.pull": {
+      "title": ["More pulling: {exercise} to {to} sets", "Balance push and pull"],
+      "body": ["Your week has {push} pushing sets and {pull} pulling sets.", "Pushing sets ({push}) outnumber pulling ({pull})."],
+      "action": ["Add a set to {exercise} on {day}. Low priority.", "One more set of {exercise} ({day})."]
+    },
+    "F2.scheduled": {
+      "title": ["Lighter week", "This is your lighter week"],
+      "body": ["After {weeks} weeks of training, this week eases off.", "It's planned every few weeks to clear fatigue."],
+      "action": ["Same exercises, about {setsCut}% fewer sets, about {lighter}% lighter, stopping 3–4 reps short. Feeling fresh? You can push it back a week, once."]
+    },
+    "F2.early": {
+      "title": ["Take your lighter week now", "Lighter week, {weeksEarly|week|weeks} early"],
+      "body": ["{signalsText}.", "Signs line up: {signalsText}."],
+      "action": ["Same exercises, about {setsCut}% fewer sets, about {lighter}% lighter, stopping 3–4 reps short. Then back to normal fresher."]
+    },
+    "F2.hold": {
+      "title": ["No weight increases this week", "Holding weights this week"],
+      "body": ["One sign of fatigue in the last 14 days: {signalsText}.", "Over the last 14 days, {signalsText}."],
+      "action": ["Lighter days are welcome. Progress picks up once it settles.", "If it keeps up, a lighter week comes next."]
+    },
+    "G1.rest-day": {
+      "title": ["Missed {day} on {weekday}?", "{day} from {weekday} is still open"],
+      "body": ["Today's a rest day, so there's room for it.", "You can do it today."],
+      "action": ["Do it today, or skip it and carry on."]
+    },
+    "G1.busy-day": {
+      "title": ["{day} from {weekday} is still open"],
+      "body": ["Today is {today}."],
+      "action": ["Do {day} today instead and shift the week, or skip it."]
+    },
+    "G3.tier1-first": {
+      "title": ["Welcome back. It's been {days|day|days}."],
+      "body": ["A short break barely dents strength."],
+      "action": ["Today runs as planned, without weight increases."]
+    },
+    "G3.tier2-first": {
+      "title": ["Welcome back. It's been {days|day|days}."],
+      "body": ["Strength returns fast after a break, so easing in costs almost nothing and saves a week of soreness."],
+      "action": ["Today runs about {percent}% of your usual weights, one set fewer per exercise, stopping {rir} short. Next session about 95%."]
+    },
+    "G3.tier2-ramp": {
+      "title": ["Session {session} back: about {percent}%"],
+      "body": ["Almost back to your usual weights."],
+      "action": ["Then we're back on plan."]
+    },
+    "G3.tier3-first": {
+      "title": ["Welcome back. It's been {days|day|days}."],
+      "body": ["Strength comes back quickly; in one study, ten weeks off were made up in about five."],
+      "action": ["Today runs about {percent}% of your usual weights, one set fewer, stopping {rir} short. About 5% more each session after that."]
+    },
+    "G3.tier3-ramp": {
+      "title": ["Session {session} back: about {percent}%"],
+      "body": ["Building back up from the break."],
+      "action": ["About 5% more each session until you're back on plan."]
+    },
+    "G3.tier4-first": {
+      "title": ["Welcome back. It's been {days|day|days}."],
+      "body": ["After a long break, we'll find your weights again, starting from about {percent}% of your old numbers."],
+      "action": ["Rate each set and Atlas sets the next one. Back to normal in about 3 weeks."]
+    },
+    "G3.tier4-ramp": {
+      "title": ["Session {session} back: about {percent}%"],
+      "body": ["Rebuilding from your old numbers."],
+      "action": ["Steady steps back up."]
+    },
+    "G4.week": {
+      "title": ["{done} of {planned} this week", "Week so far: {done} of {planned}"],
+      "body": ["{left|session|sessions} to go.", "{left} more and the week is done."],
+      "action": [""]
+    },
+    "G4.week-done": {
+      "title": ["Week done: {done} of {planned}", "All {planned} sessions this week"],
+      "body": ["Every planned session, done.", "That's the whole week."],
+      "action": [""]
+    },
+    "H3.fast": {
+      "title": ["Your weight is dropping about {pct}% a week"],
+      "body": ["That's faster than the 0.5–1% range that best protects muscle, for {weeks} weeks now."],
+      "action": ["Training stays the same; you might ease the deficit a little. Your call."]
+    },
+    "H3.flat": {
+      "title": ["Weight steady at about {weight} {unit} for {weeks} weeks"],
+      "body": ["Just so you know; nothing changes in training."],
+      "action": [""]
+    },
+    "H3P.tip": {
+      "title": ["Protein: about {grams} g a day"],
+      "body": ["At {weight} {unit}, that's around 1.6 g per kg, where research sees the benefit level off."],
+      "action": ["Atlas doesn't track food; this is a once-a-month pointer."]
+    },
+    "T.cue": {
+      "title": ["First {exercise} done", "{exercise}: one thing for next time", "A cue for {exercise}"],
+      "body": ["{cue}.", "Next time, focus on this: {cue}."],
+      "action": [""]
+    },
+    "K.trend": {
+      "title": ["{exercise}: up {gain} {unit} in {weeks|week|weeks}", "{exercise} keeps climbing"],
+      "body": ["Your estimated max went from {from} to {to} {unit}.", "Estimated max {from} → {to} {unit} over {weeks|week|weeks}."],
+      "action": [""]
+    }
+  },
+  "again": {
+    "A2.beat": ["Still at {lastLoad} {unit}: "],
+    "A5.stretch": ["Still building reps: "],
+    "D.range": ["Still stuck, so this time: "],
+    "D.swap": ["Still stuck, so this time: "]
+  },
+  "wins": {
+    "pr-max": {
+      "title": ["New best: {exercise} {load} × {reps}", "{exercise} record: {load} {unit} × {reps}", "Best {exercise} yet: {load} × {reps}"],
+      "body": ["That's an estimated {e1rm} {unit} max, up from {previous}.", "Estimated max {e1rm} {unit} (was {previous}).", "Up {gain} {unit} in estimated max since {since}."]
+    },
+    "pr-load": {
+      "title": ["Heaviest {exercise} yet: {load} {unit}", "{exercise}: {load} {unit}, a new top weight"],
+      "body": ["{reps} reps at it. Your previous top was {previous} {unit}.", "Previous heaviest: {previous} {unit}."]
+    },
+    "pr-reps": {
+      "title": ["Rep record: {exercise} {load} × {reps}", "{reps} reps at {load} {unit} on {exercise}"],
+      "body": ["Your best at that weight was {previous}.", "Previously {previous} at {load} {unit}."]
+    },
+    "streak": {
+      "title": ["{weeks} weeks, every planned session", "{weeks}-week streak"],
+      "body": ["Consistency is what makes the rest work.", "Week after week."]
+    },
+    "trend": {
+      "title": ["{exercise}: +{gain} {unit} in {weeks|week|weeks}"],
+      "body": ["Estimated max {from} → {to} {unit}."]
+    },
+    "fat-loss": {
+      "title": ["Down {lost} {unit} in {weeks} weeks, strength holding"],
+      "body": ["About {pct}% a week, and {lifts} haven't budged. That's what a good cut looks like."]
+    },
+    "comeback": {
+      "title": ["Back to your pre-break {exercise}: {e1rm} {unit}"],
+      "body": ["Your estimated max is where it was before the break."]
+    },
+    "all-done": {
+      "title": ["Week complete: {sessions} of {sessions}", "Every session this week"],
+      "body": ["{streak|week|weeks} in a row now.", "Streak: {streak|week|weeks}."]
+    }
+  },
+  "rest": {
+    "advice": "Reps dropped by {dropped} after a {restTaken:clock} rest. Take the full {seconds:clock} before the next set."
+  }
+}

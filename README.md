@@ -3,7 +3,7 @@
 A strength training app for iPhone (and any modern phone) with a built-in coach that learns from
 every set. It installs to the Home Screen, works fully offline, and keeps all data on the phone.
 
-> Status: in development. Setup, Today, the plan view and workouts work; the Coach, progress
+> Status: in development. Setup, Today, the plan view, workouts and the Coach work; progress
 > tracking and plan editing are next. See `CLAUDE.md` for the architecture and roadmap.
 
 ## Use it

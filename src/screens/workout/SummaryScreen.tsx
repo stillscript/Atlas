@@ -1,8 +1,10 @@
+import { reviewFor } from '../../app/coach';
 import { navigate } from '../../app/router';
 import { activeGym } from '../../app/state';
-import { exerciseHistory, pastSessions } from '../../app/workout';
+import { pastSessions } from '../../app/workout';
 import { requireExercise } from '../../domain/catalog';
-import { detectRecords, summarize, workSets } from '../../domain/workout';
+import { summarize, workSets } from '../../domain/workout';
+import { CoachCard, WinCard } from '../coach/CoachCard';
 import { formatLongDate } from '../../lib/format';
 import { Button } from '../../ui/controls';
 import { EmptyState } from '../../ui/feedback';
@@ -29,7 +31,7 @@ export function SummaryScreen({ sessionId }: { sessionId: string }) {
   }
 
   const stats = summarize(session);
-  const records = detectRecords(session, exerciseHistory.value);
+  const review = reviewFor(session.id);
   const trained = session.entries.filter((e) => workSets(e).length > 0);
 
   return (
@@ -63,27 +65,23 @@ export function SummaryScreen({ sessionId }: { sessionId: string }) {
         )}
       </div>
 
-      {records.length > 0 && (
-        <section class="records" aria-label="New records">
-          {records.map((record) => {
-            const ctx = loadContext({ exerciseId: record.exerciseId }, gym);
-            return (
-              <div key={record.exerciseId} class="record">
-                <span class="record-icon">
-                  <Icon name="trophy" size={22} />
-                </span>
-                <div>
-                  <p class="record-title">New best: {ctx.exercise.name}</p>
-                  <p class="record-detail num">
-                    {setText(record.set, ctx, true)}
-                    {record.kind === 'heaviest'
-                      ? ` · heaviest yet (was ${record.previous})`
-                      : ` · estimated max ${record.value} (was ${record.previous})`}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
+      {review && review.wins.length > 0 && (
+        <section class="records" aria-label="Wins">
+          {review.wins.map((win) => (
+            <WinCard key={win.id} win={win} />
+          ))}
+        </section>
+      )}
+
+      {review && (review.next.length > 0 || review.insight) && (
+        <section class="summary-coach" aria-label="Coach">
+          <p class="ex-section-title">Next time</p>
+          <div class="coach-stack">
+            {review.next.map((rec) => (
+              <CoachCard key={rec.id} rec={rec} compact />
+            ))}
+            {review.insight && <CoachCard rec={review.insight} compact />}
+          </div>
         </section>
       )}
 

@@ -31,6 +31,7 @@ import {
   useNow,
   type LoadContext,
 } from './helpers';
+import { EntryCoach, SetCoach } from './WorkoutCoach';
 import { WorkoutSheets, type OpenSheet } from './WorkoutSheets';
 import './workout.css';
 
@@ -101,7 +102,7 @@ function Workout({ session, gym }: { session: Session; gym: Gym }) {
           ) : (
             <SetLogger
               // A new set, a swap or a rating (which moves calibration) re-fills the dials.
-              key={`${entry.id}:${entry.sets.length}:${entry.target?.load ?? ''}:${entry.sets[entry.sets.length - 1]?.rir ?? ''}`}
+              key={`${entry.id}:${entry.sets.length}:${entry.target?.load ?? ''}:${entry.sets[entry.sets.length - 1]?.rir ?? ''}:${entry.nextSet?.load ?? ''}:${entry.nextSet?.reps ?? ''}`}
               session={session}
               index={index}
               entry={entry}
@@ -223,6 +224,7 @@ function EntryView({ session, index, entry, gym, onOpen }: EntryViewProps) {
 
       <MachineCard entry={entry} gym={gym} ctx={ctx} onEdit={() => onOpen({ kind: 'machine' })} onVerify={() => onOpen({ kind: 'verify' })} />
 
+      <EntryCoach session={session} index={index} entry={entry} gym={gym} />
       {reason && <p class="wo-reason">{reason}</p>}
       {entry.notes && (
         <p class="wo-note">
@@ -352,9 +354,11 @@ function SetLogger({ session, index, entry, gym }: { session: Session; index: nu
     void changeSession((s, now) => logSet(s, index, { load: stored, reps }, now));
   };
 
+  const latest = latestSet(session);
   return (
     <div class="logger">
       {unrated && <RateStrip session={session} target={unrated} gym={gym} compact />}
+      {latest?.entryIndex === index && <SetCoach session={session} entryIndex={index} />}
       <div class={hasLoad ? 'logger-dials' : 'logger-dials is-single'}>
         {hasLoad && (
           <Dial
@@ -502,6 +506,7 @@ function RestPanel({ session, gym, now }: { session: Session; gym: Gym; now: num
         <span style={{ transform: `scaleX(${fraction})` }} />
       </div>
       {latest && <RateStrip session={session} target={latest} gym={gym} />}
+      {latest && <SetCoach session={session} entryIndex={latest.entryIndex} showRest />}
       <p class="rest-next">
         <span>Next</span> {nextText}
       </p>

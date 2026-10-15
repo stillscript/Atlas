@@ -23,6 +23,10 @@ version with today's date.
 - Cardio and intervals, a quick check-in before (easy to turn off) and a 10-second check-out after
 - Close the app mid-workout and it reopens exactly where you were, even offline
 - New personal bests are called out when you finish
+- A coach that reads every set: when to add weight, when to hold, when to back off, with the reason and the research behind it one tap away
+- Short on time? A shorter version of today keeps the key lifts
+- Lighter weeks, easing back in after a break, and a weekly review of sets per muscle
+- Nothing in your plan changes without your OK
 - Works fully offline; your data stays on your phone, with backups you can save to Files
 ### Internal
 - App shell, offline service worker and update flow
@@ -31,3 +35,5 @@ version with today's date.
 - Home Screen guide before setup, onboarding, Today, read-only Plan/day/gym views, Redo setup
 - Workout engine (`domain/workout.ts`): sessions, supersets, calibration (A1 with A5 for big jumps),
   rest sizing, swaps with conservative conversion (I2), records; saved on every tap with resume
+- Coach engine (`src/coach/`): rules A–L from the approved proposal, knowledge and phrases as data,
+  repetition control, stable recommendation ids; scenario tests render every message

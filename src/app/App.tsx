@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'preact/hooks';
-import { CoachScreen, ProgressScreen } from '../screens/EmptyTabs';
+import { CoachScreen } from '../screens/coach/CoachScreen';
+import { ProgressScreen } from '../screens/EmptyTabs';
 import { InstallGuide } from '../screens/InstallGuide';
 import { Onboarding } from '../screens/onboarding/Onboarding';
 import { GymScreen, PlanDayScreen, PlanScreen } from '../screens/plan/PlanScreens';

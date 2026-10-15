@@ -1,6 +1,6 @@
 # Atlas Coach: rules proposal
 
-**Status:** proposal for approval. Nothing below is built yet.
+**Status:** approved as proposed (2026-10-14); built in stage 4 (`src/coach/`). See "Build notes" at the end for where the build clarified or departed from the text.
 **Date:** 2026-10-14
 **Scope:** the on-device Coach: what it decides, when, how sure it is, how it talks, and the evidence behind each rule.
 
@@ -365,6 +365,25 @@ Numbers are illustrative (Office equipment; real stack steps get confirmed durin
 5. Anything you want the Coach to **never** say or do.
 
 ---
+
+## Build notes (stage 4)
+
+Clarifications made while building, found by scenario tests and a walkthrough with realistic data:
+
+- **A4:** two *small* misses in a row (only the last set short) hold the weight; "second miss" lowers it only when at least one of the two was a clear miss.
+- **A3:** the jump is capped (10% for beginners and early reads, 15% otherwise); when the cap allows only one step, it's a normal A2 move.
+- **B1:** on equipment with big gaps (the Office Smith: 85 → 125 → 135), the offer is the weight predicted to land closest to the rep range, not the middle of the range rounded down (which could mean 135 → 85).
+- **D:** a lift at the top of its range is ready to move up, not stalled. At most two plateau changes are suggested at once, key lifts first ("never shuffled for novelty").
+- **E4:** one volume change per muscle per week (after Apply, that muscle waits 7 days).
+- **G1:** "Do it today" starts the missed session today; the rest of the week isn't rescheduled.
+- **Confidence "consistent trend"** is read as: no missed reps in the last 3 exposures.
+- **Coach output** is computed from saved data in one app store rather than stored separately; only "shown" marks and decisions are written (to `coachLog`).
+
+Not built yet:
+- B3 across sessions (shortening an isolation lift's default rest by 15 s after consistent early starts). In-session B3 advice is built.
+- The 3-month experience re-check (3.1).
+- Body-weight entry UI (stage 5); the H3 rules already run on any measurements saved.
+- Message variety: 2–5 interchangeable phrasings per part (titles, evidence, actions) rather than 8–12; with rotation that avoids the last 5 used, frequent messages still read differently from session to session.
 
 ## Sources
 1. Currier BS, D'Souza AC, Fiatarone Singh MA, et al. (Phillips SM, chair). ACSM Position Stand: Resistance Training Prescription for Muscle Function, Hypertrophy, and Physical Performance in Healthy Adults: An Overview of Reviews. *Med Sci Sports Exerc.* 2026;58(4):851–872. doi:10.1249/MSS.0000000000003897 · [PMC12965823](https://pmc.ncbi.nlm.nih.gov/articles/PMC12965823)

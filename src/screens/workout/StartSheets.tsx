@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
+import { decide, planFor } from '../../app/coach';
 import { settings, updateSettings } from '../../app/state';
-import { startWorkout } from '../../app/workout';
+import { pastSessions, startWorkout } from '../../app/workout';
+import type { PlanOptions } from '../../coach/engine';
+import { readinessOffer } from '../../coach/readiness';
+import type { ReadinessOffer, SessionVariant } from '../../coach/types';
+import { CoachCard } from '../coach/CoachCard';
 import type { Program, ProgramDay, ReadinessCheck } from '../../db/types';
 import { estimateDayMinutes } from '../../domain/generator';
 import { primeAudio } from '../../lib/chime';
@@ -17,11 +22,12 @@ type Level = 1 | 2 | 3;
  * Optional by design: "Skip today" for once, "Don't ask before workouts" to switch it off, and
  * Settings › Workouts to switch it back on.
  */
-export function ReadinessSheet({ day, open, onClose }: { day: ProgramDay | null; open: boolean; onClose: () => void }) {
+export function ReadinessSheet({ day, options = {}, open, onClose }: { day: ProgramDay | null; options?: PlanOptions; open: boolean; onClose: () => void }) {
   const [sleep, setSleep] = useState<Level | null>(null);
   const [energy, setEnergy] = useState<Level | null>(null);
   const [soreness, setSoreness] = useState<Level | null>(null);
   const [starting, setStarting] = useState(false);
+  const [offer, setOffer] = useState<{ check: ReadinessCheck; offer: ReadinessOffer } | null>(null);
   const score = useRef<HTMLInputElement>(null);
   const wearable = settings.value.wearableScore;
 
@@ -31,27 +37,58 @@ export function ReadinessSheet({ day, open, onClose }: { day: ProgramDay | null;
       setEnergy(null);
       setSoreness(null);
       setStarting(false);
+      setOffer(null);
     }
   }, [open]);
 
-  const go = async (readiness?: ReadinessCheck) => {
+  const go = async (readiness?: ReadinessCheck, variant?: SessionVariant) => {
     primeAudio();
     setStarting(true);
-    await startWorkout(day, readiness);
+    if (variant === 'cardio') {
+      await startWorkout(null, readiness);
+      return;
+    }
+    await startWorkout(day, readiness, day ? planFor(day, variant ? { ...options, variant } : options) : null);
   };
 
   const answered = sleep !== null && energy !== null && soreness !== null;
   const start = () => {
     if (!answered) return;
     const value = Number(score.current?.value);
-    void go({
+    const check: ReadinessCheck = {
       sleep,
       energy,
       soreness,
       wearable: wearable && Number.isFinite(value) && value > 0 && value <= 100 ? Math.round(value) : undefined,
       at: Date.now(),
-    });
+    };
+    // C1/C2 · A rough check-in offers a lighter or shorter day; never forced.
+    const found = day ? readinessOffer(check, pastSessions.value, day.name) : null;
+    if (found) setOffer({ check, offer: found });
+    else void go(check);
   };
+
+  if (offer) {
+    const rec = offer.offer.recommendation;
+    const lighter = offer.offer.variant === 'lighter';
+    return (
+      <Sheet open={open} onClose={onClose} title="Quick check-in">
+        <CoachCard
+          rec={rec}
+          labels={{ use: lighter ? 'Use lighter day' : '30-minute version', keep: 'Train as planned' }}
+          onAction={(action) => {
+            void decide(rec, action === 'use' ? 'used' : 'kept');
+            void go(offer.check, action === 'use' ? offer.offer.variant : undefined);
+          }}
+        />
+        {!lighter && (
+          <button type="button" class="link-button" disabled={starting} onClick={() => void go(offer.check, 'cardio')}>
+            <Icon name="pulse" size={16} /> Easy cardio instead
+          </button>
+        )}
+      </Sheet>
+    );
+  }
 
   return (
     <Sheet
