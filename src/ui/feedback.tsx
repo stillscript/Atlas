@@ -7,19 +7,25 @@ import './feedback.css';
 
 export type ToastTone = 'neutral' | 'good' | 'win' | 'danger';
 
+interface ToastAction {
+  label: string;
+  onClick: () => void;
+}
+
 interface ToastMessage {
   id: number;
   message: string;
   tone: ToastTone;
+  action?: ToastAction;
 }
 
 const toasts = signal<ToastMessage[]>([]);
 let nextToastId = 1;
 
-/** A short message at the top of the screen that clears itself. */
-export function showToast(message: string, tone: ToastTone = 'neutral', durationMs = 3200): void {
+/** A short message at the top of the screen that clears itself, optionally with one action (Undo). */
+export function showToast(message: string, tone: ToastTone = 'neutral', durationMs = 3200, action?: ToastAction): void {
   const id = nextToastId++;
-  toasts.value = [...toasts.value.slice(-2), { id, message, tone }];
+  toasts.value = [...toasts.value.slice(-2), { id, message, tone, action }];
   window.setTimeout(() => {
     toasts.value = toasts.value.filter((t) => t.id !== id);
   }, durationMs);
@@ -29,8 +35,20 @@ export function ToastHost() {
   return (
     <div class="toast-host" role="status" aria-live="polite">
       {toasts.value.map((toast) => (
-        <div key={toast.id} class={`toast toast-${toast.tone}`}>
-          {toast.message}
+        <div key={toast.id} class={`toast toast-${toast.tone}${toast.action ? ' has-action' : ''}`}>
+          <span>{toast.message}</span>
+          {toast.action && (
+            <button
+              type="button"
+              class="toast-action"
+              onClick={() => {
+                toasts.value = toasts.value.filter((t) => t.id !== toast.id);
+                toast.action!.onClick();
+              }}
+            >
+              {toast.action.label}
+            </button>
+          )}
         </div>
       ))}
     </div>

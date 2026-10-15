@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'preact/hooks';
-import { exportBackup } from '../app/backupActions';
 import { coachTodayState, pendingStartDay, planFor } from '../app/coach';
 import type { PlanOptions } from '../coach/engine';
+import { BackupReminder } from './BackupReminder';
 import { ShortOnTimeSheet, TodayCoach } from './coach/TodayCoach';
 import { navigate } from '../app/router';
-import { activeGym, activeProgram, appMeta, completedSessions, getDb, patchAppMeta, profile, settings } from '../app/state';
+import { activeGym, activeProgram, completedSessions, profile, settings } from '../app/state';
 import { activeSession, pastSessions, startWorkout } from '../app/workout';
 import type { Program, ProgramDay, ProgramSlot } from '../db/types';
 import { estimateDayMinutes } from '../domain/generator';
-import { backupReminderDue, snoozeUntil } from '../domain/reminders';
 import { addDays, blockPosition, mondayOf, nextSession, sessionOn, WEEKDAY_LETTER, WEEKDAY_LONG } from '../domain/schedule';
 import { summarize } from '../domain/workout';
 import { primeAudio } from '../lib/chime';
@@ -16,7 +15,7 @@ import { formatLongDate, plural, toISODate } from '../lib/format';
 import { isMobile, isStandalone } from '../lib/platform';
 import { dayMeta } from './plan/meta';
 import { Button, IconButton } from '../ui/controls';
-import { Notice, showToast } from '../ui/feedback';
+import { Notice } from '../ui/feedback';
 import { Icon } from '../ui/Icon';
 import { Portal } from '../ui/Portal';
 import { ScreenHeader } from '../ui/ScreenHeader';
@@ -52,11 +51,9 @@ export function TodayScreen() {
   const program = activeProgram.value;
   const gym = activeGym.value;
   const me = profile.value;
-  const app = appMeta.value;
   const inProgress = activeSession.value;
   const [openSlot, setOpenSlot] = useState<ProgramSlot | null>(null);
   const [installOpen, setInstallOpen] = useState(false);
-  const [backingUp, setBackingUp] = useState(false);
   const [checkIn, setCheckIn] = useState<{ open: boolean; day: ProgramDay | null; options: PlanOptions }>({ open: false, day: null, options: {} });
   const [pickerOpen, setPickerOpen] = useState(false);
   const [shortOpen, setShortOpen] = useState(false);
@@ -89,20 +86,7 @@ export function TodayScreen() {
   const finishedToday = pastSessions.value.filter((s) => s.date === toISODate(now));
   const plannedDone = day ? finishedToday.some((s) => s.dayId === day.id) : false;
   const showStart = Boolean(day) && !plannedDone && !inProgress;
-  const backupDue = app ? backupReminderDue(app, completedSessions.value) : false;
   const inBrowser = isMobile() && !isStandalone();
-
-  async function backUp() {
-    setBackingUp(true);
-    try {
-      if ((await exportBackup(getDb())) !== 'cancelled') {
-        await patchAppMeta({ lastBackupAt: Date.now() });
-        showToast('Backup saved', 'good');
-      }
-    } finally {
-      setBackingUp(false);
-    }
-  }
 
   const weekLabel = block.lighterWeek ? 'Lighter week' : `Week ${block.week} of ${block.lengthWeeks}`;
 
@@ -163,7 +147,8 @@ export function TodayScreen() {
       {day && !plannedDone ? (
         <section class="today-card" aria-label="Today’s session">
           <p class="today-card-meta num">{dayMeta(day)}</p>
-          <SessionList day={day} gym={gym} profile={me} onOpen={setOpenSlot} plan={coachTodayState.value?.plan} />
+          {/* The Coach's day: in another gym, exercises it can't do already show their stand-ins (I3). */}
+          <SessionList day={coachTodayState.value?.plan?.day ?? day} gym={gym} profile={me} onOpen={setOpenSlot} plan={coachTodayState.value?.plan} />
           {!inProgress && (
             <div class="today-links">
               <button type="button" class="today-switch" onClick={() => setPickerOpen(true)}>
@@ -215,25 +200,7 @@ export function TodayScreen() {
             sets the next weight from that.
           </Notice>
         )}
-        {backupDue && (
-          <Notice
-            icon="share"
-            tone="warn"
-            title="Time for a backup"
-            action={
-              <>
-                <Button variant="primary" size="sm" disabled={backingUp} onClick={() => void backUp()}>
-                  Back up now
-                </Button>
-                <Button variant="ghost" size="sm" onClick={() => void patchAppMeta({ backupReminderSnoozedUntil: snoozeUntil() })}>
-                  Later
-                </Button>
-              </>
-            }
-          >
-            It’s been a month. A backup file keeps your training safe if anything happens to this phone.
-          </Notice>
-        )}
+        <BackupReminder />
         {inBrowser && (
           <Notice
             icon="home-add"

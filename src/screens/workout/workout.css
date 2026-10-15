@@ -1237,6 +1237,10 @@ button.wo-set {
   font-size: var(--text-sm);
 }
 
+.summary-backup:not(:empty) {
+  margin-top: var(--space-4);
+}
+
 .summary-actions {
   margin-top: var(--space-6);
 }

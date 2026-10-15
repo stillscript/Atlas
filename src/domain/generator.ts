@@ -75,6 +75,11 @@ function prescribe(role: SlotRole, exercise: ExerciseDef, goal: Goal, experience
   return { sets, repsLow, repsHigh, rir: targetRir(goal, experience, exercise), restSec: restSeconds(goal, role, exercise) };
 }
 
+/** Sets, reps, effort and rest for an exercise added by hand, using the same tables as the generator. */
+export function prescribeExercise(exerciseId: string, role: SlotRole, goal: Goal, experience: Experience) {
+  return prescribe(role, requireExercise(exerciseId), goal, experience);
+}
+
 // ---------------------------------------------------------------- time estimates
 
 function workSeconds(slot: ProgramSlot): number {

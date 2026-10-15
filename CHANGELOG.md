@@ -29,6 +29,10 @@ version with today's date.
 - Nothing in your plan changes without your OK
 - Progress: your streak, a training calendar, every record, and a chart for each lift
 - Body measurements with a 7-day weight average that smooths out daily swings
+- Make the plan yours: change exercises, sets, reps, rest and supersets, reorder, add sessions, move days
+- More than one gym: your plan follows you, using the closest exercise each gym has
+- Set the real weights on every machine and rack, and add or remove equipment
+- Smarter backup reminders, based on how much training a backup would protect
 - Works fully offline; your data stays on your phone, with backups you can save to Files
 ### Internal
 - App shell, offline service worker and update flow
@@ -40,3 +44,4 @@ version with today's date.
 - Coach engine (`src/coach/`): rules A–L from the approved proposal, knowledge and phrases as data,
   repetition control, stable recommendation ids; scenario tests render every message
 - Progress domain (`domain/progress.ts`) on the Coach's measures; SVG charts without a library
+- Plan and gym editing as pure functions with Undo; rule I3 applied at session time

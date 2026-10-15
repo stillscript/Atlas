@@ -1,6 +1,7 @@
 import type { ProgramDay, ProgramSlot, Session } from '../db/types';
 import { requireExercise } from '../domain/catalog';
 import { shortenDay } from '../domain/generator';
+import { remapDayForGym } from '../domain/gymEdit';
 import { loadSourceFor } from '../domain/gym';
 import { snapLoad } from '../domain/loads';
 import { blockPosition, sessionOn } from '../domain/schedule';
@@ -172,9 +173,11 @@ export function planSession(p: Prepared, day: ProgramDay, options: PlanOptions =
   const position = blockPosition(p.input.program, new Date(p.now));
   const lighterWeek = position.lighterWeek;
   const decided = decisions(log);
-  let working = day;
-  if (options.variant === 'short') working = shortenDay(day, gym, options.minutes ?? 30, { keyLiftsOnly: options.minutes === undefined }).day;
-  else if (options.minutes) working = shortenDay(day, gym, options.minutes).day;
+  // I3 · In a gym the plan wasn't built for, exercises it can't do become the best stand-in.
+  const remapped = remapDayForGym(day, gym, p.input.profile.experience).day;
+  let working = remapped;
+  if (options.variant === 'short') working = shortenDay(remapped, gym, options.minutes ?? 30, { keyLiftsOnly: options.minutes === undefined }).day;
+  else if (options.minutes) working = shortenDay(remapped, gym, options.minutes).day;
 
   const slots: Record<string, SlotPlan> = {};
   const recommendations: Recommendation[] = [];

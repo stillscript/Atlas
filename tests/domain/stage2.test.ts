@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { Program } from '../../src/db/types';
 import { createGymFromPreset } from '../../src/domain/gym';
 import { buildGym, buildProfile, buildProgram, keyLifts, type OnboardingAnswers } from '../../src/domain/onboarding';
-import { backupReminderDue, snoozeUntil } from '../../src/domain/reminders';
+import { backupReminderDue, backupStatus, snoozeUntil } from '../../src/domain/reminders';
 import { blockPosition, nextSession, sessionOn, weekdayIndex } from '../../src/domain/schedule';
 import { startSuggestion } from '../../src/domain/start';
 
@@ -122,6 +122,21 @@ describe('backup reminder', () => {
   it('waits until there is a workout worth keeping', () => {
     expect(backupReminderDue(app, 0, now)).toBe(false);
     expect(backupReminderDue(app, 1, now)).toBe(true);
+  });
+
+  it('by what’s at risk: first after 3 workouts, then every 30 days or 12 workouts', () => {
+    const fresh = { createdAt: now - 5 * DAY };
+    const workouts = (n: number, from = now - 4 * DAY) => Array.from({ length: n }, (_, i) => from + i * 3_600_000);
+    expect(backupStatus(fresh, workouts(2), now)).toMatchObject({ due: false, reason: null, daysSince: null, workoutsSince: 2 });
+    expect(backupStatus(fresh, workouts(3), now)).toMatchObject({ due: true, reason: 'first' });
+    const backedUp = { createdAt: now - 60 * DAY, lastBackupAt: now - 10 * DAY };
+    expect(backupStatus(backedUp, workouts(11), now).due).toBe(false);
+    expect(backupStatus(backedUp, workouts(12), now)).toMatchObject({ due: true, reason: 'workouts', daysSince: 10 });
+    const old = { createdAt: now - 60 * DAY, lastBackupAt: now - 31 * DAY };
+    expect(backupStatus(old, workouts(1), now)).toMatchObject({ due: true, reason: 'days' });
+    // Nothing new since the backup: nothing to lose, no reminder.
+    expect(backupStatus(old, [now - 40 * DAY], now).due).toBe(false);
+    expect(backupStatus({ ...old, backupReminderSnoozedUntil: snoozeUntil(now) }, workouts(1), now)).toMatchObject({ due: false, reason: 'days' });
   });
 
   it('counts from the last backup and respects a snooze', () => {

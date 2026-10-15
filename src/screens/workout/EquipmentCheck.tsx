@@ -1,6 +1,7 @@
 import { useState } from 'preact/hooks';
 import { updateEquipment } from '../../app/workout';
 import type { EquipmentItem, LoadModel } from '../../db/types';
+import { parseWeights, weightRange } from '../../domain/gymEdit';
 import { expandLoadSpec, summarizeLoad } from '../../domain/loads';
 import { haptic } from '../../lib/haptics';
 import { Button, Segmented } from '../../ui/controls';
@@ -20,6 +21,23 @@ export function EquipmentCheckSheet({ open, onClose, item, units }: { open: bool
       {item?.load.kind === 'plates' && <PlatesForm key={item.id} item={item} model={item.load} units={units} onDone={onClose} />}
     </Sheet>
   );
+}
+
+/** The right weight editor for any piece of equipment (or null when it has no weights to set). */
+export function LoadEditor({ item, units, onDone }: { item: EquipmentItem; units: string; onDone: () => void }) {
+  switch (item.load.kind) {
+    case 'stack':
+      return <StackForm key={item.id} item={item} model={item.load} units={units} onDone={onDone} />;
+    case 'plates':
+      return <PlatesForm key={item.id} item={item} model={item.load} units={units} onDone={onDone} />;
+    case 'dumbbells':
+    case 'fixed':
+      return <WeightsForm key={item.id} item={item} weights={item.load.weights} units={units} onDone={onDone} />;
+    case 'bodyweight':
+      return <WeightsForm key={item.id} item={item} weights={item.load.addedWeights ?? []} units={units} onDone={onDone} added />;
+    default:
+      return null;
+  }
 }
 
 const range = (from: number, to: number, step: number) =>
@@ -71,6 +89,45 @@ function StackForm({ item, model, units, onDone }: { item: EquipmentItem; model:
       />
       <p class="check-preview num">{summarizeLoad(next, units)}</p>
       <Button variant="primary" size="lg" block onClick={() => void save(item, next, onDone, changed)}>
+        {changed ? 'Save' : 'Looks right'}
+      </Button>
+    </div>
+  );
+}
+
+/**
+ * Dumbbells, kettlebells and other fixed weights (or the added weights for bodyweight work): the
+ * exact list, typed or filled from a range.
+ */
+function WeightsForm({ item, weights, units, onDone, added = false }: { item: EquipmentItem; weights: number[]; units: string; onDone: () => void; added?: boolean }) {
+  const [text, setText] = useState(weights.join(', '));
+  const [from, setFrom] = useState(weights[0] ?? 5);
+  const [to, setTo] = useState(weights[weights.length - 1] ?? 50);
+  const [step, setStep] = useState('5');
+  const list = parseWeights(text);
+  const changed = list.join() !== weights.join();
+  const model: LoadModel =
+    item.load.kind === 'bodyweight' ? { kind: 'bodyweight', addedWeights: list.length ? list : undefined } : { kind: item.load.kind as 'dumbbells' | 'fixed', weights: list };
+  return (
+    <div class="check-form">
+      <p class="sheet-copy">
+        {added ? 'Weights you can add (a vest, belt or dumbbell between the feet).' : 'Every weight on the rack.'} Atlas only suggests these.
+      </p>
+      <label class="field">
+        <span class="field-label">Weights ({units}), separated by commas</span>
+        <textarea class="field-input field-area num" rows={3} value={text} onInput={(e) => setText(e.currentTarget.value)} />
+      </label>
+      <p class="check-label">Or fill a range</p>
+      <div class="check-dials">
+        <Dial label="From" value={from} options={range(2.5, 150, 2.5)} onChange={setFrom} display={String(from)} unit={units} />
+        <Dial label="To" value={to} options={range(from, 200, 2.5)} onChange={setTo} display={String(to)} unit={units} />
+      </div>
+      <Segmented label="Step" options={['2.5', '5', '10'].map((v) => ({ value: v, label: `${v} ${units}` }))} value={step} onChange={setStep} />
+      <Button block onClick={() => setText(weightRange(from, to, Number(step)).join(', '))}>
+        Fill {from}–{to} by {step}
+      </Button>
+      <p class="check-preview num">{list.length ? `${list.length} weights: ${list[0]}–${list[list.length - 1]} ${units}` : 'No weights yet'}</p>
+      <Button variant="primary" size="lg" block disabled={!list.length && !added} onClick={() => void save(item, model, onDone, changed)}>
         {changed ? 'Save' : 'Looks right'}
       </Button>
     </div>

@@ -19,6 +19,7 @@ import { cancelChime, primeAudio, scheduleChime } from '../lib/chime';
 import { haptic } from '../lib/haptics';
 import { setKeepAwake } from '../lib/wakeLock';
 import { showToast } from '../ui/feedback';
+import { gyms } from './edit';
 import { navigate } from './router';
 import { activeGym, activeProgram, appMeta, completedSessions, getDb, profile, settings } from './state';
 
@@ -151,6 +152,7 @@ export async function updateEquipment(item: EquipmentItem): Promise<void> {
   const next = { ...gym, equipment: gym.equipment.map((e) => (e.id === item.id ? item : e)), updatedAt: Date.now() };
   await saveGym(getDb(), next);
   activeGym.value = next;
+  gyms.value = gyms.value.map((g) => (g.id === next.id ? next : g));
 }
 
 // ---------------------------------------------------------------- side effects while training

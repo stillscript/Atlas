@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from 'preact/hooks';
+import { gyms } from '../../app/edit';
 import { navigate } from '../../app/router';
 import { saveOnboarding } from '../../app/repo';
 import {
@@ -129,7 +130,16 @@ export function Onboarding() {
       : gymChoice === 'custom'
         ? { kind: 'custom', name: customName, equipment: customEquipment }
         : { kind: 'preset', presetId: gymChoice };
-  const gym: Gym | null = useMemo(() => (gymAnswer ? buildGym({ gym: gymAnswer }) : null), [gymChoice, customName, customEquipment.join(',')]);
+  // Redoing setup with a preset you already have keeps that gym: its confirmed weights and machine
+  // settings carry over instead of starting from the catalog again.
+  const gym: Gym | null = useMemo(() => {
+    if (!gymAnswer) return null;
+    if (gymAnswer.kind === 'preset') {
+      const existing = gyms.value.find((g) => g.presetId === gymAnswer.presetId);
+      if (existing) return existing;
+    }
+    return buildGym({ gym: gymAnswer });
+  }, [gymChoice, customName, customEquipment.join(',')]);
 
   const answersFor = (choice: 'auto' | 'pillar'): OnboardingAnswers | null =>
     goal && experience && minutes && gymAnswer
@@ -161,6 +171,7 @@ export function Onboarding() {
       appMeta.value = saved.app;
       profileSignal.value = newProfile;
       activeGym.value = gym;
+      gyms.value = [...gyms.value.filter((g) => g.id !== gym.id), gym];
       activeProgram.value = program;
       haptic('success');
       redoingSetup.value = false;

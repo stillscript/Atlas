@@ -18,6 +18,7 @@ import { toISODate } from '../lib/format';
 import { newId } from '../lib/ids';
 import { PROGRAMMING, requireExercise } from './catalog';
 import { loadSourceFor } from './gym';
+import { remapDayForGym } from './gymEdit';
 import { snapLoad, stepLoad } from './loads';
 import { convertStartLoad } from './resolver';
 import { startSuggestion } from './start';
@@ -264,7 +265,8 @@ export function createSession(input: {
   plan?: SessionPlan | null;
 }): Session {
   const { program, gym, profile, history, now, plan } = input;
-  const day = plan?.day ?? input.day;
+  // The Coach's plan already accounts for the gym; without one, apply rule I3 here.
+  const day = plan?.day ?? remapDayForGym(input.day, gym, profile.experience).day;
   const ctx = { gym, profile, history };
   const variant: Session['variant'] = plan?.variant ?? (plan?.lighterWeek ? 'lighter-week' : plan && plan.returnTier >= 2 ? 'return' : undefined);
   let session: Session = {

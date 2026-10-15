@@ -17,6 +17,7 @@ import { listSnapshots } from '../db/snapshot';
 import type { ThemePreference } from '../db/types';
 import { goalName } from '../domain/generator';
 import { WEEKDAY_SHORT } from '../domain/schedule';
+import { currentBackupStatus } from './BackupReminder';
 import { InstallGuide } from './InstallGuide';
 import { formatRelativeDay, formatShortDate, plural } from '../lib/format';
 import { isStandalone } from '../lib/platform';
@@ -56,6 +57,7 @@ export function SettingsScreen() {
   }, []);
 
   const persisted = app?.persist?.granted === true;
+  const backup = currentBackupStatus();
   const standalone = isStandalone();
 
   async function onExport() {
@@ -193,9 +195,12 @@ export function SettingsScreen() {
         />
         <ListRow
           icon="share"
-          tone="accent"
+          tone={backup?.due ? 'warn' : 'accent'}
           label={exporting ? 'Preparing backup…' : 'Export backup'}
-          detail={app?.lastBackupAt ? `Last backup ${formatRelativeDay(app.lastBackupAt)}` : 'No backup yet'}
+          detail={
+            (app?.lastBackupAt ? `Last backup ${formatRelativeDay(app.lastBackupAt)}` : 'No backup yet') +
+            (backup && backup.workoutsSince > 0 ? ` · ${plural(backup.workoutsSince, 'workout')} since` : '')
+          }
           onClick={() => void onExport()}
         />
         <ListRow

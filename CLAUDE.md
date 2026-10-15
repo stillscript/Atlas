@@ -15,8 +15,8 @@ IndexedDB on the phone.
 | 3. Workout: focus mode, rest timer, machine settings (incl. confirming `verifyLoad` stack steps), swaps, cardio, resume, check-in | Done (branch `stage-3-workout`, cut from stage 2) |
 | 4. Coach engine + tests + UI | Done (branch `stage-4-coach`, cut from stage 3) |
 | 5. Progress: week view, charts, PRs, body measurements | Done (branch `stage-5-progress`, cut from stage 4) |
-| 6. Plan editing, gyms/equipment editing, backup reminder | Next |
-| 7. QA (393×852, both themes, offline, cold start, update with data), README, deploy | |
+| 6. Plan editing, gyms/equipment editing, backup reminder | Done (branch `stage-6-editing`, cut from stage 5) |
+| 7. QA (393×852, both themes, offline, cold start, update with data), README, deploy | Next |
 
 ## Commands
 
@@ -60,7 +60,7 @@ src/
   domain/               Pure functions over the catalogs: catalog (typed access), gym (presets,
                         capability tags), loads (equipment-aware load math), strength (e1RM),
                         resolver (pattern → exercise, swaps, start loads), generator, volume,
-                        workout (session engine)
+                        workout (session engine), progress, planEdit + gymEdit (editing, I3 remap)
   coach/                Pure-function Coach engine (see "Coach" below); knowledge + phrases JSON in data/coach/
 vite-plugins/atlas-pwa.ts  Generates dist/sw.js + dist/version.json after each build
 tests/                  Vitest; tests/db/fixtures/vN.json = sample data for every schema version
@@ -168,6 +168,26 @@ Rules:
   so a weigh-in feeds the fat-loss rules (H3) immediately. Units: the gym's lb/kg; lengths in in/cm.
   Photos are never stored; an entry can only note that one was taken.
 - Routes: `#/progress`, `#/progress/exercise/<id>`, `#/progress/body` (all highlight the Progress tab).
+
+## Editing plans and gyms
+
+- `domain/planEdit.ts` and `domain/gymEdit.ts` are pure (`tests/domain/editing.test.ts`): each edit
+  returns a new program or gym. Slot ids stay stable through edits so the Coach's history and
+  decisions keep pointing at the right exercise. Supersets are only valid for neighbours
+  (`normalizeSupersets` dissolves a pair a move or removal splits).
+- `app/edit.ts` saves every edit immediately; removals pass an `undo` label and the toast offers
+  Undo, which restores the previous version exactly. `showToast` takes an optional action.
+- **Several gyms** (`gyms` signal, all loaded at boot). The plan isn't tied to one: rule I3 is applied
+  when a session is planned or built (`remapDayForGym` in `planSession` and `createSession`), so an
+  exercise the gym can't do runs as the best stand-in (same movement, then the pattern's
+  fallbacks) and switching back restores everything. Switching gyms is blocked during a workout.
+- Redo setup with a preset you already have reuses that gym, keeping confirmed weights and machine
+  settings.
+- Equipment weights: `LoadEditor` in `screens/workout/EquipmentCheck.tsx` (stack, plates, dumbbell
+  or fixed lists, bodyweight add-ons). Gym units (lb/kg) are fixed at creation.
+- Backup reminder (`domain/reminders.backupStatus`): first after 3 workouts with no backup, then
+  every 30 days or 12 workouts since the last backup, whichever comes first; never when nothing new
+  was logged; "Later" snoozes a week. Shown on Today, after a workout, and in Settings.
 
 ## Service worker and updates
 

@@ -4,6 +4,7 @@ import { activeGym } from '../../app/state';
 import { pastSessions } from '../../app/workout';
 import { requireExercise } from '../../domain/catalog';
 import { summarize, workSets } from '../../domain/workout';
+import { BackupReminder } from '../BackupReminder';
 import { CoachCard, WinCard } from '../coach/CoachCard';
 import { formatLongDate } from '../../lib/format';
 import { Button } from '../../ui/controls';
@@ -113,6 +114,11 @@ export function SummaryScreen({ sessionId }: { sessionId: string }) {
           {session.checkout.pain.length ? `, pain: ${session.checkout.pain.map((p) => p.area.replace('-', ' ')).join(', ')}` : ''}.
         </p>
       )}
+
+      {/* Right after a workout is a good moment to save a copy, when one is due. */}
+      <div class="summary-backup">
+        <BackupReminder />
+      </div>
 
       <div class="summary-actions">
         <Button variant="primary" size="lg" block onClick={() => navigate('today', { replace: true })}>

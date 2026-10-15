@@ -24,6 +24,26 @@
   animation: toast-in var(--dur-slow) var(--ease-out);
 }
 
+.toast.has-action {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-right: 6px;
+}
+
+.toast-action {
+  min-height: 32px;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bg) 18%, transparent);
+  color: inherit;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
 .toast-good {
   background: var(--good);
   color: #fff;

@@ -6,6 +6,7 @@ import { App } from './app/App';
 import { loadTrainingState } from './app/repo';
 import { navigate } from './app/router';
 import { loadCoachState, startCoachClock } from './app/coach';
+import { loadGymList } from './app/edit';
 import { loadWorkoutState, shouldResumeOnLaunch, startWorkoutEffects } from './app/workout';
 import {
   APP_VERSION,
@@ -77,7 +78,7 @@ async function boot(): Promise<void> {
   completedSessions.value = training.completedSessions;
   applyTheme(loadedSettings.theme);
   setHapticsEnabled(loadedSettings.haptics);
-  await Promise.all([loadWorkoutState(db, meta, loadedSettings.activeGymId), loadCoachState(db)]);
+  await Promise.all([loadWorkoutState(db, meta, loadedSettings.activeGymId), loadCoachState(db), loadGymList(db)]);
 
   if (await applyWaitingUpdateOnColdStart(Boolean(meta.activeSessionId))) return;
 

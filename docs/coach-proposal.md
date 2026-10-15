@@ -378,6 +378,7 @@ Clarifications made while building, found by scenario tests and a walkthrough wi
 - **G1:** "Do it today" starts the missed session today; the rest of the week isn't rescheduled.
 - **Confidence "consistent trend"** is read as: no missed reps in the last 3 exposures.
 - **Coach output** is computed from saved data in one app store rather than stored separately; only "shown" marks and decisions are written (to `coachLog`).
+- **I3 (stage 6):** the remap happens when a session is planned, not by rewriting the plan, so switching back to the original gym restores every exercise. A stand-in starts from its own history or the I2 conversion as usual.
 
 Not built yet:
 - B3 across sessions (shortening an isolation lift's default rest by 15 s after consistent early starts). In-session B3 advice is built.

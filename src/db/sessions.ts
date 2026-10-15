@@ -73,3 +73,14 @@ export async function saveMachineSetting(db: AtlasDB, setting: MachineSetting): 
 export async function saveGym(db: AtlasDB, gym: Gym): Promise<void> {
   await db.put('gyms', gym);
 }
+
+export async function loadGyms(db: AtlasDB): Promise<Gym[]> {
+  return (await db.getAll('gyms')).sort((a, b) => a.createdAt - b.createdAt);
+}
+
+/** Removes a gym and its machine settings in one step. Workouts done there keep their records. */
+export async function deleteGym(db: AtlasDB, gymId: string): Promise<void> {
+  const tx = db.transaction(['gyms', 'machineSettings'], 'readwrite');
+  const settings = await tx.objectStore('machineSettings').index('byGym').getAllKeys(gymId);
+  await Promise.all([tx.objectStore('gyms').delete(gymId), ...settings.map((key) => tx.objectStore('machineSettings').delete(key)), tx.done]);
+}
