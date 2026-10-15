@@ -11,9 +11,9 @@ IndexedDB on the phone.
 | 0. Foundation: shell, design tokens, data layer, migrations, snapshots, backups, service worker, update flow, release tooling | Done |
 | Coach rules proposal (`docs/coach-proposal.md`) | Approved as proposed (2026-10-14). Build the Coach to it |
 | 1. Catalogs: equipment, exercises (with form notes), Office gym preset, Pillar template, program generator | Done (branch `stage-1-catalogs`) |
-| 2. Onboarding (Home Screen guide first), Today, read-only Plan view | Done (branch `stage-2-onboarding`, cut from stage 1). Today's Start button is a placeholder toast until stage 3 |
-| 3. Workout: focus mode, rest timer, machine settings (incl. confirming `verifyLoad` stack steps), swaps, cardio, resume, check-in | Next |
-| 4. Coach engine + tests + UI | |
+| 2. Onboarding (Home Screen guide first), Today, read-only Plan view | Done (branch `stage-2-onboarding`, cut from stage 1) |
+| 3. Workout: focus mode, rest timer, machine settings (incl. confirming `verifyLoad` stack steps), swaps, cardio, resume, check-in | Done (branch `stage-3-workout`, cut from stage 2) |
+| 4. Coach engine + tests + UI | Next. Hook points: readiness on the session (C1/C2), in-session offers (B1/B2) next to the set logger, progression (A2–A5) into `suggestFirstSet` |
 | 5. Progress: week view, charts, PRs, body measurements | |
 | 6. Plan editing, gyms/equipment editing, backup reminder | |
 | 7. QA (393×852, both themes, offline, cold start, update with data), README, deploy | |
@@ -46,7 +46,8 @@ src/
   app/                  App shell (gates: Home Screen guide → setup → tabs), router (hash routes with
                         params: #/plan/day/<id>, #/plan/gym), state signals, repo (load/save training data)
   screens/              Today, Settings, Recovery, InstallGuide, onboarding/, plan/ (Plan, day, gym,
-                        SessionList, ExerciseSheet)
+                        SessionList, ExerciseSheet), workout/ (focus mode, sheets, finishers/cardio,
+                        check-in/check-out, summary)
   ui/                   Design system: Icon, Logo, controls (Button/Toggle/Segmented), List, Sheet, feedback
   styles/tokens.css     Colors (light + two identical dark blocks), type scale, spacing, motion
   db/                   IndexedDB: types, schema, migrations, open, snapshots, backups, kv settings
@@ -57,7 +58,8 @@ src/
                         (pillar + generator blueprints), programming.json (reps/sets/rest/volume bands)
   domain/               Pure functions over the catalogs: catalog (typed access), gym (presets,
                         capability tags), loads (equipment-aware load math), strength (e1RM),
-                        resolver (pattern → exercise, swaps, start loads), generator, volume
+                        resolver (pattern → exercise, swaps, start loads), generator, volume,
+                        workout (session engine)
   (coming) coach/       Pure-function Coach engine; knowledge + phrases JSON in data/coach/
 vite-plugins/atlas-pwa.ts  Generates dist/sw.js + dist/version.json after each build
 tests/                  Vitest; tests/db/fixtures/vN.json = sample data for every schema version
@@ -126,6 +128,31 @@ Rules:
 - Fixed bottom bars and sheets must render through `ui/Portal` (or the Sheet's portal): the screen
   enter animation transforms the screen container, which breaks `position: fixed` while it runs.
 
+## Workouts
+
+- **Engine** (`domain/workout.ts`, pure, tested in `tests/domain/workout.test.ts`): every action is
+  `(session, …, now) → session` (`logSet`, `rateSet`, `swapEntry`, `skipEntry`, `postponeEntry`,
+  `logCardio`, `finishSession`…). No clock reads inside; `now` is passed in.
+- **Store** (`app/workout.ts`): `activeSession` signal. Every change goes through `changeSession`,
+  which saves to IndexedDB *first*, then updates the screen, one change at a time in order. Start,
+  finish and discard also set/clear `appMeta.activeSessionId` in the same transaction
+  (`db/sessions.ts`). While it's set, updates never apply and What's new waits.
+- **Resume**: the session stores its cursor and the rest timer as timestamps (`rest.endsAt`,
+  `intervalTimer.startedAt`), so a reload, crash, lock or update resumes exactly. On launch a
+  workout touched in the last 3 hours reopens `#/workout`; older ones show Resume on Today.
+- **First weights**: `suggestFirstSet` = last time's top working weight (history), the set entered
+  at setup (known), or a light catalog guess (calibrate). `calibrating` (no history, a swap
+  estimate, or only one exposure) makes `prefill` follow rule A1 set by set, with A5 when the next
+  step is a big jump (more reps first). Otherwise the next set repeats the last; changing that is
+  the Coach's job (stage 4).
+- **UI**: `#/workout` renders outside `.screen-host` (opacity-only animation) so the fixed dock
+  works; the dock measures itself into `--dock-h`. Rest chime: Web Audio, primed on the Done tap,
+  scheduled at `rest.endsAt`, rescheduled on returning to the app. iPhone suspends web audio when
+  locked, so the screen is kept awake (Wake Lock, Settings › Keep screen on). Android also vibrates.
+- **Readiness** (`ReadinessSheet`): only when `settings.readinessCheck`; "Skip today" for once,
+  "Don't ask before workouts" switches it off with a toast pointing to Settings › Workouts.
+- Records (`detectRecords`) compare against earlier sessions only; a first session never counts.
+
 ## Service worker and updates
 
 - `vite-plugins/atlas-pwa.ts` lists every built file with a content hash and writes `dist/sw.js`;
@@ -160,8 +187,8 @@ See `docs/coach-proposal.md`. Planned shape: pure functions in `src/coach/`, `ev
 {now, moment}) → { recommendations[], todayPlan?, inSession?, review?, wins[] }`, rules and
 thresholds in `src/data/coach/knowledge.json` (each with sources), wording in
 `src/data/coach/phrases.json`, rendering separate from the engine so an AI layer can replace it.
-Readiness check is optional and must stay one tap to switch off (sheet: "Stop asking"; Settings ›
-Workouts) and back on; the wearable score is off by default.
+Readiness check is optional and must stay one tap to switch off (check-in sheet: "Don't ask before
+workouts"; Settings › Workouts) and back on; the wearable score is off by default.
 
 ## Catalogs: equipment, exercises, templates
 

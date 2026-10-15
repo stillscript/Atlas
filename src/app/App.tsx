@@ -5,6 +5,8 @@ import { Onboarding } from '../screens/onboarding/Onboarding';
 import { GymScreen, PlanDayScreen, PlanScreen } from '../screens/plan/PlanScreens';
 import { SettingsScreen } from '../screens/SettingsScreen';
 import { TodayScreen } from '../screens/TodayScreen';
+import { SummaryScreen } from '../screens/workout/SummaryScreen';
+import { WorkoutScreen } from '../screens/workout/WorkoutScreen';
 import { pendingWhatsNew } from '../pwa/whatsNew';
 import { UpdateBanner, WhatsNewSheet } from '../pwa/UpdateUI';
 import { ToastHost } from '../ui/feedback';
@@ -27,6 +29,8 @@ function screenFor(current: Route) {
       return <GymScreen />;
     case 'settings':
       return <SettingsScreen />;
+    case 'summary':
+      return <SummaryScreen sessionId={current.sessionId} />;
     case 'today':
     default:
       return <TodayScreen />;
@@ -77,6 +81,17 @@ export function App() {
   }
   const current = route.value;
   const tab = activeTab.value;
+  if (current.name === 'workout') {
+    // Full screen, no tab bar, and no update banner: nothing interrupts a workout.
+    return (
+      <>
+        <div class="workout-host">
+          <WorkoutScreen />
+        </div>
+        <ToastHost />
+      </>
+    );
+  }
   return (
     <>
       <div class="screen-host" key={routePath(current)}>

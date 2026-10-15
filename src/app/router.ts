@@ -12,7 +12,9 @@ export type Route =
   | { name: TabRoute }
   | { name: 'settings' }
   | { name: 'plan-day'; dayId: string }
-  | { name: 'gym' };
+  | { name: 'gym' }
+  | { name: 'workout' }
+  | { name: 'summary'; sessionId: string };
 
 export type RouteName = Route['name'];
 
@@ -22,6 +24,8 @@ export function parseRoute(hash: string): Route {
   if (first === 'plan' && second === 'day' && third) return { name: 'plan-day', dayId: third };
   if (first === 'plan' && second === 'gym') return { name: 'gym' };
   if (first === 'settings') return { name: 'settings' };
+  if (first === 'workout') return { name: 'workout' };
+  if (first === 'summary' && second) return { name: 'summary', sessionId: second };
   if ((TAB_ROUTES as readonly string[]).includes(first ?? '')) return { name: first as TabRoute };
   return { name: 'today' };
 }
@@ -32,6 +36,8 @@ export function routePath(route: Route): string {
       return `/plan/day/${encodeURIComponent(route.dayId)}`;
     case 'gym':
       return '/plan/gym';
+    case 'summary':
+      return `/summary/${encodeURIComponent(route.sessionId)}`;
     default:
       return `/${route.name}`;
   }
@@ -63,10 +69,17 @@ export function isTab(name: RouteName): name is TabRoute {
   return (TAB_ROUTES as readonly string[]).includes(name);
 }
 
-export function navigate(to: Route | TabRoute | 'settings' | 'gym'): void {
+export function navigate(to: Route | TabRoute | 'settings' | 'gym' | 'workout', options: { replace?: boolean } = {}): void {
   const target: Route = typeof to === 'string' ? ({ name: to } as Route) : to;
   if (routePath(target) === routePath(route.value)) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+  if (options.replace) {
+    // No history entry: "back" from here skips the screen being replaced (e.g. a finished workout).
+    history.replaceState(history.state, '', `#${routePath(target)}`);
+    route.value = target;
+    window.scrollTo({ top: 0 });
     return;
   }
   navigatedInApp = true;

@@ -217,14 +217,33 @@ export interface SetLog {
   at: Timestamp;
 }
 
+/** Why a weight was suggested, so the UI (and later the Coach) can explain it. */
+export type SuggestionReason = 'history' | 'known' | 'calibrate' | 'swap' | 'bodyweight' | 'none';
+
 export interface ExerciseEntry {
   id: string;
   slotId?: string;
   exerciseId: string;
   equipmentId?: string;
+  role?: SlotRole;
+  /** Entries sharing a superset id are done back to back, one round at a time. */
+  superset?: string;
   /** Set when "Station taken?" swapped this entry from another exercise. */
   swappedFromExerciseId?: string;
-  target?: { sets: number; repsLow: number; repsHigh: number; rir?: number; load?: number | null };
+  target?: {
+    sets: number;
+    repsLow: number;
+    repsHigh: number;
+    rir?: number;
+    /** Suggested first-set load (null for bodyweight or when unknown). */
+    load?: number | null;
+    /** Suggested reps for the first set (seconds for timed exercises). */
+    firstReps?: number;
+    restSec?: number;
+    reason?: SuggestionReason;
+    /** First exposures (Coach rule A1): each set's rating sets the next set's weight. */
+    calibrating?: boolean;
+  };
   sets: SetLog[];
   skipped?: boolean;
   notes?: string;
@@ -236,6 +255,8 @@ export interface CardioEntry {
   id: string;
   exerciseId: string;
   equipmentId?: string;
+  /** The program extra (finisher) this logs, if any. */
+  extraId?: string;
   durationSec?: number;
   distanceM?: number;
   calories?: number;
@@ -246,6 +267,7 @@ export interface CardioEntry {
   at: Timestamp;
 }
 
+/** Before a workout. For all three, 1 is the worst answer and 3 the best (soreness 3 = not sore). */
 export interface ReadinessCheck {
   sleep: 1 | 2 | 3;
   energy: 1 | 2 | 3;
@@ -275,10 +297,17 @@ export interface Session {
   gymId?: string;
   programId?: string;
   dayId?: string;
+  /** Snapshot of the session's name, so history reads right even if the plan changes. */
+  dayName?: string;
   startedAt: Timestamp;
   endedAt?: Timestamp;
   entries: ExerciseEntry[];
   cardio: CardioEntry[];
+  /** Finishers from the plan (cardio or a short circuit), and which ones are done. */
+  extras?: ProgramExtra[];
+  extrasDone?: string[];
+  /** A running interval timer for cardio, stored as a start time so it survives the phone locking. */
+  intervalTimer?: { extraId?: string; exerciseId: string; startedAt: Timestamp; workSec: number; restSec: number; rounds: number };
   readiness?: ReadinessCheck;
   checkout?: CheckOut;
   /** Where the user is, so a reopened app resumes exactly here. */

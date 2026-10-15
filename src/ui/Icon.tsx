@@ -117,6 +117,22 @@ const PATHS = {
       <path d="M3.5 10h17M8 3v4M16 3v4" />
     </>
   ),
+  'chevron-down': <path d="m5.5 9.5 6.5 6.5 6.5-6.5" />,
+  swap: <path d="M7.5 4.5 4 8l3.5 3.5M4 8h12.5M16.5 12.5 20 16l-3.5 3.5M20 16H7.5" />,
+  book: <path d="M12 6.75C10 5.25 7.5 4.75 4 4.75v13c3.5 0 6 .5 8 2 2-1.5 4.5-2 8-2v-13c-3.5 0-6 .5-8 2zM12 6.75v13" />,
+  pencil: <path d="M4.5 19.5 5.5 15l10-10 3.5 3.5-10 10zM13.25 7.25l3.5 3.5" />,
+  trophy: <path d="M7.5 4.5h9v5a4.5 4.5 0 0 1-9 0zM7.5 6.5h-3c0 2.75 1.4 4.4 3.3 4.75M16.5 6.5h3c0 2.75-1.4 4.4-3.3 4.75M12 14v3.5M8.5 20h7M9.5 17.5h5" />,
+  play: <path d="M8 5.5v13l10.5-6.5z" />,
+  stop: <rect x="6.5" y="6.5" width="11" height="11" rx="2" />,
+  alert: <path d="M12 4 2.75 19.5h18.5zM12 10v4.25M12 17v.25" />,
+  trash: <path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 12.5h9l1-12.5M10 11v5M14 11v5" />,
+  timer: (
+    <>
+      <circle cx="12" cy="13.5" r="7" />
+      <path d="M12 13.5V10M9.5 3.5h5M18 7l1.25-1.25" />
+    </>
+  ),
+  list: <path d="M8.5 6.5h12M8.5 12h12M8.5 17.5h12M4 6.5h.5M4 12h.5M4 17.5h.5" />,
 } as const satisfies Record<string, JSX.Element>;
 
 export type IconName = keyof typeof PATHS;

@@ -90,6 +90,55 @@
   background: transparent;
 }
 
+.week-day.is-done .week-mark,
+.week-day.is-done.is-past .week-mark {
+  background: var(--good);
+}
+
+/* ---------- Done today ---------- */
+
+.today-done {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: var(--good-soft);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.today-done-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--good);
+  color: var(--surface);
+}
+
+.today-done-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.today-done-text span {
+  color: var(--ink-2);
+  font-size: var(--text-sm);
+}
+
+.today-done > .icon:last-child {
+  color: var(--ink-3);
+}
+
 /* ---------- Session card ---------- */
 
 .today-card {
@@ -162,6 +211,26 @@
 
 .next-up-text span {
   color: var(--ink-2);
+}
+
+.today-switch {
+  display: block;
+  width: 100%;
+  min-height: var(--tap);
+  margin-top: var(--space-1);
+  border: 0;
+  border-top: 1px solid var(--line);
+  background: none;
+  color: var(--accent-text);
+  font-size: var(--text-sm);
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.today-rest-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
 }
 
 .today-notices {

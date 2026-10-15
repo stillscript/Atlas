@@ -4,9 +4,12 @@ import { loadSourceFor } from '../../domain/gym';
 import { describeLoad } from '../../domain/loads';
 import { swapOptions } from '../../domain/resolver';
 import { startSuggestion } from '../../domain/start';
+import type { ExerciseDef } from '../../domain/types';
 import { muscleName } from '../../domain/volume';
 import { effortLabel, formatLoad, restLabel, setsAndReps } from '../../lib/training-format';
 import { profile } from '../../app/state';
+import { exerciseHistory } from '../../app/workout';
+import { lastExposure } from '../../domain/workout';
 import { Sheet } from '../../ui/Sheet';
 import './plan.css';
 
@@ -26,11 +29,34 @@ export function ExerciseSheet({ slot, gym, onClose }: ExerciseSheetProps) {
   );
 }
 
+/** Setup, cues and what to watch for. */
+export function FormNotes({ exercise }: { exercise: ExerciseDef }) {
+  return (
+    <section class="ex-form">
+      <p class="ex-section-title">Setup</p>
+      <p>{exercise.form.setup}</p>
+      <p class="ex-section-title">Cues</p>
+      <ol>
+        {exercise.form.cues.map((cue) => (
+          <li key={cue}>{cue}</li>
+        ))}
+      </ol>
+      <p class="ex-section-title">Watch for</p>
+      <ul>
+        {exercise.form.watch.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
 function ExerciseDetail({ slot, gym }: { slot: ProgramSlot; gym: Gym }) {
   const exercise = requireExercise(slot.exerciseId);
   const source = loadSourceFor(exercise, gym);
   const current = profile.value;
   const start = current ? startSuggestion(slot, gym, current, current.experience) : { kind: 'none' as const };
+  const last = lastExposure(exerciseHistory.value, exercise.id);
   const swaps = swapOptions(exercise.id, gym, { experience: current?.experience, limit: 4 });
   const settingsFields = [...new Set([...(source?.item.settingsFields ?? []), ...(exercise.settings ?? [])])];
   // "Pin at 20" adds nothing next to "20 lb"; plates, add-ons and dumbbell pairs do.
@@ -60,7 +86,15 @@ function ExerciseDetail({ slot, gym }: { slot: ProgramSlot; gym: Gym }) {
         </div>
       </div>
 
-      {start.kind !== 'none' && source && (
+      {last && source ? (
+        <div class="ex-start">
+          <p class="ex-section-title">Last time</p>
+          <p class="num">
+            {last.sets.map((s) => `${s.load ?? 0} × ${s.reps}`).join(', ')} <span class="ex-muted">{gym.units}</span>
+          </p>
+          {source.item.loadNote && <p class="ex-muted ex-small">{source.item.loadNote}</p>}
+        </div>
+      ) : start.kind !== 'none' && source && (
         <div class="ex-start">
           <p class="ex-section-title">First session</p>
           {start.kind === 'known' ? (
@@ -83,22 +117,7 @@ function ExerciseDetail({ slot, gym }: { slot: ProgramSlot; gym: Gym }) {
         </div>
       )}
 
-      <section class="ex-form">
-        <p class="ex-section-title">Setup</p>
-        <p>{exercise.form.setup}</p>
-        <p class="ex-section-title">Cues</p>
-        <ol>
-          {exercise.form.cues.map((cue) => (
-            <li key={cue}>{cue}</li>
-          ))}
-        </ol>
-        <p class="ex-section-title">Watch for</p>
-        <ul>
-          {exercise.form.watch.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-      </section>
+      <FormNotes exercise={exercise} />
 
       {muscles.length > 0 && (
         <section>

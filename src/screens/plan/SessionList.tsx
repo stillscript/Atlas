@@ -1,6 +1,7 @@
 import type { Gym, Profile, ProgramDay, ProgramSlot } from '../../db/types';
+import { exerciseHistory } from '../../app/workout';
 import { requireExercise } from '../../domain/catalog';
-import { startSuggestion } from '../../domain/start';
+import { suggestFirstSet } from '../../domain/workout';
 import { haptic } from '../../lib/haptics';
 import { effortLabel, formatLoad, setsAndReps, uniformEffort } from '../../lib/training-format';
 import { Icon } from '../../ui/Icon';
@@ -92,7 +93,10 @@ function SlotRow({
   onOpen: (slot: ProgramSlot) => void;
 }) {
   const exercise = requireExercise(slot.exerciseId);
-  const start = profile ? startSuggestion(slot, gym, profile, profile.experience) : { kind: 'none' as const };
+  // The same weight the workout will pre-fill: last time's, the one entered at setup, or a light guess.
+  const suggestion = profile ? suggestFirstSet(slot.exerciseId, slot, { gym, profile, history: exerciseHistory.value }) : null;
+  const load = suggestion?.load ?? null;
+  const light = suggestion?.reason === 'calibrate';
   return (
     <button
       type="button"
@@ -113,10 +117,13 @@ function SlotRow({
         </span>
         {showPurpose && slot.purpose && <span class="slot-purpose">{slot.purpose}</span>}
       </span>
-      {start.kind === 'known' && <span class="slot-load num">{formatLoad(start.load)}</span>}
-      {start.kind === 'calibrate' && start.load !== null && (
-        <span class="slot-load is-light num" title="A light first guess; your first sets find the real weight">
-          ~{formatLoad(start.load)}
+      {load !== null && suggestion?.reason !== 'bodyweight' && (
+        <span
+          class={light ? 'slot-load is-light num' : 'slot-load num'}
+          title={light ? 'A light first guess; your first sets find the real weight' : undefined}
+        >
+          {light ? '~' : ''}
+          {formatLoad(load, gym.units)}
         </span>
       )}
       <Icon name="chevron-right" size={18} class="slot-chevron" />
