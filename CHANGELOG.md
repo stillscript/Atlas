@@ -10,6 +10,8 @@ Work in progress goes under `## [Unreleased]`. `npm run release` turns that sect
 version with today's date.
 
 ## [Unreleased]
+
+## [1.1.0] - 2026-10-15
 ### Highlights
 - All strength: cardio logging is gone, so keep tracking it with your watch or Strava. Cardio you logged before stays in your history
 - Fix any past workout: open it from Progress › Workouts, tap Edit, and change a set, remove an exercise or delete the workout

@@ -17,7 +17,7 @@ IndexedDB on the phone.
 | 5. Progress: week view, charts, PRs, body measurements | Done (branch `stage-5-progress`, cut from stage 4) |
 | 6. Plan editing, gyms/equipment editing, backup reminder | Done (branch `stage-6-editing`, cut from stage 5) |
 | 7. QA (393×852, both themes, offline, cold start, update with data), README, deploy | Done. v1.0.0 live at https://stillscript.github.io/Atlas/ (Pages via Actions, remote `origin` = github.com/stillscript/Atlas) |
-| v1.1 strength focus: cardio removed, fix/delete past workouts, leg style (gender default, Plan settings switch) | Built on branch `v1.1-strength-focus`; not merged or released yet (ask first) |
+| v1.1 strength focus: cardio removed, fix/delete past workouts, leg style (gender default, Plan settings switch) | Released as v1.1.0 (2026-10-15), merged into `main` and deployed |
 
 Pushing: this shell can't sign in to GitHub; run `git push` in the user's Terminal panel (Git
 Credential Manager opens the browser sign-in). Always ask before pushing.
