@@ -14,6 +14,24 @@ interface SheetProps {
 
 const CLOSE_MS = 320;
 
+const FOCUSABLE = 'button:not(:disabled), [href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])';
+
+/** Tab and Shift+Tab cycle through the sheet instead of reaching the page behind it. */
+function keepFocusInside(node: HTMLElement, event: KeyboardEvent): void {
+  const items = [...node.querySelectorAll<HTMLElement>(FOCUSABLE)].filter((el) => el.offsetParent !== null);
+  if (items.length === 0) return;
+  const first = items[0]!;
+  const last = items[items.length - 1]!;
+  const active = document.activeElement;
+  if (!node.contains(active) || (event.shiftKey && (active === first || active === node))) {
+    event.preventDefault();
+    (event.shiftKey ? last : first).focus();
+  } else if (!event.shiftKey && active === last) {
+    event.preventDefault();
+    first.focus();
+  }
+}
+
 /**
  * Bottom sheet. Slides up over a scrim; closes with the X, a tap on the scrim, Escape, or a
  * downward swipe on its top edge.
@@ -46,9 +64,14 @@ export function Sheet({ open, onClose, title, children, footer }: SheetProps) {
   useEffect(() => {
     if (!mounted) return;
     const previous = document.activeElement as HTMLElement | null;
-    panel.current?.focus({ preventScroll: true });
+    const node = panel.current;
+    node?.focus({ preventScroll: true });
     const onKey = (event: KeyboardEvent) => {
+      // Only the top sheet reacts when two are stacked.
+      const sheets = document.querySelectorAll('.sheet');
+      if (!node || sheets[sheets.length - 1] !== node) return;
       if (event.key === 'Escape') onCloseRef.current();
+      if (event.key === 'Tab') keepFocusInside(node, event);
     };
     document.addEventListener('keydown', onKey);
     document.documentElement.classList.add('sheet-open');

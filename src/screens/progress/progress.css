@@ -48,7 +48,7 @@
 
 .streak-card.is-lit .streak-icon {
   background: var(--win);
-  color: #fff;
+  color: var(--on-status);
 }
 
 .streak-title {
@@ -364,8 +364,9 @@
 .chip-row {
   display: flex;
   gap: var(--space-2);
-  margin: var(--space-2) calc(var(--gutter) * -1) 0;
-  padding: 0 var(--gutter) 2px;
+  /* 4px above and below so the chips' 44px touch areas aren't clipped by the scroller. */
+  margin: calc(var(--space-2) - 4px) calc(var(--gutter) * -1) -2px;
+  padding: 4px var(--gutter);
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -375,6 +376,7 @@
 }
 
 .chip {
+  position: relative;
   flex: none;
   min-height: 36px;
   padding: 0 var(--space-4);
@@ -385,6 +387,12 @@
   font-size: var(--text-sm);
   font-weight: 650;
   cursor: pointer;
+}
+
+.chip::before {
+  content: '';
+  position: absolute;
+  inset: -5.5px 0;
 }
 
 .chip.is-selected {

@@ -63,6 +63,7 @@
 }
 
 .coach-why {
+  position: relative;
   min-height: 36px;
   margin-left: auto;
   padding: 0 var(--space-2);
@@ -72,6 +73,13 @@
   font-size: var(--text-sm);
   font-weight: 650;
   cursor: pointer;
+}
+
+/* 44px touch area (see .btn-sm in ui/controls.css). */
+.coach-why::before {
+  content: '';
+  position: absolute;
+  inset: -4px 0;
 }
 
 .coach-stack {
@@ -150,7 +158,7 @@
   height: 40px;
   border-radius: 50%;
   background: var(--win);
-  color: #fff;
+  color: var(--on-status);
 }
 
 .win-title {

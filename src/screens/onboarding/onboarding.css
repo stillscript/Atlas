@@ -234,7 +234,7 @@
   height: 68px;
   border-radius: 50%;
   background: var(--good);
-  color: #fff;
+  color: var(--on-status);
   animation: ob-pop 520ms var(--ease-out);
 }
 

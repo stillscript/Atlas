@@ -11,29 +11,17 @@ version with today's date.
 
 ## [Unreleased]
 ### Highlights
-- Setup in under a minute: your goal, days, session length and gym, then a plan built from your gym's real equipment
-- Pillar is built in, mapped to the Office machines
-- Today shows your session, your week and a light starting weight for every exercise
-- Your plan at a glance, with form tips (setup, cues, what to watch for) for every exercise
-- Workout mode: one exercise at a time, weight and reps filled in, one tap to log a set
-- Rest timer with a chime, +30 s and skip; it keeps time even if the phone locks
-- Rate each set by the reps you had left, and your first sessions find your working weights
-- Station taken? Swap to something else in your gym, or do that exercise later
-- Remembers your seat and pad settings for every machine, and lets you confirm a machine’s weights
-- Cardio and intervals, a quick check-in before (easy to turn off) and a 10-second check-out after
+- Setup in under a minute: a plan built from your gym's real equipment. Pillar is built in, mapped to the Office machines
+- Workout mode: one exercise at a time, weight and reps filled in, one tap per set, and a rest timer that keeps time through a lock
+- Your first sessions find your working weights; rate each set by the reps you had left
+- Station taken or something hurts? Swap to the closest exercise your gym has. Seat and pad settings are remembered per machine
+- Cardio and intervals, an optional check-in before and a 10-second check-out after
 - Close the app mid-workout and it reopens exactly where you were, even offline
-- New personal bests are called out when you finish
-- A coach that reads every set: when to add weight, when to hold, when to back off, with the reason and the research behind it one tap away
-- Short on time? A shorter version of today keeps the key lifts
-- Lighter weeks, easing back in after a break, and a weekly review of sets per muscle
-- Nothing in your plan changes without your OK
-- Progress: your streak, a training calendar, every record, and a chart for each lift
-- Body measurements with a 7-day weight average that smooths out daily swings
-- Make the plan yours: change exercises, sets, reps, rest and supersets, reorder, add sessions, move days
-- More than one gym: your plan follows you, using the closest exercise each gym has
-- Set the real weights on every machine and rack, and add or remove equipment
-- Smarter backup reminders, based on how much training a backup would protect
-- Works fully offline; your data stays on your phone, with backups you can save to Files
+- A coach that reads every set: when to add weight, hold or back off, with the reason and the research one tap away. Nothing in your plan changes without your OK
+- Short on time? A shorter version keeps the key lifts. Lighter weeks and easing back in after a break are planned for you
+- Progress: your streak, a training calendar, every record, a chart for each lift, and body measurements
+- Make the plan yours, and train at more than one gym: your plan follows you
+- Works fully offline and your data stays on your phone, with backup reminders and backups you save to Files
 ### Internal
 - App shell, offline service worker and update flow
 - IndexedDB data layer with numbered migrations, snapshots and migration tests
@@ -45,3 +33,6 @@ version with today's date.
   repetition control, stable recommendation ids; scenario tests render every message
 - Progress domain (`domain/progress.ts`) on the Coach's measures; SVG charts without a library
 - Plan and gym editing as pure functions with Undo; rule I3 applied at session time
+- QA: 44px touch areas for compact controls, text contrast at WCAG AA in both themes (`--ink-3`,
+  `--good`, `--warn`, new `--on-status`), focus kept inside sheets, long names wrap, Latin-only
+  font files (14 → 11 precached files)

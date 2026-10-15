@@ -16,7 +16,7 @@ IndexedDB on the phone.
 | 4. Coach engine + tests + UI | Done (branch `stage-4-coach`, cut from stage 3) |
 | 5. Progress: week view, charts, PRs, body measurements | Done (branch `stage-5-progress`, cut from stage 4) |
 | 6. Plan editing, gyms/equipment editing, backup reminder | Done (branch `stage-6-editing`, cut from stage 5) |
-| 7. QA (393×852, both themes, offline, cold start, update with data), README, deploy | Next |
+| 7. QA (393×852, both themes, offline, cold start, update with data), README, deploy | Done (branch `stage-7-qa`, cut from stage 6). Next: merge the stage branches into main (ask first), add the GitHub remote, push, enable Pages, then the README's iPhone checklist |
 
 ## Commands
 
@@ -71,11 +71,20 @@ docs/program-samples.md Generated plans for review (regenerate after catalog/gen
 ## Design system
 
 - Brand: strong, calm, premium. Warm paper neutrals, near-black ink, **Atlas blue** (`--accent`) for
-  actions, **ember** (`--win`) only for wins (PRs, streaks). Font: Geist Variable (self-hosted,
-  precached). Body 17px; large titles 34px; numbers use tabular figures (`.num`).
+  actions, **ember** (`--win`) only for wins (PRs, streaks). Font: Geist Variable (self-hosted
+  Latin subsets in `styles/fonts.css`, precached). Body 17px; large titles 34px; numbers use
+  tabular figures (`.num`).
+- Contrast: every text color passes WCAG AA (4.5:1) on `--bg`, `--surface` and `--surface-2` in
+  both themes; `--ink-3` is the lightest text allowed. Ember is for icons and fills (3:1), not small
+  text. Text or icons on a solid good/win/danger fill use `--on-status`.
 - The mark (`src/ui/Logo.tsx`): a figure bearing a sphere. Geometry is duplicated in
   `scripts/icons.mjs`; change both and run `npm run icons`.
-- Tap targets ≥ 44px; primary actions 56px. Respect `env(safe-area-inset-*)` (tokens `--safe-*`).
+- Tap targets ≥ 44px; primary actions 56px. Compact controls that look smaller (`.btn-sm`, chips,
+  switches, the workout's prev/next) keep a 44px touch area with a transparent `::before`; keep
+  neighbours ≥ 8px apart so those areas don't overlap. Respect `env(safe-area-inset-*)` (tokens
+  `--safe-*`).
+- Sheets (`ui/Sheet`) always have a title (it names the dialog); Escape and Tab only act on the top
+  sheet, and focus stays inside it.
 - Copy: plain words, sentence case, no jargon without an inline explanation, no "please",
   no exclamation marks except real wins. Empty states invite (what this space is for + one action).
 - Motion: subtle and functional only; `prefers-reduced-motion` turns it off globally.

@@ -68,7 +68,7 @@ export function Dial({ label, value, options, onChange, display, unit, caption }
             }}
           />
         ) : (
-          <button type="button" class="dial-value" aria-label={`${label}: ${display} ${unit ?? ''}. Tap to type`} onClick={() => setTyping(true)}>
+          <button type="button" class="dial-value" aria-label={`${label}: ${[display, unit].filter(Boolean).join(' ')}. Tap to type`} onClick={() => setTyping(true)}>
             <span class="dial-number num">{display}</span>
             {unit && <span class="dial-unit">{unit}</span>}
           </button>

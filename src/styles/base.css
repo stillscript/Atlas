@@ -24,6 +24,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior-y: none;
+  overflow-wrap: break-word;
 }
 
 #app {
@@ -35,6 +36,14 @@ h2,
 h3,
 p {
   margin: 0;
+}
+
+/* Names people type (plans, sessions, gyms) can be one long word: wrap it rather than widen the page. */
+h1,
+h2,
+h3,
+.row-label {
+  overflow-wrap: anywhere;
 }
 
 button,

@@ -29,10 +29,23 @@
 }
 
 .btn-sm {
+  position: relative;
   min-height: 36px;
   padding: 0 var(--space-4);
   font-size: var(--text-sm);
   border-radius: var(--radius-sm);
+}
+
+/*
+ * Compact controls look small but keep a 44px touch area: an invisible layer extends the hit box
+ * above and below (a tap on a pseudo-element lands on its element). Neighbours sit at least 8px
+ * apart, so the extended areas never overlap. Other compact controls do the same in their own CSS.
+ */
+.btn-sm::before,
+.segmented-option::before {
+  content: '';
+  position: absolute;
+  inset: -4px 0;
 }
 
 .btn-lg {
@@ -68,11 +81,12 @@
 
 .btn-danger {
   background: var(--danger);
-  color: #fff;
+  color: var(--on-status);
 }
 
 .icon-btn {
   display: inline-grid;
+  flex: none;
   place-items: center;
   width: var(--tap);
   height: var(--tap);
@@ -105,6 +119,13 @@
   background: var(--surface-3);
   cursor: pointer;
   transition: background-color var(--dur) var(--ease);
+}
+
+/* 44px touch area around the 31px switch (the row's label toggles it too). */
+.toggle::before {
+  content: '';
+  position: absolute;
+  inset: -7px -4px;
 }
 
 .toggle::after {

@@ -1,5 +1,5 @@
 import { render } from 'preact';
-import '@fontsource-variable/geist';
+import './styles/fonts.css';
 import './styles/tokens.css';
 import './styles/base.css';
 import { App } from './app/App';

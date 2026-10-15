@@ -32,6 +32,7 @@
 }
 
 .toast-action {
+  position: relative;
   min-height: 32px;
   padding: 0 var(--space-3);
   border: 0;
@@ -44,19 +45,26 @@
   cursor: pointer;
 }
 
+/* 44px touch area for Undo (see .btn-sm in ui/controls.css). */
+.toast-action::before {
+  content: '';
+  position: absolute;
+  inset: -6px -4px;
+}
+
 .toast-good {
   background: var(--good);
-  color: #fff;
+  color: var(--on-status);
 }
 
 .toast-win {
   background: var(--win);
-  color: #fff;
+  color: var(--on-status);
 }
 
 .toast-danger {
   background: var(--danger);
-  color: #fff;
+  color: var(--on-status);
 }
 
 @keyframes toast-in {
