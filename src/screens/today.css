@@ -1,0 +1,192 @@
+.today.has-cta {
+  padding-bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 104px);
+}
+
+.today-sub {
+  margin-top: -2px;
+  color: var(--ink-2);
+  font-size: var(--text-md);
+}
+
+.gym-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--ink);
+  font-size: var(--text-sm);
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.gym-chip:active {
+  background: var(--surface-3);
+}
+
+/* ---------- Week strip ---------- */
+
+.week-strip {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-2);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+}
+
+.week-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.week-letter {
+  color: var(--ink-3);
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.week-date {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  font-size: var(--text-md);
+  font-weight: 600;
+}
+
+.week-day.is-today .week-date {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.week-day.is-past .week-date {
+  color: var(--ink-3);
+}
+
+.week-mark {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.week-day.is-planned .week-mark {
+  background: var(--accent);
+}
+
+.week-day.is-planned.is-past .week-mark {
+  background: var(--line-strong);
+}
+
+.week-day.is-rest .week-mark {
+  background: transparent;
+}
+
+/* ---------- Session card ---------- */
+
+.today-card {
+  margin-top: var(--space-4);
+  padding: var(--space-4) var(--space-4) var(--space-2);
+  border-radius: var(--radius-xl);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+}
+
+.today-card-meta {
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-2);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.today-rest {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5);
+}
+
+.today-rest-line {
+  font-size: var(--text-lg);
+  font-weight: 650;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.next-up {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.next-up:active {
+  background: var(--surface-3);
+}
+
+.next-up-label {
+  color: var(--accent-text);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.next-up-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  font-size: var(--text-sm);
+}
+
+.next-up-text strong {
+  font-size: var(--text-base);
+}
+
+.next-up-text span {
+  color: var(--ink-2);
+}
+
+.today-notices {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+/* ---------- Start button, in thumb reach above the tab bar ---------- */
+
+.today-cta {
+  position: fixed;
+  right: 0;
+  bottom: calc(var(--tabbar-h) + var(--safe-bottom));
+  left: 0;
+  z-index: 20;
+  padding: var(--space-5) calc(var(--gutter) + var(--safe-right)) var(--space-3) calc(var(--gutter) + var(--safe-left));
+  background: linear-gradient(to bottom, transparent, var(--bg) 22px);
+  pointer-events: none;
+}
+
+.today-cta .btn {
+  max-width: 608px;
+  margin: 0 auto;
+  pointer-events: auto;
+  box-shadow: var(--shadow-2);
+}

@@ -1,10 +1,23 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { exportBackup } from '../app/backupActions';
 import { goBack } from '../app/router';
-import { APP_VERSION, appMeta, getDb, patchAppMeta, settings, updateSettings, workoutActive } from '../app/state';
+import {
+  APP_VERSION,
+  appMeta,
+  getDb,
+  patchAppMeta,
+  profile,
+  redoingSetup,
+  settings,
+  updateSettings,
+  workoutActive,
+} from '../app/state';
 import { importBackup, parseBackup, type BackupFile, type BackupPreview } from '../db/backup';
 import { listSnapshots } from '../db/snapshot';
 import type { ThemePreference } from '../db/types';
+import { goalName } from '../domain/generator';
+import { WEEKDAY_SHORT } from '../domain/schedule';
+import { InstallGuide } from './InstallGuide';
 import { formatRelativeDay, formatShortDate, plural } from '../lib/format';
 import { isStandalone } from '../lib/platform';
 import { currentNotes } from '../pwa/whatsNew';
@@ -14,6 +27,8 @@ import { showToast } from '../ui/feedback';
 import { ControlRow, ListGroup, ListRow, ToggleRow } from '../ui/List';
 import { ScreenHeader } from '../ui/ScreenHeader';
 import { Sheet } from '../ui/Sheet';
+
+const EXPERIENCE_NAMES = { beginner: 'New to lifting', intermediate: 'Some experience', advanced: 'Experienced' } as const;
 
 const THEMES: { value: ThemePreference; label: string }[] = [
   { value: 'system', label: 'System' },
@@ -29,7 +44,10 @@ export function SettingsScreen() {
   const [importing, setImporting] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [notesOpen, setNotesOpen] = useState(false);
+  const [installOpen, setInstallOpen] = useState(false);
+  const [redoOpen, setRedoOpen] = useState(false);
   const [snapshotCount, setSnapshotCount] = useState<number | null>(null);
+  const me = profile.value;
 
   useEffect(() => {
     listSnapshots()
@@ -89,6 +107,20 @@ export function SettingsScreen() {
   return (
     <main class="screen">
       <ScreenHeader title="Settings" onBack={() => goBack()} />
+
+      {me && (
+        <ListGroup title="Your training">
+          <ListRow icon="sparkle" tone="accent" label="Goal" value={goalName(me.goal)} />
+          <ListRow icon="progress" label="Experience" value={EXPERIENCE_NAMES[me.experience]} />
+          <ListRow
+            icon="calendar"
+            label="Schedule"
+            value={`${me.trainingDays.map((d) => WEEKDAY_SHORT[d]).join(' ')}`}
+          />
+          <ListRow icon="clock" label="Session length" value={`${me.sessionMinutes} min`} />
+          <ListRow icon="refresh" label="Redo setup" detail="New answers and a new plan. Your history stays." chevron onClick={() => setRedoOpen(true)} />
+        </ListGroup>
+      )}
 
       <ListGroup title="Workouts" footer={readinessFooter}>
         <ToggleRow
@@ -185,9 +217,44 @@ export function SettingsScreen() {
       </ListGroup>
 
       <ListGroup title="About">
+        {!standalone && <ListRow icon="home-add" tone="accent" label="Add to Home Screen" chevron onClick={() => setInstallOpen(true)} />}
         <ListRow icon="sparkle" tone="win" label="What’s new" chevron onClick={() => setNotesOpen(true)} />
         <ListRow label="Version" value={APP_VERSION} />
       </ListGroup>
+
+      <Sheet open={installOpen} onClose={() => setInstallOpen(false)} title="Add Atlas to your Home Screen">
+        <InstallGuide variant="sheet" />
+      </Sheet>
+
+      <Sheet
+        open={redoOpen}
+        onClose={() => setRedoOpen(false)}
+        title="Redo setup?"
+        footer={
+          <>
+            <Button
+              variant="primary"
+              size="lg"
+              block
+              onClick={() => {
+                setRedoOpen(false);
+                if (workoutActive.value) showToast('Finish your workout first');
+                else redoingSetup.value = true;
+              }}
+            >
+              Answer again
+            </Button>
+            <Button variant="ghost" block onClick={() => setRedoOpen(false)}>
+              Cancel
+            </Button>
+          </>
+        }
+      >
+        <p class="sheet-copy">
+          You’ll answer the setup questions again and get a new plan. Your workouts, records and measurements stay exactly
+          as they are, and your current plan is kept in the background.
+        </p>
+      </Sheet>
 
       <input ref={fileInput} type="file" accept="application/json,.json" hidden onChange={(event) => void onFileChosen(event)} />
 

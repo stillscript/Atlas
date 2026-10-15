@@ -1,0 +1,222 @@
+/* ---------- Choice cards ---------- */
+
+.choice {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  min-height: 72px;
+  padding: var(--space-4);
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color var(--dur) var(--ease),
+    background-color var(--dur) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.choice:active {
+  transform: scale(0.985);
+}
+
+.choice.is-selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.choice-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--surface-2);
+  color: var(--ink-2);
+  transition:
+    background-color var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+
+.choice.is-selected .choice-icon {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.choice-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.choice-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-base);
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.choice-badge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  font-size: var(--text-xs);
+  font-weight: 650;
+}
+
+.choice.is-selected .choice-badge {
+  background: var(--surface);
+}
+
+.choice-desc {
+  color: var(--ink-2);
+  font-size: var(--text-sm);
+  line-height: 1.4;
+}
+
+.choice-check {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 50%;
+  color: transparent;
+  transition:
+    background-color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+
+.choice.is-selected .choice-check {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.choice-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* ---------- Stepper ---------- */
+
+.stepper {
+  display: grid;
+  grid-template-columns: 52px 1fr 52px;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.stepper-lg {
+  grid-template-columns: 60px 1fr 60px;
+}
+
+.stepper-btn {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    transform var(--dur-fast) var(--ease),
+    background-color var(--dur-fast) var(--ease);
+}
+
+.stepper-lg .stepper-btn {
+  width: 60px;
+  height: 60px;
+}
+
+.stepper-btn:active:not(:disabled) {
+  transform: scale(0.92);
+  background: var(--surface-3);
+}
+
+.stepper-btn:disabled {
+  opacity: 0.35;
+}
+
+.stepper-value {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  text-align: center;
+}
+
+.stepper-number {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.stepper-lg .stepper-number {
+  font-size: var(--text-num);
+  letter-spacing: -0.04em;
+}
+
+.stepper-unit {
+  color: var(--ink-2);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.stepper-caption {
+  margin-top: 2px;
+  color: var(--ink-3);
+  font-size: var(--text-xs);
+}
+
+/* ---------- Pills ---------- */
+
+.pill {
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border: 1.5px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: var(--text-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    color var(--dur) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.pill:active {
+  transform: scale(0.96);
+}
+
+.pill.is-selected {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}

@@ -132,7 +132,7 @@
     "name": "Upper, lower and pull",
     "days": [
       {
-        "id": "upper-a", "name": "Upper A", "subtitle": "Push, shoulders lead",
+        "id": "chest-back", "name": "Chest and back", "subtitle": "Presses and rows",
         "slots": [
           { "pattern": "incline-press", "role": "main" },
           { "pattern": "horizontal-press", "role": "secondary" },
@@ -143,7 +143,7 @@
         ]
       },
       {
-        "id": "lower-a", "name": "Lower A", "subtitle": "Squat",
+        "id": "squat-day", "name": "Squat day", "subtitle": "Quads and glutes",
         "slots": [
           { "pattern": "squat", "role": "main" },
           { "pattern": "hinge", "role": "secondary" },
@@ -153,7 +153,7 @@
         ]
       },
       {
-        "id": "pull", "name": "Pull and arms", "subtitle": "Back, rear delts, arms",
+        "id": "back-arms", "name": "Back and arms", "subtitle": "Width, rear delts, biceps",
         "slots": [
           { "pattern": "vertical-pull", "role": "main" },
           { "pattern": "horizontal-pull", "role": "secondary" },
@@ -164,7 +164,7 @@
         ]
       },
       {
-        "id": "lower-b", "name": "Lower B", "subtitle": "Hinge",
+        "id": "hinge-day", "name": "Hinge day", "subtitle": "Hamstrings and glutes",
         "slots": [
           { "pattern": "deadlift", "role": "main" },
           { "pattern": "leg-press", "role": "secondary" },
@@ -174,7 +174,7 @@
         ]
       },
       {
-        "id": "upper-b", "name": "Upper B", "subtitle": "Shoulders and arms",
+        "id": "shoulders-arms", "name": "Shoulders and arms", "subtitle": "Overhead press, arms, chest",
         "slots": [
           { "pattern": "vertical-press", "role": "main" },
           { "pattern": "vertical-pull", "role": "secondary" },

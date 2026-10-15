@@ -10,9 +10,9 @@ IndexedDB on the phone.
 |---|---|
 | 0. Foundation: shell, design tokens, data layer, migrations, snapshots, backups, service worker, update flow, release tooling | Done |
 | Coach rules proposal (`docs/coach-proposal.md`) | Approved as proposed (2026-10-14). Build the Coach to it |
-| 1. Catalogs: equipment, exercises (with form notes), Office gym preset, Pillar template, program generator | Done (branch `stage-1-catalogs`); domain code not wired into the UI yet |
-| 2. Onboarding (Home Screen guide first), Today, read-only Plan view | Next |
-| 3. Workout: focus mode, rest timer, machine settings, swaps, cardio, resume, check-in | |
+| 1. Catalogs: equipment, exercises (with form notes), Office gym preset, Pillar template, program generator | Done (branch `stage-1-catalogs`) |
+| 2. Onboarding (Home Screen guide first), Today, read-only Plan view | Done (branch `stage-2-onboarding`, cut from stage 1). Today's Start button is a placeholder toast until stage 3 |
+| 3. Workout: focus mode, rest timer, machine settings (incl. confirming `verifyLoad` stack steps), swaps, cardio, resume, check-in | Next |
 | 4. Coach engine + tests + UI | |
 | 5. Progress: week view, charts, PRs, body measurements | |
 | 6. Plan editing, gyms/equipment editing, backup reminder | |
@@ -42,9 +42,11 @@ Hand-written service worker (no Workbox). Vitest + fake-indexeddb for tests.
 
 ```
 src/
-  main.tsx              Boot order: open DB (migrate) → cold-start update → render → background work
-  app/                  App shell, router (hash routes), state signals, tab bar, backup actions
-  screens/              One file per screen (Today, Settings, Recovery, …)
+  main.tsx              Boot order: open DB (migrate) → load profile/gym/plan → cold-start update → render
+  app/                  App shell (gates: Home Screen guide → setup → tabs), router (hash routes with
+                        params: #/plan/day/<id>, #/plan/gym), state signals, repo (load/save training data)
+  screens/              Today, Settings, Recovery, InstallGuide, onboarding/, plan/ (Plan, day, gym,
+                        SessionList, ExerciseSheet)
   ui/                   Design system: Icon, Logo, controls (Button/Toggle/Segmented), List, Sheet, feedback
   styles/tokens.css     Colors (light + two identical dark blocks), type scale, spacing, motion
   db/                   IndexedDB: types, schema, migrations, open, snapshots, backups, kv settings
@@ -110,6 +112,19 @@ Rules:
 5. Backups (`src/db/backup.ts`): JSON `{format:'atlas-backup', formatVersion, schemaVersion, stores}`.
    Import validates, previews, snapshots current data, migrates old backups through the same
    migrations in a temp DB, then replaces data in one transaction.
+
+## First run and setup
+
+- `App` gates in order: Home Screen guide (phones in a browser tab, once; `appMeta.installGuideDismissedAt`),
+  then onboarding (`needsSetup`: no `onboardingCompletedAt` or no active plan, or `redoingSetup`), then tabs.
+  On iPhone the Home Screen app has storage separate from Safari, which is why the guide comes first.
+- Onboarding (`screens/onboarding/Onboarding.tsx`) collects `OnboardingAnswers`; `domain/onboarding.ts`
+  turns them into a Gym, Program and Profile; `app/repo.saveOnboarding` writes them in one transaction.
+  Single-choice steps auto-advance. "Redo setup" in Settings re-runs it; old gyms/plans stay in the DB.
+- Starting weights: `profile.startingLoads` (sets the user knew). `domain/start.ts` turns them into a
+  first-session load per slot; otherwise a light catalog guess marked "~" in the UI (calibration, rule A1).
+- Fixed bottom bars and sheets must render through `ui/Portal` (or the Sheet's portal): the screen
+  enter animation transforms the screen container, which breaks `position: fixed` while it runs.
 
 ## Service worker and updates
 

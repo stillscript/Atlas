@@ -10,3 +10,12 @@ export function isIOS(): boolean {
   // iPadOS reports as Mac; touch support tells them apart.
   return /iPhone|iPad|iPod/.test(ua) || (ua.includes('Macintosh') && navigator.maxTouchPoints > 1);
 }
+
+export function isAndroid(): boolean {
+  return typeof navigator !== 'undefined' && /Android/.test(navigator.userAgent);
+}
+
+/** Phones and tablets: where installing to the Home Screen matters. */
+export function isMobile(): boolean {
+  return isIOS() || isAndroid();
+}

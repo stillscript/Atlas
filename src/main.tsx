@@ -3,7 +3,21 @@ import '@fontsource-variable/geist';
 import './styles/tokens.css';
 import './styles/base.css';
 import { App } from './app/App';
-import { APP_VERSION, appMeta, applyTheme, patchAppMeta, setDatabase, settings } from './app/state';
+import { loadTrainingState } from './app/repo';
+import {
+  APP_VERSION,
+  activeGym,
+  activeProgram,
+  appMeta,
+  applyTheme,
+  completedSessions,
+  installPrompt,
+  patchAppMeta,
+  profile,
+  setDatabase,
+  settings,
+  type InstallPromptEvent,
+} from './app/state';
 import { ensureAppMeta, loadSettings } from './db/kv';
 import { openAtlasDB } from './db/open';
 import { requestPersistentStorage } from './db/persist';
@@ -21,6 +35,12 @@ import { showToast } from './ui/feedback';
  * 3. Render, then do everything that can wait: service worker checks, storage persistence,
  *    "Updated to vX" and What's new.
  */
+// Android/Chrome offer a one-tap install; keep the event so the Home Screen guide can use it.
+window.addEventListener('beforeinstallprompt', (event) => {
+  event.preventDefault();
+  installPrompt.value = event as InstallPromptEvent;
+});
+
 async function boot(): Promise<void> {
   const root = document.getElementById('app');
   if (!root) return;
@@ -45,8 +65,13 @@ async function boot(): Promise<void> {
   const { db } = opened;
   setDatabase(db);
   const [loadedSettings, meta] = await Promise.all([loadSettings(db), ensureAppMeta(db)]);
+  const training = await loadTrainingState(db, loadedSettings);
   settings.value = loadedSettings;
   appMeta.value = meta;
+  profile.value = training.profile;
+  activeGym.value = training.gym;
+  activeProgram.value = training.program;
+  completedSessions.value = training.completedSessions;
   applyTheme(loadedSettings.theme);
   setHapticsEnabled(loadedSettings.haptics);
 

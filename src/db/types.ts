@@ -28,6 +28,8 @@ export interface Profile {
   trainingDays: number[];
   sessionMinutes: number;
   bodyWeight?: number;
+  /** Working sets the user knew at setup (exerciseId → weight × reps). Skipped lifts calibrate. */
+  startingLoads?: Record<string, { load: number; reps: number }>;
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }

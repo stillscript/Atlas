@@ -128,6 +128,35 @@ export function nextStepFraction(model: LoadModel, load: number): number | null 
   return Math.round(((next - load) / load) * 1000) / 1000;
 }
 
+/** One line describing what a piece of equipment can do, for the gym screen. */
+export function summarizeLoad(model: LoadModel, units = 'lb'): string {
+  switch (model.kind) {
+    case 'stack': {
+      const first = model.weights[0];
+      const last = model.weights[model.weights.length - 1];
+      const step = model.weights.length > 1 ? round(model.weights[1]! - model.weights[0]!) : null;
+      const addOn = model.addOns.length ? ` + ${model.addOns.join(' and ')} ${units} add-on` : '';
+      return `${first}–${last} ${units}${step ? ` in ${step}s` : ''}${addOn}`;
+    }
+    case 'plates': {
+      const plates = model.plates.map((p) => p.weight).join(', ');
+      return model.barWeight > 0 ? `${model.barWeight} ${units} bar · ${plates} ${units} plates` : `${plates} ${units} plates`;
+    }
+    case 'dumbbells':
+    case 'fixed': {
+      const first = model.weights[0];
+      const last = model.weights[model.weights.length - 1];
+      return first === last ? `${first} ${units}` : `${first}–${last} ${units}`;
+    }
+    case 'bodyweight':
+      return 'Bodyweight';
+    case 'levels':
+      return model.levels.length > 1 ? `${model.levels[0]} to ${model.levels[model.levels.length - 1]?.toLowerCase()}` : 'Bands';
+    case 'none':
+      return '';
+  }
+}
+
 export interface LoadDescription {
   /** Short label for the big number's caption, e.g. "Pin 190 + 5 lb add-on". */
   detail: string;

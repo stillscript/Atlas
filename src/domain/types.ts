@@ -71,6 +71,8 @@ export interface EquipmentDef {
 export interface GymPresetDef {
   id: string;
   name: string;
+  /** One line for the setup screen. */
+  description: string;
   units: 'lb' | 'kg';
   equipment: { catalogId: string; name?: string; load?: LoadSpec; verifyLoad?: boolean }[];
 }

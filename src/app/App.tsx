@@ -1,23 +1,30 @@
 import { useEffect, useState } from 'preact/hooks';
-import { CoachScreen, PlanScreen, ProgressScreen } from '../screens/EmptyTabs';
+import { CoachScreen, ProgressScreen } from '../screens/EmptyTabs';
+import { InstallGuide } from '../screens/InstallGuide';
+import { Onboarding } from '../screens/onboarding/Onboarding';
+import { GymScreen, PlanDayScreen, PlanScreen } from '../screens/plan/PlanScreens';
 import { SettingsScreen } from '../screens/SettingsScreen';
 import { TodayScreen } from '../screens/TodayScreen';
 import { pendingWhatsNew } from '../pwa/whatsNew';
 import { UpdateBanner, WhatsNewSheet } from '../pwa/UpdateUI';
 import { ToastHost } from '../ui/feedback';
-import { isTab, route, type RouteName } from './router';
-import { workoutActive } from './state';
+import { activeTab, route, routePath, type Route } from './router';
+import { needsSetup, patchAppMeta, showInstallGuide, workoutActive } from './state';
 import { TabBar } from './TabBar';
 import './app.css';
 
-function screenFor(name: RouteName) {
-  switch (name) {
+function screenFor(current: Route) {
+  switch (current.name) {
     case 'coach':
       return <CoachScreen />;
     case 'progress':
       return <ProgressScreen />;
     case 'plan':
       return <PlanScreen />;
+    case 'plan-day':
+      return <PlanDayScreen dayId={current.dayId} />;
+    case 'gym':
+      return <GymScreen />;
     case 'settings':
       return <SettingsScreen />;
     case 'today':
@@ -50,13 +57,32 @@ function PostUpdateNotes() {
 }
 
 export function App() {
+  // First run on a phone browser: the Home Screen guide comes before anything else.
+  if (showInstallGuide.value) {
+    return (
+      <>
+        <InstallGuide variant="first-run" onContinueInBrowser={() => void patchAppMeta({ installGuideDismissedAt: Date.now() })} />
+        <ToastHost />
+      </>
+    );
+  }
+  if (needsSetup.value) {
+    return (
+      <>
+        <Onboarding />
+        <UpdateBanner />
+        <ToastHost />
+      </>
+    );
+  }
   const current = route.value;
+  const tab = activeTab.value;
   return (
     <>
-      <div class="screen-host" key={current}>
+      <div class="screen-host" key={routePath(current)}>
         {screenFor(current)}
       </div>
-      {isTab(current) && <TabBar active={current} />}
+      {tab && <TabBar active={tab} />}
       <UpdateBanner />
       <PostUpdateNotes />
       <ToastHost />

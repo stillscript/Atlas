@@ -85,6 +85,38 @@ const PATHS = {
     </>
   ),
   history: <path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3M4.5 4.5v4h4M12 8v4.25l2.75 1.75" />,
+  flame: <path d="M12 21c-3.6 0-6.5-2.6-6.5-6.2 0-3.4 2.4-5.3 3.6-7.8.4 1.6 1.3 2.7 2.4 3.3.3-2.9 1.6-5.3 3.4-6.8.3 3.3 3.6 5.4 3.6 9.8 0 4.4-2.9 7.7-6.5 7.7zM12 21c-1.6 0-2.8-1.2-2.8-2.8 0-1.8 1.6-2.6 2.8-4.2 1.2 1.6 2.8 2.4 2.8 4.2 0 1.6-1.2 2.8-2.8 2.8z" />,
+  pulse: <path d="M3.5 12.5h3.75l2.25-5 3.5 10 2.5-6.5 1.25 1.5h3.75" />,
+  barbell: <path d="M2.75 12h18.5M5.5 8.5v7M8.25 7v10M15.75 7v10M18.5 8.5v7" />,
+  sprout: <path d="M12 20.5V11M12 11c0-3.6-2.5-6-6.5-6 0 3.6 2.6 6 6.5 6zm0 0c0-3 2.1-5.25 6.5-5.25 0 3.25-2.6 5.25-6.5 5.25zM8 20.5h8" />,
+  mountain: <path d="m2.75 19.5 6.5-11 4 6.5 2.25-3.5 5.75 8zM9.25 8.5l1.5 2.5" />,
+  building: (
+    <>
+      <path d="M4.5 20.5V5.75A1.75 1.75 0 0 1 6.25 4h7.5a1.75 1.75 0 0 1 1.75 1.75V20.5M15.5 9.5h2.25a1.75 1.75 0 0 1 1.75 1.75v9.25M3 20.5h18" />
+      <path d="M8 8h4M8 11.5h4M8 15h4" />
+    </>
+  ),
+  more: (
+    <>
+      <circle cx="6" cy="12" r="1.4" fill="currentColor" stroke="none" />
+      <circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none" />
+      <circle cx="18" cy="12" r="1.4" fill="currentColor" stroke="none" />
+    </>
+  ),
+  link: <path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-.75.75M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l.75-.75" />,
+  'arrow-right': <path d="M4.5 12h15M13.5 6l6 6-6 6" />,
+  'toggle-on': (
+    <>
+      <rect x="2.75" y="7" width="18.5" height="10" rx="5" />
+      <circle cx="16.25" cy="12" r="2.75" fill="currentColor" stroke="none" />
+    </>
+  ),
+  calendar: (
+    <>
+      <rect x="3.5" y="5" width="17" height="15.5" rx="3.5" />
+      <path d="M3.5 10h17M8 3v4M16 3v4" />
+    </>
+  ),
 } as const satisfies Record<string, JSX.Element>;
 
 export type IconName = keyof typeof PATHS;
