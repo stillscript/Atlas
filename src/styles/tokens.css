@@ -1,0 +1,153 @@
+/*
+ * Atlas design tokens.
+ *
+ * Brand: strong, calm, premium. Warm paper neutrals, near-black ink, one confident blue ("Atlas
+ * blue") for action, and a warm ember reserved for wins (PRs, streaks). Everything else is neutral.
+ *
+ * Dark values are declared twice (system preference, and an explicit choice in Settings). Keep the
+ * two dark blocks identical.
+ */
+
+:root {
+  color-scheme: light;
+  --font-sans: 'Geist Variable', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
+
+  --bg: #f5f4f0;
+  --surface: #ffffff;
+  --surface-2: #edebe5;
+  --surface-3: #e3e0d8;
+  --ink: #111318;
+  --ink-2: #555b67;
+  --ink-3: #858b97;
+  --line: rgba(17, 19, 24, 0.09);
+  --line-strong: rgba(17, 19, 24, 0.16);
+
+  --accent: #2e4bdb;
+  --accent-pressed: #2440c4;
+  --on-accent: #ffffff;
+  --accent-soft: #e7ebfc;
+  --accent-text: #2440c4;
+
+  --win: #e0562a;
+  --win-soft: #fcebe3;
+  --good: #16865a;
+  --good-soft: #e1f3ea;
+  --warn: #a2670a;
+  --warn-soft: #fbf0dc;
+  --danger: #c4352b;
+  --danger-soft: #fbe7e5;
+
+  --scrim: rgba(12, 14, 18, 0.36);
+  --shadow-1: 0 1px 2px rgba(17, 19, 24, 0.05), 0 1px 1px rgba(17, 19, 24, 0.03);
+  --shadow-2: 0 12px 32px rgba(17, 19, 24, 0.14), 0 2px 6px rgba(17, 19, 24, 0.06);
+  --bar-bg: rgba(245, 244, 240, 0.84);
+  --mark: #111318;
+  --mark-orb: #2e4bdb;
+
+  /* Type: iOS-like sizes so the app feels native; 17px body. */
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-md: 15px;
+  --text-base: 17px;
+  --text-lg: 20px;
+  --text-xl: 24px;
+  --text-2xl: 30px;
+  --text-3xl: 34px;
+  --text-num: 60px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --gutter: 16px;
+
+  --radius-sm: 10px;
+  --radius: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+
+  --tap: 44px;
+  --tap-lg: 56px;
+  --tabbar-h: 58px;
+
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 120ms;
+  --dur: 220ms;
+  --dur-slow: 380ms;
+
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --bg: #0b0d11;
+    --surface: #15181e;
+    --surface-2: #1d2129;
+    --surface-3: #262b34;
+    --ink: #edeef0;
+    --ink-2: #a3a9b5;
+    --ink-3: #6f7682;
+    --line: rgba(237, 238, 240, 0.08);
+    --line-strong: rgba(237, 238, 240, 0.15);
+    --accent: #7c93ff;
+    --accent-pressed: #6c84f5;
+    --on-accent: #0b0d11;
+    --accent-soft: rgba(124, 147, 255, 0.15);
+    --accent-text: #9db0ff;
+    --win: #ff8a5c;
+    --win-soft: rgba(255, 138, 92, 0.15);
+    --good: #46c28e;
+    --good-soft: rgba(70, 194, 142, 0.14);
+    --warn: #e8aa4c;
+    --warn-soft: rgba(232, 170, 76, 0.14);
+    --danger: #f26a5f;
+    --danger-soft: rgba(242, 106, 95, 0.14);
+    --scrim: rgba(0, 0, 0, 0.56);
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-2: 0 14px 36px rgba(0, 0, 0, 0.55), 0 2px 6px rgba(0, 0, 0, 0.3);
+    --bar-bg: rgba(11, 13, 17, 0.82);
+    --mark: #f2f0ea;
+    --mark-orb: #7c93ff;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0b0d11;
+  --surface: #15181e;
+  --surface-2: #1d2129;
+  --surface-3: #262b34;
+  --ink: #edeef0;
+  --ink-2: #a3a9b5;
+  --ink-3: #6f7682;
+  --line: rgba(237, 238, 240, 0.08);
+  --line-strong: rgba(237, 238, 240, 0.15);
+  --accent: #7c93ff;
+  --accent-pressed: #6c84f5;
+  --on-accent: #0b0d11;
+  --accent-soft: rgba(124, 147, 255, 0.15);
+  --accent-text: #9db0ff;
+  --win: #ff8a5c;
+  --win-soft: rgba(255, 138, 92, 0.15);
+  --good: #46c28e;
+  --good-soft: rgba(70, 194, 142, 0.14);
+  --warn: #e8aa4c;
+  --warn-soft: rgba(232, 170, 76, 0.14);
+  --danger: #f26a5f;
+  --danger-soft: rgba(242, 106, 95, 0.14);
+  --scrim: rgba(0, 0, 0, 0.56);
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 14px 36px rgba(0, 0, 0, 0.55), 0 2px 6px rgba(0, 0, 0, 0.3);
+  --bar-bg: rgba(11, 13, 17, 0.82);
+  --mark: #f2f0ea;
+  --mark-orb: #7c93ff;
+}

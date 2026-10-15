@@ -1,0 +1,209 @@
+{
+  "description": "Sample user data at schema v1. Never edit after v1.0.0 ships; add v2.json etc. for later versions.",
+  "schemaVersion": 1,
+  "stores": {
+    "kv": [
+      {
+        "key": "profile",
+        "value": {
+          "goal": "fat-loss",
+          "experience": "intermediate",
+          "daysPerWeek": 5,
+          "trainingDays": [0, 1, 2, 3, 4],
+          "sessionMinutes": 60,
+          "bodyWeight": 160,
+          "createdAt": 1789000000000,
+          "updatedAt": 1789000000000
+        }
+      },
+      {
+        "key": "settings",
+        "value": {
+          "units": "lb",
+          "theme": "system",
+          "sound": true,
+          "haptics": true,
+          "keepAwake": true,
+          "readinessCheck": false,
+          "wearableScore": false,
+          "activeGymId": "gym-office",
+          "activeProgramId": "prg-pillar"
+        }
+      },
+      {
+        "key": "app",
+        "value": {
+          "installId": "inst-fixture-1",
+          "createdAt": 1789000000000,
+          "lastSeenVersion": "1.0.0",
+          "persist": { "supported": true, "granted": true, "checkedAt": 1789000000000 },
+          "lastBackupAt": 1789500000000,
+          "onboardingCompletedAt": 1789000100000,
+          "activeSessionId": "ses-active"
+        }
+      }
+    ],
+    "gyms": [
+      {
+        "id": "gym-office",
+        "name": "Office",
+        "presetId": "office",
+        "units": "lb",
+        "equipment": [
+          {
+            "id": "eq-leg-press",
+            "catalogId": "precor-resolute-leg-press",
+            "name": "Precor Resolute Leg Press",
+            "category": "machine",
+            "load": { "kind": "stack", "weights": [20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240], "addOns": [10] }
+          },
+          {
+            "id": "eq-smith",
+            "catalogId": "smith-machine",
+            "name": "Smith machine",
+            "category": "free-weight",
+            "load": { "kind": "plates", "barWeight": 35, "plates": [{ "weight": 45, "pairs": 6 }, { "weight": 25, "pairs": 4 }] }
+          },
+          {
+            "id": "eq-dumbbells",
+            "catalogId": "dumbbells",
+            "name": "Dumbbells",
+            "category": "free-weight",
+            "load": { "kind": "dumbbells", "weights": [5, 7.5, 10, 12.5, 15, 17.5, 20, 22.5, 25, 30, 35, 40, 45, 50, 55, 60, 65] }
+          },
+          {
+            "id": "eq-rower",
+            "catalogId": "stairmaster-hiit-rower",
+            "name": "StairMaster HIIT Rower",
+            "category": "cardio",
+            "load": { "kind": "none" },
+            "cardioMetrics": ["duration", "distance", "calories", "pace"]
+          }
+        ],
+        "createdAt": 1789000000000,
+        "updatedAt": 1789000000000
+      }
+    ],
+    "programs": [
+      {
+        "id": "prg-pillar",
+        "name": "Pillar",
+        "templateId": "pillar",
+        "goal": "fat-loss",
+        "days": [
+          {
+            "id": "lower-a",
+            "name": "Lower A",
+            "subtitle": "Squat focus",
+            "slots": [
+              { "id": "s1", "pattern": "squat", "exerciseId": "smith-squat", "sets": 4, "repsLow": 6, "repsHigh": 8, "rir": 2, "restSec": 180, "priority": 1 },
+              { "id": "s2", "pattern": "leg-press", "exerciseId": "leg-press", "sets": 3, "repsLow": 10, "repsHigh": 12, "rir": 2, "restSec": 120, "priority": 2 }
+            ],
+            "extras": [{ "id": "x1", "exerciseId": "stair-climber", "label": "10 min easy stairs" }]
+          }
+        ],
+        "schedule": [null, "lower-a", null, null, null, null, null],
+        "block": { "startDate": "2026-09-14", "lengthWeeks": 6 },
+        "createdAt": 1789000000000,
+        "updatedAt": 1789000000000
+      }
+    ],
+    "exercises": [
+      {
+        "id": "cx-landmine",
+        "name": "Sandbag carry",
+        "pattern": "carry",
+        "primaryMuscles": ["core"],
+        "secondaryMuscles": ["forearms"],
+        "equipmentCatalogIds": ["sandbags"],
+        "createdAt": 1789000000000
+      }
+    ],
+    "sessions": [
+      {
+        "id": "ses-0915",
+        "date": "2026-09-15",
+        "status": "completed",
+        "gymId": "gym-office",
+        "programId": "prg-pillar",
+        "dayId": "lower-a",
+        "startedAt": 1789488000000,
+        "endedAt": 1789491600000,
+        "entries": [
+          {
+            "id": "e1",
+            "slotId": "s1",
+            "exerciseId": "smith-squat",
+            "equipmentId": "eq-smith",
+            "target": { "sets": 4, "repsLow": 6, "repsHigh": 8, "rir": 2, "load": 135 },
+            "sets": [
+              { "id": "a", "kind": "warmup", "load": 95, "reps": 8, "at": 1789488300000 },
+              { "id": "b", "kind": "work", "load": 135, "reps": 8, "rir": 2, "at": 1789488500000 },
+              { "id": "c", "kind": "work", "load": 135, "reps": 8, "rir": 2, "restTakenSec": 175, "at": 1789488700000 },
+              { "id": "d", "kind": "work", "load": 135, "reps": 7, "rir": 1, "restTakenSec": 182, "at": 1789488900000 },
+              { "id": "e", "kind": "work", "load": 135, "reps": 7, "rir": 1, "restTakenSec": 190, "at": 1789489100000 }
+            ]
+          },
+          {
+            "id": "e2",
+            "slotId": "s2",
+            "exerciseId": "leg-press",
+            "equipmentId": "eq-leg-press",
+            "swappedFromExerciseId": "hack-squat",
+            "sets": [
+              { "id": "f", "kind": "work", "load": 190, "reps": 12, "rir": 2, "at": 1789489600000 },
+              { "id": "g", "kind": "work", "load": 190, "reps": 12, "rir": 2, "restTakenSec": 120, "at": 1789489800000 },
+              { "id": "h", "kind": "work", "load": 190, "reps": 11, "rir": 1, "restTakenSec": 125, "pain": false, "at": 1789490000000 }
+            ]
+          }
+        ],
+        "cardio": [
+          { "id": "c1", "exerciseId": "rower", "equipmentId": "eq-rower", "durationSec": 600, "distanceM": 2100, "calories": 120, "at": 1789491000000 }
+        ],
+        "readiness": { "sleep": 2, "energy": 3, "soreness": 2, "at": 1789487900000 },
+        "checkout": { "feel": 4, "energy": 2, "pain": [{ "area": "knee", "side": "left", "exerciseId": "smith-squat" }], "note": "Left knee a bit cranky on squats.", "at": 1789491700000 },
+        "coachApplied": ["rec-1"],
+        "updatedAt": 1789491700000
+      },
+      {
+        "id": "ses-active",
+        "date": "2026-09-22",
+        "status": "active",
+        "gymId": "gym-office",
+        "programId": "prg-pillar",
+        "dayId": "lower-a",
+        "startedAt": 1790092800000,
+        "entries": [
+          {
+            "id": "e1",
+            "slotId": "s1",
+            "exerciseId": "smith-squat",
+            "sets": [{ "id": "a", "kind": "work", "load": 140, "reps": 8, "rir": 2, "at": 1790093100000 }]
+          }
+        ],
+        "cardio": [],
+        "cursor": { "entryIndex": 0, "setIndex": 1 },
+        "rest": { "startedAt": 1790093100000, "endsAt": 1790093280000, "durationSec": 180 },
+        "updatedAt": 1790093100000
+      }
+    ],
+    "measurements": [
+      { "id": "m1", "date": "2026-09-11", "weight": 160.4, "waist": 31.5, "shoulders": 47.75, "chest": 39, "arm": 14, "thigh": 22, "photoTaken": true, "at": 1789120000000 },
+      { "id": "m2", "date": "2026-10-09", "weight": 157.2, "waist": 30.75, "at": 1791540000000 }
+    ],
+    "machineSettings": [
+      {
+        "id": "gym-office:eq-leg-press:leg-press",
+        "gymId": "gym-office",
+        "equipmentId": "eq-leg-press",
+        "exerciseId": "leg-press",
+        "fields": [{ "label": "Seat", "value": "5" }, { "label": "Feet", "value": "High, shoulder width" }],
+        "updatedAt": 1789489500000
+      }
+    ],
+    "coachLog": [
+      { "id": "log-1", "at": 1789491800000, "kind": "shown", "recommendationId": "rec-2", "ruleId": "A2", "key": "progress.load-up:leg-press", "fingerprint": "f1", "variant": "v3" },
+      { "id": "log-2", "at": 1789491900000, "kind": "decision", "recommendationId": "rec-2", "ruleId": "A2", "key": "progress.load-up:leg-press", "fingerprint": "f1", "decision": "applied" }
+    ]
+  }
+}

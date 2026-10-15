@@ -1,0 +1,101 @@
+.update-banner {
+  position: fixed;
+  right: calc(var(--space-3) + var(--safe-right));
+  bottom: calc(var(--tabbar-h) + var(--safe-bottom) + var(--space-3));
+  left: calc(var(--space-3) + var(--safe-left));
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: 560px;
+  margin: 0 auto;
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-2);
+  animation: banner-in var(--dur-slow) var(--ease-out);
+}
+
+.update-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+
+.update-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  font-size: var(--text-sm);
+  line-height: 1.3;
+}
+
+.update-text strong {
+  font-size: var(--text-md);
+}
+
+.update-text span {
+  overflow: hidden;
+  color: var(--ink-2);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Screens without a tab bar (Settings, the workout) keep the banner at the bottom edge. */
+body:not(:has(.tabbar)) .update-banner {
+  bottom: calc(var(--safe-bottom) + var(--space-3));
+}
+
+@keyframes banner-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.whatsnew-release + .whatsnew-release {
+  margin-top: var(--space-6);
+}
+
+.whatsnew-version {
+  color: var(--ink-2);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.whatsnew-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.whatsnew-list li {
+  display: flex;
+  gap: var(--space-3);
+  font-size: var(--text-base);
+  line-height: 1.4;
+}
+
+.whatsnew-check {
+  flex: none;
+  margin-top: 2px;
+  color: var(--accent);
+}
+
+.whatsnew-empty {
+  color: var(--ink-2);
+}

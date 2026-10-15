@@ -1,0 +1,299 @@
+/**
+ * Record types stored in IndexedDB.
+ *
+ * Rules (see CLAUDE.md, "Data safety"):
+ * - Only add fields. Never rename or remove one in place; add the new field, migrate, and keep
+ *   reading the old one until a migration has copied it.
+ * - Every new required field needs a numbered migration that fills it for existing records.
+ * - Optional fields can be added without a migration if every reader handles `undefined`.
+ */
+
+/** Local calendar date, YYYY-MM-DD. */
+export type ISODate = string;
+/** Milliseconds since the epoch. */
+export type Timestamp = number;
+
+export type Goal = 'muscle' | 'fat-loss' | 'strength' | 'general';
+export type Experience = 'beginner' | 'intermediate' | 'advanced';
+export type Units = 'lb' | 'kg';
+export type ThemePreference = 'system' | 'light' | 'dark';
+
+// ---------------------------------------------------------------- kv store
+
+export interface Profile {
+  goal: Goal;
+  experience: Experience;
+  daysPerWeek: number;
+  /** Preferred training weekdays, 0 = Monday … 6 = Sunday. */
+  trainingDays: number[];
+  sessionMinutes: number;
+  bodyWeight?: number;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
+export interface Settings {
+  units: Units;
+  theme: ThemePreference;
+  sound: boolean;
+  haptics: boolean;
+  /** Keep the screen awake during workouts so the rest chime can play. */
+  keepAwake: boolean;
+  /** Ask the 3-tap readiness check before workouts. Easy to switch off and back on. */
+  readinessCheck: boolean;
+  /** Ask for a wearable readiness score (Oura, Whoop, Garmin). Off by default. */
+  wearableScore: boolean;
+  activeGymId?: string;
+  activeProgramId?: string;
+}
+
+export interface PersistStatus {
+  supported: boolean;
+  granted: boolean;
+  checkedAt: Timestamp;
+}
+
+export interface AppMeta {
+  installId: string;
+  createdAt: Timestamp;
+  /** Last app version that ran on this device. Drives "Updated to vX" and What's new. */
+  lastSeenVersion?: string;
+  persist?: PersistStatus;
+  lastBackupAt?: Timestamp;
+  backupReminderSnoozedUntil?: Timestamp;
+  installGuideDismissedAt?: Timestamp;
+  onboardingCompletedAt?: Timestamp;
+  /** The workout in progress, if any. Updates never apply while this is set. */
+  activeSessionId?: string;
+}
+
+export interface KvValues {
+  profile: Profile;
+  settings: Settings;
+  app: AppMeta;
+}
+export type KvKey = keyof KvValues;
+export interface KvRecord<K extends KvKey = KvKey> {
+  key: K;
+  value: KvValues[K];
+}
+
+// ---------------------------------------------------------------- gyms and equipment
+
+/** How a piece of equipment can be loaded. Only loads this model can produce are ever suggested. */
+export type LoadModel =
+  | { kind: 'stack'; weights: number[]; addOns: number[] }
+  | { kind: 'plates'; barWeight: number; plates: { weight: number; pairs: number }[] }
+  | { kind: 'dumbbells'; weights: number[] }
+  | { kind: 'fixed'; weights: number[] }
+  | { kind: 'bodyweight'; addedWeights?: number[] }
+  | { kind: 'none' };
+
+export interface EquipmentItem {
+  id: string;
+  /** Catalog entry this came from, if any. */
+  catalogId?: string;
+  name: string;
+  category: 'machine' | 'cable' | 'free-weight' | 'bodyweight' | 'cardio' | 'support' | 'other';
+  load: LoadModel;
+  /** Cardio metrics this machine reports. */
+  cardioMetrics?: CardioMetric[];
+  notes?: string;
+}
+
+export interface Gym {
+  id: string;
+  name: string;
+  presetId?: string;
+  units: Units;
+  equipment: EquipmentItem[];
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
+// ---------------------------------------------------------------- programs
+
+export interface ProgramSlot {
+  id: string;
+  /** Movement pattern, used to find swaps (e.g. "incline-press"). */
+  pattern?: string;
+  exerciseId: string;
+  sets: number;
+  repsLow: number;
+  repsHigh: number;
+  /** Target reps left in the tank. */
+  rir?: number;
+  restSec?: number;
+  /** Lower = more important; kept first when time is short. */
+  priority?: number;
+  /** Slots sharing a superset id are done back to back. */
+  superset?: string;
+  notes?: string;
+}
+
+export interface ProgramDay {
+  id: string;
+  name: string;
+  subtitle?: string;
+  slots: ProgramSlot[];
+  /** Optional cardio or finisher items. */
+  extras?: { id: string; exerciseId: string; label: string; detail?: string }[];
+}
+
+export interface Program {
+  id: string;
+  name: string;
+  templateId?: string;
+  goal: Goal;
+  days: ProgramDay[];
+  /** Mon..Sun → ProgramDay id, or null for rest. */
+  schedule: (string | null)[];
+  block: { startDate: ISODate; lengthWeeks: number };
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
+// ---------------------------------------------------------------- exercises (user-defined)
+
+export interface CustomExercise {
+  id: string;
+  name: string;
+  pattern?: string;
+  primaryMuscles: string[];
+  secondaryMuscles: string[];
+  equipmentCatalogIds: string[];
+  createdAt: Timestamp;
+}
+
+// ---------------------------------------------------------------- sessions
+
+/** Reps left in the tank after a set. 4 means "4 or more". */
+export type RepsInReserve = 0 | 1 | 2 | 3 | 4;
+
+export interface SetLog {
+  id: string;
+  kind: 'work' | 'warmup';
+  /** Total load for the set in the gym's units; null for bodyweight-only. */
+  load: number | null;
+  reps: number;
+  rir?: RepsInReserve;
+  /** Seconds actually rested before this set. */
+  restTakenSec?: number;
+  pain?: boolean;
+  at: Timestamp;
+}
+
+export interface ExerciseEntry {
+  id: string;
+  slotId?: string;
+  exerciseId: string;
+  equipmentId?: string;
+  /** Set when "Station taken?" swapped this entry from another exercise. */
+  swappedFromExerciseId?: string;
+  target?: { sets: number; repsLow: number; repsHigh: number; rir?: number; load?: number | null };
+  sets: SetLog[];
+  skipped?: boolean;
+  notes?: string;
+}
+
+export type CardioMetric = 'duration' | 'distance' | 'calories' | 'watts' | 'level' | 'floors' | 'pace' | 'intervals';
+
+export interface CardioEntry {
+  id: string;
+  exerciseId: string;
+  equipmentId?: string;
+  durationSec?: number;
+  distanceM?: number;
+  calories?: number;
+  avgWatts?: number;
+  level?: number;
+  floors?: number;
+  intervals?: { workSec: number; restSec: number; rounds: number };
+  at: Timestamp;
+}
+
+export interface ReadinessCheck {
+  sleep: 1 | 2 | 3;
+  energy: 1 | 2 | 3;
+  soreness: 1 | 2 | 3;
+  wearable?: number;
+  at: Timestamp;
+}
+
+export interface PainReport {
+  area: string;
+  side?: 'left' | 'right' | 'both';
+  exerciseId?: string;
+}
+
+export interface CheckOut {
+  feel: 1 | 2 | 3 | 4 | 5;
+  energy: 1 | 2 | 3;
+  pain: PainReport[];
+  note?: string;
+  at: Timestamp;
+}
+
+export interface Session {
+  id: string;
+  date: ISODate;
+  status: 'active' | 'completed' | 'abandoned';
+  gymId?: string;
+  programId?: string;
+  dayId?: string;
+  startedAt: Timestamp;
+  endedAt?: Timestamp;
+  entries: ExerciseEntry[];
+  cardio: CardioEntry[];
+  readiness?: ReadinessCheck;
+  checkout?: CheckOut;
+  /** Where the user is, so a reopened app resumes exactly here. */
+  cursor?: { entryIndex: number; setIndex: number };
+  /** A running rest timer, stored as an end time so it survives the phone locking. */
+  rest?: { startedAt: Timestamp; endsAt: Timestamp; durationSec: number };
+  /** Coach recommendation ids applied to this session. */
+  coachApplied?: string[];
+  updatedAt: Timestamp;
+}
+
+// ---------------------------------------------------------------- body, machine settings, coach log
+
+export interface Measurement {
+  id: string;
+  date: ISODate;
+  weight?: number;
+  waist?: number;
+  shoulders?: number;
+  chest?: number;
+  arm?: number;
+  thigh?: number;
+  photoTaken?: boolean;
+  note?: string;
+  at: Timestamp;
+}
+
+export interface MachineSetting {
+  /** `${gymId}:${equipmentId}:${exerciseId}` */
+  id: string;
+  gymId: string;
+  equipmentId: string;
+  exerciseId: string;
+  fields: { label: string; value: string }[];
+  note?: string;
+  updatedAt: Timestamp;
+}
+
+export interface CoachLogEntry {
+  id: string;
+  at: Timestamp;
+  kind: 'shown' | 'decision';
+  recommendationId: string;
+  ruleId: string;
+  /** Insight key used for repetition control, e.g. "progress.load-up:leg-press". */
+  key: string;
+  /** Hash of the facts behind the message; a changed fingerprint means the situation moved. */
+  fingerprint: string;
+  decision?: 'applied' | 'dismissed' | 'used' | 'kept';
+  /** Which phrasing variant was shown, so it isn't reused soon. */
+  variant?: string;
+}

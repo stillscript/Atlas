@@ -1,0 +1,139 @@
+.list-group {
+  margin-top: var(--space-6);
+}
+
+.list-title {
+  margin: 0 var(--space-4) var(--space-2);
+  color: var(--ink-2);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.list {
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+}
+
+.list-footer {
+  margin: var(--space-2) var(--space-4) 0;
+  color: var(--ink-3);
+  font-size: var(--text-sm);
+  line-height: 1.4;
+}
+
+.row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: 52px;
+  padding: var(--space-3) var(--space-4);
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+}
+
+/* Hairline between rows, inset to the text like iOS. */
+.row + .row::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: var(--space-4);
+  height: 1px;
+  background: var(--line);
+}
+
+.row:has(.row-icon) + .row::before,
+.row + .row:has(.row-icon)::before {
+  left: 60px;
+}
+
+.row-button {
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease);
+}
+
+.row-button:active {
+  background: var(--surface-2);
+}
+
+.row-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+}
+
+.tone-neutral {
+  background: var(--surface-2);
+  color: var(--ink-2);
+}
+.tone-accent {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.tone-good {
+  background: var(--good-soft);
+  color: var(--good);
+}
+.tone-warn {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+.tone-danger {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+.tone-win {
+  background: var(--win-soft);
+  color: var(--win);
+}
+
+.row-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.row-label {
+  font-size: var(--text-base);
+  line-height: 1.3;
+}
+
+.row-label.is-destructive {
+  color: var(--danger);
+}
+
+.row-detail {
+  color: var(--ink-2);
+  font-size: var(--text-sm);
+  line-height: 1.35;
+}
+
+.row-value {
+  flex: none;
+  color: var(--ink-2);
+  font-size: var(--text-md);
+  font-variant-numeric: tabular-nums;
+}
+
+.row-chevron {
+  flex: none;
+  color: var(--ink-3);
+}
+
+.row-stacked {
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-3);
+}
