@@ -17,6 +17,14 @@ export async function loadMeasurements(db: AtlasDB): Promise<Measurement[]> {
   return (await db.getAll('measurements')).sort((a, b) => a.at - b.at);
 }
 
+export async function saveMeasurement(db: AtlasDB, measurement: Measurement): Promise<void> {
+  await db.put('measurements', measurement);
+}
+
+export async function deleteMeasurement(db: AtlasDB, id: string): Promise<void> {
+  await db.delete('measurements', id);
+}
+
 export async function saveProgram(db: AtlasDB, program: Program): Promise<void> {
   await db.put('programs', program);
 }

@@ -14,8 +14,8 @@ IndexedDB on the phone.
 | 2. Onboarding (Home Screen guide first), Today, read-only Plan view | Done (branch `stage-2-onboarding`, cut from stage 1) |
 | 3. Workout: focus mode, rest timer, machine settings (incl. confirming `verifyLoad` stack steps), swaps, cardio, resume, check-in | Done (branch `stage-3-workout`, cut from stage 2) |
 | 4. Coach engine + tests + UI | Done (branch `stage-4-coach`, cut from stage 3) |
-| 5. Progress: week view, charts, PRs, body measurements | Next. Body-weight entry feeds the Coach's fat-loss rules (H3), which already read `measurements` |
-| 6. Plan editing, gyms/equipment editing, backup reminder | |
+| 5. Progress: week view, charts, PRs, body measurements | Done (branch `stage-5-progress`, cut from stage 4) |
+| 6. Plan editing, gyms/equipment editing, backup reminder | Next |
 | 7. QA (393×852, both themes, offline, cold start, update with data), README, deploy | |
 
 ## Commands
@@ -47,7 +47,8 @@ src/
                         params: #/plan/day/<id>, #/plan/gym), state signals, repo (load/save training data)
   screens/              Today, Settings, Recovery, InstallGuide, onboarding/, plan/ (Plan, day, gym,
                         SessionList, ExerciseSheet), workout/ (focus mode, sheets, finishers/cardio,
-                        check-in/check-out, summary, WorkoutCoach), coach/ (Coach tab, CoachCard, Why?)
+                        check-in/check-out, summary, WorkoutCoach), coach/ (Coach tab, CoachCard, Why?),
+                        progress/ (Progress tab, exercise detail, Body, MeasurementSheet)
   ui/                   Design system: Icon, Logo, controls (Button/Toggle/Segmented), List, Sheet, feedback
   styles/tokens.css     Colors (light + two identical dark blocks), type scale, spacing, motion
   db/                   IndexedDB: types, schema, migrations, open, snapshots, backups, kv settings
@@ -152,6 +153,21 @@ Rules:
 - **Readiness** (`ReadinessSheet`): only when `settings.readinessCheck`; "Skip today" for once,
   "Don't ask before workouts" switches it off with a toast pointing to Settings › Workouts.
 - Records (`detectRecords`) compare against earlier sessions only; a first session never counts.
+
+## Progress
+
+- `domain/progress.ts` (pure, `tests/domain/progress.test.ts`) builds on the Coach's measures, so
+  Progress and the Coach never disagree: `weekHistory` (calendar: planned/done/missed per day; days
+  before the plan existed aren't "planned"), `exerciseSummaries`, `exerciseSeries` (est. max uses
+  reps actually done, like records; lighter sessions are flagged and drawn hollow),
+  `exerciseRecords`, `recordHistory` (coach `sessionRecords` per session), body series, 7-day
+  average, summaries.
+- Charts are hand-drawn SVG (`ui/Chart.tsx`: `LineChart`, `Sparkline`): no library, offline, tap or
+  arrow keys to read a point, an aria-label summary for screen readers.
+- Body measurements share the Coach's `measurements` signal (`app/progress.ts` saves/edits/deletes),
+  so a weigh-in feeds the fat-loss rules (H3) immediately. Units: the gym's lb/kg; lengths in in/cm.
+  Photos are never stored; an entry can only note that one was taken.
+- Routes: `#/progress`, `#/progress/exercise/<id>`, `#/progress/body` (all highlight the Progress tab).
 
 ## Service worker and updates
 

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'preact/hooks';
 import { CoachScreen } from '../screens/coach/CoachScreen';
-import { ProgressScreen } from '../screens/EmptyTabs';
+import { BodyScreen } from '../screens/progress/BodyScreen';
+import { ExerciseProgress } from '../screens/progress/ExerciseProgress';
+import { ProgressScreen } from '../screens/progress/ProgressScreen';
 import { InstallGuide } from '../screens/InstallGuide';
 import { Onboarding } from '../screens/onboarding/Onboarding';
 import { GymScreen, PlanDayScreen, PlanScreen } from '../screens/plan/PlanScreens';
@@ -32,6 +34,10 @@ function screenFor(current: Route) {
       return <SettingsScreen />;
     case 'summary':
       return <SummaryScreen sessionId={current.sessionId} />;
+    case 'progress-exercise':
+      return <ExerciseProgress exerciseId={current.exerciseId} />;
+    case 'progress-body':
+      return <BodyScreen />;
     case 'today':
     default:
       return <TodayScreen />;

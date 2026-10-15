@@ -31,6 +31,12 @@ export function formatRelativeDay(timestamp: number, now = Date.now()): string {
   return new Date(timestamp).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 }
 
+/** "Oct 14" (no year): for chart axes and lists within the last year. */
+export function formatMonthDay(input: Date | number | string): string {
+  const date = typeof input === 'string' ? new Date(`${input}T12:00:00`) : new Date(input);
+  return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+}
+
 export function plural(count: number, one: string, many = `${one}s`): string {
   return `${count} ${count === 1 ? one : many}`;
 }

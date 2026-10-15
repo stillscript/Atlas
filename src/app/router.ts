@@ -14,7 +14,9 @@ export type Route =
   | { name: 'plan-day'; dayId: string }
   | { name: 'gym' }
   | { name: 'workout' }
-  | { name: 'summary'; sessionId: string };
+  | { name: 'summary'; sessionId: string }
+  | { name: 'progress-exercise'; exerciseId: string }
+  | { name: 'progress-body' };
 
 export type RouteName = Route['name'];
 
@@ -26,6 +28,8 @@ export function parseRoute(hash: string): Route {
   if (first === 'settings') return { name: 'settings' };
   if (first === 'workout') return { name: 'workout' };
   if (first === 'summary' && second) return { name: 'summary', sessionId: second };
+  if (first === 'progress' && second === 'exercise' && third) return { name: 'progress-exercise', exerciseId: third };
+  if (first === 'progress' && second === 'body') return { name: 'progress-body' };
   if ((TAB_ROUTES as readonly string[]).includes(first ?? '')) return { name: first as TabRoute };
   return { name: 'today' };
 }
@@ -38,6 +42,10 @@ export function routePath(route: Route): string {
       return '/plan/gym';
     case 'summary':
       return `/summary/${encodeURIComponent(route.sessionId)}`;
+    case 'progress-exercise':
+      return `/progress/exercise/${encodeURIComponent(route.exerciseId)}`;
+    case 'progress-body':
+      return '/progress/body';
     default:
       return `/${route.name}`;
   }
@@ -49,6 +57,7 @@ export const route = signal<Route>(parseRoute(typeof location === 'undefined' ? 
 export const activeTab = computed<TabRoute | null>(() => {
   const current = route.value;
   if (current.name === 'plan-day' || current.name === 'gym') return 'plan';
+  if (current.name === 'progress-exercise' || current.name === 'progress-body') return 'progress';
   return isTab(current.name) ? current.name : null;
 });
 

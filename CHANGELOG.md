@@ -27,6 +27,8 @@ version with today's date.
 - Short on time? A shorter version of today keeps the key lifts
 - Lighter weeks, easing back in after a break, and a weekly review of sets per muscle
 - Nothing in your plan changes without your OK
+- Progress: your streak, a training calendar, every record, and a chart for each lift
+- Body measurements with a 7-day weight average that smooths out daily swings
 - Works fully offline; your data stays on your phone, with backups you can save to Files
 ### Internal
 - App shell, offline service worker and update flow
@@ -37,3 +39,4 @@ version with today's date.
   rest sizing, swaps with conservative conversion (I2), records; saved on every tap with resume
 - Coach engine (`src/coach/`): rules A–L from the approved proposal, knowledge and phrases as data,
   repetition control, stable recommendation ids; scenario tests render every message
+- Progress domain (`domain/progress.ts`) on the Coach's measures; SVG charts without a library

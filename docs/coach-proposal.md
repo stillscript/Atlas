@@ -382,7 +382,6 @@ Clarifications made while building, found by scenario tests and a walkthrough wi
 Not built yet:
 - B3 across sessions (shortening an isolation lift's default rest by 15 s after consistent early starts). In-session B3 advice is built.
 - The 3-month experience re-check (3.1).
-- Body-weight entry UI (stage 5); the H3 rules already run on any measurements saved.
 - Message variety: 2–5 interchangeable phrasings per part (titles, evidence, actions) rather than 8–12; with rotation that avoids the last 5 used, frequent messages still read differently from session to session.
 
 ## Sources
