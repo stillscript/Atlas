@@ -1,0 +1,1159 @@
+[
+  {
+    "id": "barbell-bench-press", "name": "Barbell bench press", "aka": ["bench press", "flat bench"],
+    "pattern": "horizontal-press", "primary": ["chest"], "secondary": ["triceps", "front-delts"],
+    "requires": ["barbell", "flat-bench", "squat-rack"], "loadFrom": "barbell", "loadMode": "total",
+    "metric": "reps", "kind": "compound", "restClass": "heavy", "rank": 90, "ratio": 1,
+    "start": { "beginner": 65, "intermediate": 95, "advanced": 135 },
+    "stresses": ["shoulder", "elbow", "wrist"], "settings": ["Rack height"],
+    "form": {
+      "setup": "Eyes under the bar, feet planted, shoulder blades pulled down and back. Grip a little wider than shoulders.",
+      "cues": ["Lower to mid-chest with control.", "Elbows about 45° from your body, not flared to 90°.", "Drive your feet into the floor as you press."],
+      "watch": ["Bouncing the bar off your chest.", "Hips lifting off the bench."]
+    }
+  },
+  {
+    "id": "smith-bench-press", "name": "Smith machine bench press", "aka": ["smith bench"],
+    "pattern": "horizontal-press", "primary": ["chest"], "secondary": ["triceps", "front-delts"],
+    "requires": ["smith", "flat-bench"], "loadFrom": "smith", "loadMode": "total",
+    "metric": "reps", "kind": "compound", "restClass": "heavy", "rank": 70, "ratio": 1,
+    "start": { "beginner": 35, "intermediate": 85, "advanced": 125 },
+    "stresses": ["shoulder", "elbow", "wrist"], "settings": ["Bench position under the bar", "Safety stop height"],
+    "form": {
+      "setup": "Slide the bench so the bar lines up with your mid-chest. Set the safety stops just below chest height.",
+      "cues": ["Shoulder blades down and back before you unhook.", "Lower to mid-chest, elbows about 45° out.", "Press straight up; the rails guide the path."],
+      "watch": ["Bench too far forward or back, which puts the bar at your neck or belly.", "Letting the bar drop onto your chest."]
+    }
+  },
+  {
+    "id": "db-bench-press", "name": "Dumbbell bench press", "aka": ["flat dumbbell press", "db press"],
+    "pattern": "horizontal-press", "primary": ["chest"], "secondary": ["triceps", "front-delts"],
+    "requires": ["dumbbells", "flat-bench"], "loadFrom": "dumbbells", "loadMode": "per-hand",
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 80, "ratio": 0.4,
+    "start": { "beginner": 20, "intermediate": 35, "advanced": 50 },
+    "stresses": ["shoulder", "elbow"], "settings": ["Bench angle"],
+    "form": {
+      "setup": "Sit with the dumbbells on your knees, lie back and kick them up one at a time. Feet flat, shoulder blades pinned.",
+      "cues": ["Lower until you feel a stretch across the chest.", "Press up and slightly in, dumbbells nearly touching at the top.", "Keep wrists stacked over elbows the whole way."],
+      "watch": ["Dumbbells drifting toward your face.", "Going so heavy that the first set falls below the rep range."]
+    }
+  },
+  {
+    "id": "machine-chest-press", "name": "Machine chest press", "aka": ["chest press", "converging chest press"],
+    "pattern": "horizontal-press", "primary": ["chest"], "secondary": ["triceps", "front-delts"],
+    "requires": ["chest-press-machine"], "loadFrom": "chest-press-machine", "loadMode": "total",
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 75, "ratio": 0.9,
+    "start": { "beginner": 50, "intermediate": 90, "advanced": 130 },
+    "stresses": ["shoulder", "elbow"],
+    "form": {
+      "setup": "Set the seat so the handles line up with mid-chest. Back flat against the pad, feet planted.",
+      "cues": ["Shoulder blades back against the pad before the first rep.", "Press until your arms are nearly straight, without locking hard.", "Let the handles come back until you feel a chest stretch."],
+      "watch": ["Seat too low, which turns it into a shoulder press.", "Letting the stack slam between reps."]
+    }
+  },
+  {
+    "id": "push-up", "name": "Push-up", "aka": ["press-up"],
+    "pattern": "horizontal-press", "primary": ["chest"], "secondary": ["triceps", "front-delts", "abs"],
+    "requires": [], "loadMode": "bodyweight",
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 30,
+    "stresses": ["shoulder", "wrist"],
+    "form": {
+      "setup": "Hands a little wider than shoulders, body in one straight line from head to heels.",
+      "cues": ["Squeeze your glutes and brace your abs.", "Lower until your chest is a fist above the floor.", "Elbows about 45° from your body."],
+      "watch": ["Hips sagging.", "Half reps at the top."]
+    }
+  },
+
+  {
+    "id": "barbell-incline-press", "name": "Barbell incline press", "aka": ["incline bench"],
+    "pattern": "incline-press", "primary": ["chest"], "secondary": ["front-delts", "triceps"],
+    "requires": ["barbell", "adjustable-bench", "squat-rack"], "loadFrom": "barbell", "loadMode": "total",
+    "metric": "reps", "kind": "compound", "restClass": "heavy", "rank": 90, "ratio": 1,
+    "start": { "beginner": 45, "intermediate": 85, "advanced": 115 },
+    "stresses": ["shoulder", "elbow", "wrist"], "settings": ["Bench angle", "Rack height"],
+    "form": {
+      "setup": "Bench at about 30°. Feet planted, slight arch, shoulder blades pulled down and back.",
+      "cues": ["Touch the upper chest, just below the collarbones.", "Elbows about 45° from your body.", "Press up and slightly back over your shoulders."],
+      "watch": ["A bench steeper than 45°, which turns it into a shoulder press.", "Bouncing the bar off your chest."]
+    }
+  },
+  {
+    "id": "smith-incline-press", "name": "Smith machine incline press", "aka": ["incline smith press"],
+    "pattern": "incline-press", "primary": ["chest"], "secondary": ["front-delts", "triceps"],
+    "requires": ["smith", "adjustable-bench"], "loadFrom": "smith", "loadMode": "total",
+    "metric": "reps", "kind": "compound", "restClass": "heavy", "rank": 85, "ratio": 1,
+    "start": { "beginner": 35, "intermediate": 85, "advanced": 125 },
+    "stresses": ["shoulder", "elbow", "wrist"], "settings": ["Bench angle", "Bench position under the bar", "Safety stop height"],
+    "form": {
+      "setup": "Bench at about 30°, positioned so the bar meets your upper chest just below the collarbones. Safety stops a hand's width above your chest.",
+      "cues": ["Shoulder blades down and back, then unhook with a small twist.", "Lower under control to the upper chest.", "Press straight up and lock the bar back onto the hooks with a twist."],
+      "watch": ["The bar touching your neck or mid-chest: move the bench, not your body.", "Elbows flaring out to 90°."]
+    }
+  },
+  {
+    "id": "db-incline-press", "name": "Incline dumbbell press",
+    "pattern": "incline-press", "primary": ["chest"], "secondary": ["front-delts", "triceps"],
+    "requires": ["dumbbells", "adjustable-bench"], "loadFrom": "dumbbells", "loadMode": "per-hand",
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 80, "ratio": 0.4,
+    "start": { "beginner": 15, "intermediate": 30, "advanced": 45 },
+    "stresses": ["shoulder", "elbow"], "settings": ["Bench angle"],
+    "form": {
+      "setup": "Bench at about 30°. Kick the dumbbells up from your knees one at a time.",
+      "cues": ["Lower until the dumbbells are level with your upper chest.", "Press up and slightly in.", "Keep your shoulder blades pinned to the bench."],
+      "watch": ["Bench too steep.", "Letting the elbows drop below the bench at the bottom."]
+    }
+  },
+
+  {
+    "id": "barbell-overhead-press", "name": "Barbell overhead press", "aka": ["ohp", "military press"],
+    "pattern": "vertical-press", "primary": ["front-delts", "side-delts"], "secondary": ["triceps"],
+    "requires": ["barbell", "squat-rack"], "loadFrom": "barbell", "loadMode": "total",
+    "metric": "reps", "kind": "compound", "restClass": "heavy", "rank": 90, "ratio": 1,
+    "start": { "beginner": 45, "intermediate": 65, "advanced": 95 },
+    "stresses": ["shoulder", "lower-back", "wrist"], "settings": ["Rack height"],
+    "form": {
+      "setup": "Bar at your collarbones, grip just outside your shoulders, elbows slightly in front of the bar. Squeeze glutes and abs.",
+      "cues": ["Move your head back, press, then push your head through under the bar.", "Lock out with the bar over your mid-foot.", "Lower back to the collarbones under control."],
+      "watch": ["Leaning back into an incline press.", "Elbows flaring straight out to the sides."]
+    }
+  },
+  {
+    "id": "machine-shoulder-press", "name": "Machine shoulder press", "aka": ["shoulder press", "converging shoulder press"],
+    "pattern": "vertical-press", "primary": ["front-delts", "side-delts"], "secondary": ["triceps"],
+    "requires": ["shoulder-press-machine"], "loadFrom": "shoulder-press-machine", "loadMode": "total",
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 85, "ratio": 1,
+    "start": { "beginner": 40, "intermediate": 70, "advanced": 100 },
+    "stresses": ["shoulder", "elbow"],
+    "form": {
+      "setup": "Set the seat so the handles start at shoulder height. Back flat against the pad.",
+      "cues": ["Press up until your arms are nearly straight.", "Lower until the handles are level with your shoulders.", "Ribs down: don't arch off the pad."],
+      "watch": ["Seat so low that the handles start below your shoulders.", "Shrugging toward your ears at the top."]
+    }
+  },
+  {
+    "id": "db-shoulder-press", "name": "Seated dumbbell shoulder press",
+    "pattern": "vertical-press", "primary": ["front-delts", "side-delts"], "secondary": ["triceps"],
+    "requires": ["dumbbells", "adjustable-bench"], "loadFrom": "dumbbells", "loadMode": "per-hand",
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 80, "ratio": 0.42,
+    "start": { "beginner": 15, "intermediate": 25, "advanced": 40 },
+    "stresses": ["shoulder", "elbow"], "settings": ["Bench angle"],
+    "form": {
+      "setup": "Bench upright or one notch back. Dumbbells at shoulder height, palms forward.",
+      "cues": ["Press straight up, stopping just short of the dumbbells touching.", "Lower to shoulder height under control.", "Keep your back against the pad."],
+      "watch": ["Arching your lower back to finish a rep.", "Elbows dropping far below shoulder height."]
+    }
+  },
+  {
+    "id": "smith-seated-press", "name": "Smith machine seated press", "aka": ["smith shoulder press"],
+    "pattern": "vertical-press", "primary": ["front-delts", "side-delts"], "secondary": ["triceps"],
+    "requires": ["smith", "adjustable-bench"], "loadFrom": "smith", "loadMode": "total",
+    "metric": "reps", "kind": "compound", "restClass": "heavy", "rank": 70, "ratio": 1.05,
+    "start": { "beginner": 35, "intermediate": 65, "advanced": 95 },
+    "stresses": ["shoulder", "elbow", "neck"], "settings": ["Bench angle", "Bench position under the bar", "Safety stop height"],
+    "form": {
+      "setup": "Bench upright, positioned so the bar comes down just in front of your face to your chin. Safety stops at chin height.",
+      "cues": ["Grip just outside your shoulders.", "Press to nearly straight arms.", "Lower to chin height, not behind your head."],
+      "watch": ["Bench too far back, which pulls the bar behind your neck.", "Arching hard off the pad."]
+    }
+  },
+
+  {
+    "id": "cable-fly", "name": "Cable fly", "aka": ["cable crossover"],
+    "pattern": "chest-fly", "primary": ["chest"], "secondary": ["front-delts"],
+    "requires": ["cable-dual"], "loadFrom": "cable-dual", "loadMode": "per-side",
+    "metric": "reps", "kind": "isolation", "restClass": "isolation", "rank": 85, "ratio": 1,
+    "start": { "beginner": 10, "intermediate": 20, "advanced": 30 },
+    "stresses": ["shoulder"], "settings": ["Arm height"],
+    "form": {
+      "setup": "Pulleys at chest height or a little above. One step forward, slight bend in the elbows that never changes.",
+      "cues": ["Bring your hands together in front of your chest and squeeze.", "Open wide until you feel a stretch across the chest.", "It's a hug, not a press: the elbow angle stays fixed."],
+      "watch": ["Bending the elbows more as the set gets hard.", "Going so heavy that you lose the stretch."]
+    }
+  },
+  {
+    "id": "db-fly", "name": "Dumbbell fly",
+    "pattern": "chest-fly", "primary": ["chest"], "secondary": ["front-delts"],
+    "requires": ["dumbbells", "flat-bench"], "loadFrom": "dumbbells", "loadMode": "per-hand",
+    "metric": "reps", "kind": "isolation", "restClass": "isolation", "rank": 65, "ratio": 0.6,
+    "start": { "beginner": 10, "intermediate": 15, "advanced": 25 },
+    "stresses": ["shoulder"],
+    "form": {
+      "setup": "Lie flat, dumbbells above your chest, palms facing, a soft bend in the elbows.",
+      "cues": ["Open your arms in a wide arc until you feel a chest stretch.", "Squeeze back up along the same arc.", "Keep the elbow bend fixed."],
+      "watch": ["Lowering past a comfortable stretch.", "Turning it into a press."]
+    }
+  },
+  {
+    "id": "pec-deck", "name": "Pec deck", "aka": ["machine fly"],
+    "pattern": "chest-fly", "primary": ["chest"], "secondary": ["front-delts"],
+    "requires": ["pec-deck"], "loadFrom": "pec-deck", "loadMode": "total",
+    "metric": "reps", "kind": "isolation", "restClass": "isolation", "rank": 80, "ratio": 1.5,
+    "start": { "beginner": 40, "intermediate": 70, "advanced": 100 },
+    "stresses": ["shoulder"],
+    "form": {
+      "setup": "Seat height so the handles are at mid-chest. Back against the pad.",
+      "cues": ["Bring the handles together and squeeze for a beat.", "Open slowly until you feel a stretch.", "Keep your shoulders down and back."],
+      "watch": ["Letting the shoulders roll forward.", "Letting the stack slam."]
+    }
+  },
+
+  {
+    "id": "dip", "name": "Dip", "aka": ["parallel bar dip"],
+    "pattern": "dip", "primary": ["triceps", "chest"], "secondary": ["front-delts"],
+    "requires": ["dip-station"], "loadMode": "bodyweight",
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 90, "level": "intermediate",
+    "stresses": ["shoulder", "elbow"],
+    "form": {
+      "setup": "Parallel bars, arms locked, a slight forward lean for chest, more upright for triceps.",
+      "cues": ["Lower until your upper arms are about parallel to the floor.", "Elbows track back, not out.", "Press to a full lockout."],
+      "watch": ["Dropping so low that the front of the shoulder aches.", "Half reps."]
+    }
+  },
+  {
+    "id": "close-grip-smith-press", "name": "Close-grip Smith press", "aka": ["close grip bench"],
+    "pattern": "dip", "primary": ["triceps", "chest"], "secondary": ["front-delts"],
+    "requires": ["smith", "flat-bench"], "loadFrom": "smith", "loadMode": "total",
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 80, "ratio": 1,
+    "start": { "beginner": 35, "intermediate": 75, "advanced": 115 },
+    "stresses": ["elbow", "wrist", "shoulder"], "settings": ["Bench position under the bar", "Safety stop height"],
+    "form": {
+      "setup": "Flat bench under the Smith, bar over your lower chest. Grip about shoulder width.",
+      "cues": ["Elbows tucked close to your sides.", "Lower to the lower chest.", "Press up by straightening the elbows hard."],
+      "watch": ["Grip so narrow that your wrists bend.", "Elbows flaring out."]
+    }
+  },
+  {
+    "id": "bench-dip", "name": "Bench dip",
+    "pattern": "dip", "primary": ["triceps"], "secondary": ["chest", "front-delts"],
+    "requires": ["flat-bench"], "loadMode": "bodyweight",
+    "metric": "reps", "kind": "compound", "restClass": "isolation", "rank": 40,
+    "stresses": ["shoulder", "elbow", "wrist"],
+    "form": {
+      "setup": "Hands on the edge of a bench behind you, legs out in front, knees bent to make it easier.",
+      "cues": ["Lower until your elbows reach about 90°.", "Keep your back close to the bench.", "Press up to straight arms."],
+      "watch": ["Going deeper than 90°, which strains the shoulders.", "Shrugging up toward your ears."]
+    }
+  },
+
+  {
+    "id": "db-lateral-raise", "name": "Dumbbell lateral raise", "aka": ["lateral raise", "side raise"],
+    "pattern": "lateral-raise", "primary": ["side-delts"], "secondary": [],
+    "requires": ["dumbbells"], "loadFrom": "dumbbells", "loadMode": "per-hand",
+    "metric": "reps", "kind": "isolation", "restClass": "small", "rank": 85, "ratio": 1,
+    "start": { "beginner": 5, "intermediate": 10, "advanced": 15 },
+    "stresses": ["shoulder"],
+    "form": {
+      "setup": "Stand tall with a slight forward lean, dumbbells at your sides, a soft bend in the elbows.",
+      "cues": ["Lead with the elbows, not the hands.", "Stop at shoulder height; higher works the traps.", "Lower on a slow two count."],
+      "watch": ["Swinging from the hips to get the weight up.", "Going heavy: a strict 10 lb beats a swung 20."]
+    }
+  },
+  {
+    "id": "cable-lateral-raise", "name": "Cable lateral raise",
+    "pattern": "lateral-raise", "primary": ["side-delts"], "secondary": [],
+    "requires": ["cable-station"], "loadFrom": "cable-station", "loadMode": "total", "unilateral": true,
+    "metric": "reps", "kind": "isolation", "restClass": "small", "rank": 80, "ratio": 1.4,
+    "start": { "beginner": 10, "intermediate": 15, "advanced": 20 },
+    "stresses": ["shoulder"], "settings": ["Pulley height"],
+    "form": {
+      "setup": "Pulley at the lowest setting. Stand side-on to it and hold the handle in the far hand.",
+      "cues": ["Lead with the elbow, just like the dumbbell version.", "Stop at shoulder height.", "Control the way down: the cable keeps tension the whole time."],
+      "watch": ["Twisting your torso to help the arm up.", "Standing so close that the range gets short."]
+    }
+  },
+  {
+    "id": "machine-lateral-raise", "name": "Machine lateral raise",
+    "pattern": "lateral-raise", "primary": ["side-delts"], "secondary": [],
+    "requires": ["lateral-raise-machine"], "loadFrom": "lateral-raise-machine", "loadMode": "total",
+    "metric": "reps", "kind": "isolation", "restClass": "small", "rank": 80, "ratio": 2,
+    "start": { "beginner": 15, "intermediate": 30, "advanced": 45 },
+    "stresses": ["shoulder"],
+    "form": {
+      "setup": "Seat height so the pivot lines up with your shoulders. Pads on the outside of your upper arms.",
+      "cues": ["Raise your elbows out to shoulder height.", "Pause for a beat at the top.", "Lower slowly."],
+      "watch": ["Shrugging the weight up.", "Bouncing out of the bottom."]
+    }
+  },
+
+  {
+    "id": "cable-pushdown", "name": "Cable triceps pushdown", "aka": ["pushdown", "rope pushdown"],
+    "pattern": "triceps", "primary": ["triceps"], "secondary": [],
+    "requires": ["cable-station"], "loadFrom": "cable-station", "loadMode": "total",
+    "metric": "reps", "kind": "isolation", "restClass": "isolation", "rank": 85, "ratio": 1,
+    "start": { "beginner": 20, "intermediate": 35, "advanced": 50 },
+    "stresses": ["elbow"], "settings": ["Pulley height", "Attachment"],
+    "form": {
+      "setup": "Rope or straight bar on a high pulley. Elbows pinned to your sides, slight forward lean.",
+      "cues": ["Only your forearms move.", "Lock the elbows fully at the bottom and squeeze.", "Control the way up; don't let the stack slam."],
+      "watch": ["Elbows drifting forward, turning it into a chest press.", "Using body weight to push the bar down."]
+    }
+  },
+  {
+    "id": "cable-overhead-extension", "name": "Overhead cable triceps extension",
+    "pattern": "triceps", "primary": ["triceps"], "secondary": [],
+    "requires": ["cable-station"], "loadFrom": "cable-station", "loadMode": "total",
+    "metric": "reps", "kind": "isolation", "restClass": "isolation", "rank": 80, "ratio": 0.8,
+    "start": { "beginner": 15, "intermediate": 25, "advanced": 40 },
+    "stresses": ["elbow", "shoulder"], "settings": ["Pulley height", "Attachment"],
+    "form": {
+      "setup": "Rope on a low or mid pulley. Face away, rope behind your head, one foot forward.",
+      "cues": ["Elbows point forward and stay put.", "Straighten your arms fully overhead.", "Lower until you feel a deep stretch in the back of the arm."],
+      "watch": ["Elbows flaring wide.", "Arching your lower back."]
+    }
+  },
+  {
+    "id": "db-skull-crusher", "name": "Dumbbell skull crusher", "aka": ["lying triceps extension"],
+    "pattern": "triceps", "primary": ["triceps"], "secondary": [],
+    "requires": ["dumbbells", "flat-bench"], "loadFrom": "dumbbells", "loadMode": "per-hand",
+    "metric": "reps", "kind": "isolation", "restClass": "isolation", "rank": 70, "ratio": 0.35,
+    "start": { "beginner": 10, "intermediate": 15, "advanced": 25 },
+    "stresses": ["elbow"],
+    "form": {
+      "setup": "Lie flat, dumbbells above your shoulders, palms facing each other.",
+      "cues": ["Bend only at the elbows, lowering beside your head.", "Keep your upper arms still.", "Straighten fully and squeeze."],
+      "watch": ["Upper arms swinging back and forth.", "Going heavy enough to make the elbows ache."]
+    }
+  },
+  {
+    "id": "trx-triceps-extension", "name": "Suspension triceps extension",
+    "pattern": "triceps", "primary": ["triceps"], "secondary": ["abs"],
+    "requires": ["suspension-trainer"], "loadMode": "bodyweight",
+    "metric": "reps", "kind": "isolation", "restClass": "isolation", "rank": 40,
+    "stresses": ["elbow"],
+    "form": {
+      "setup": "Face away from the anchor, handles at forehead height, body leaning forward in a straight line.",
+      "cues": ["Bend at the elbows to bring your head between the handles.", "Push back to straight arms.", "Step your feet back to make it harder."],
+      "watch": ["Hips sagging.", "Elbows flaring out."]
+    }
+  },
+
+  {
+    "id": "lat-pulldown", "name": "Lat pulldown", "aka": ["pulldown", "diverging lat pulldown"],
+    "pattern": "vertical-pull", "primary": ["back"], "secondary": ["biceps", "rear-delts"],
+    "requires": ["lat-pulldown-machine"], "loadFrom": "lat-pulldown-machine", "loadMode": "total",
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 85, "ratio": 1,
+    "start": { "beginner": 60, "intermediate": 100, "advanced": 140 },
+    "stresses": ["shoulder", "elbow"],
+    "form": {
+      "setup": "Thigh pad snug on your legs. Grip a little wider than your shoulders.",
+      "cues": ["Start each rep by pulling your shoulder blades down.", "Drive your elbows down toward your back pockets.", "Let your arms straighten fully at the top."],
+      "watch": ["Leaning far back to use body weight.", "Shrugging at the top of each rep."]
+    }
+  },
+  {
+    "id": "pull-up", "name": "Pull-up", "aka": ["chin-up"],
+    "pattern": "vertical-pull", "primary": ["back"], "secondary": ["biceps", "rear-delts"],
+    "requires": ["pull-up-bar"], "loadMode": "bodyweight",
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 80, "level": "intermediate",
+    "stresses": ["shoulder", "elbow"],
+    "form": {
+      "setup": "Overhand grip a little wider than your shoulders. Start from a dead hang.",
+      "cues": ["Pull your shoulder blades down first, then drive your elbows to your ribs.", "Chin over the bar, chest toward it.", "Lower all the way to straight arms."],
+      "watch": ["Kipping or swinging.", "Stopping halfway down."]
+    }
+  },
+  {
+    "id": "band-assisted-pull-up", "name": "Band-assisted pull-up",
+    "pattern": "vertical-pull", "primary": ["back"], "secondary": ["biceps", "rear-delts"],
+    "requires": ["pull-up-bar", "loop-bands"], "loadMode": "bodyweight",
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 55,
+    "stresses": ["shoulder", "elbow"],
+    "form": {
+      "setup": "Loop a band over the bar and put one foot or knee in it. Thicker band, more help.",
+      "cues": ["Same as a pull-up: shoulder blades down first.", "Chin over the bar.", "Lower slowly; the band helps least at the bottom."],
+      "watch": ["Bouncing out of the bottom using the band.", "Using a band so strong the reps are easy."]
+    }
+  },
+  {
+    "id": "cable-single-arm-pulldown", "name": "Single-arm cable pulldown",
+    "pattern": "vertical-pull", "primary": ["back"], "secondary": ["biceps"],
+    "requires": ["cable-station"], "loadFrom": "cable-station", "loadMode": "total", "unilateral": true,
+    "metric": "reps", "kind": "compound", "restClass": "isolation", "rank": 60, "ratio": 0.45,
+    "start": { "beginner": 20, "intermediate": 35, "advanced": 50 },
+    "stresses": ["shoulder"], "settings": ["Pulley height"],
+    "form": {
+      "setup": "High pulley, D-handle. Half-kneel facing the pulley.",
+      "cues": ["Pull your elbow down to your side.", "Keep your chest tall.", "Reach up fully between reps."],
+      "watch": ["Twisting your torso to finish the rep.", "Short reps at the top."]
+    }
+  },
+
+  {
+    "id": "cable-row", "name": "Seated cable row", "aka": ["cable row", "low row"],
+    "pattern": "horizontal-pull", "primary": ["back"], "secondary": ["biceps", "rear-delts"],
+    "requires": ["cable-station"], "loadFrom": "cable-station", "loadMode": "total",
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 80, "ratio": 1,
+    "start": { "beginner": 40, "intermediate": 70, "advanced": 100 },
+    "stresses": ["lower-back", "elbow"], "settings": ["Pulley height", "Attachment", "Bench or floor position"],
+    "form": {
+      "setup": "Low pulley, V-handle or rope. Sit tall on the bench or floor with your feet braced and knees soft.",
+      "cues": ["Pull the handle to your lower ribs, elbows sliding past your sides.", "Squeeze your shoulder blades together for a second.", "Let your arms straighten fully and your shoulders reach forward a little."],
+      "watch": ["Rocking your torso back and forth.", "Shrugging toward your ears."]
+    }
+  },
+  {
+    "id": "seated-row-machine", "name": "Machine seated row",
+    "pattern": "horizontal-pull", "primary": ["back"], "secondary": ["biceps", "rear-delts"],
+    "requires": ["seated-row-machine"], "loadFrom": "seated-row-machine", "loadMode": "total",
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 85, "ratio": 1,
+    "start": { "beginner": 40, "intermediate": 80, "advanced": 120 },
+    "stresses": ["elbow"],
+    "form": {
+      "setup": "Chest against the pad, handles at mid-torso height.",
+      "cues": ["Drive your elbows back and squeeze your shoulder blades.", "Let your arms extend fully between reps.", "Keep your chest on the pad."],
+      "watch": ["Yanking with your lower back.", "Shrugging instead of rowing."]
+    }
+  },
+  {
+    "id": "chest-supported-db-row", "name": "Chest-supported dumbbell row", "aka": ["incline dumbbell row"],
+    "pattern": "horizontal-pull", "primary": ["back"], "secondary": ["biceps", "rear-delts"],
+    "requires": ["dumbbells", "adjustable-bench"], "loadFrom": "dumbbells", "loadMode": "per-hand",
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 80, "ratio": 0.38,
+    "start": { "beginner": 15, "intermediate": 30, "advanced": 45 },
+    "stresses": ["elbow"], "settings": ["Bench angle"],
+    "form": {
+      "setup": "Bench at about 30°. Lie chest-down on it with the dumbbells hanging straight below you.",
+      "cues": ["Row your elbows up and back, like your hands are hooks.", "Squeeze your shoulder blades at the top for a beat.", "Let the dumbbells hang to a full stretch."],
+      "watch": ["Lifting your chest off the pad.", "Curling the weight with your biceps."]
+    }
+  },
+  {
+    "id": "chest-supported-wide-row", "name": "Chest-supported wide row", "aka": ["incline row wide"],
+    "pattern": "horizontal-pull", "primary": ["back", "rear-delts"], "secondary": ["biceps"],
+    "requires": ["dumbbells", "adjustable-bench"], "loadFrom": "dumbbells", "loadMode": "per-hand",
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 60, "ratio": 0.3,
+    "start": { "beginner": 10, "intermediate": 20, "advanced": 35 },
+    "stresses": ["shoulder", "elbow"], "settings": ["Bench angle"],
+    "form": {
+      "setup": "Same as the chest-supported row, palms facing your feet.",
+      "cues": ["Row with your elbows out at about 45° to hit the upper back and rear delts.", "Squeeze your shoulder blades together at the top.", "Full stretch at the bottom."],
+      "watch": ["Elbows tucking in, which shifts the work to the lats.", "Heaving off the pad."]
+    }
+  },
+  {
+    "id": "single-arm-db-row", "name": "Single-arm dumbbell row",
+    "pattern": "horizontal-pull", "primary": ["back"], "secondary": ["biceps", "rear-delts"],
+    "requires": ["dumbbells", "flat-bench"], "loadFrom": "dumbbells", "loadMode": "per-hand", "unilateral": true,
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 75, "ratio": 0.45,
+    "start": { "beginner": 20, "intermediate": 40, "advanced": 55 },
+    "stresses": ["lower-back", "elbow"],
+    "form": {
+      "setup": "One knee and hand on the bench, back flat, dumbbell hanging below your shoulder.",
+      "cues": ["Pull the dumbbell toward your hip.", "Keep your shoulders square to the floor.", "Lower to a full stretch."],
+      "watch": ["Twisting to heave the weight up.", "Rounding your back."]
+    }
+  },
+  {
+    "id": "barbell-row", "name": "Barbell row", "aka": ["bent-over row"],
+    "pattern": "horizontal-pull", "primary": ["back"], "secondary": ["biceps", "rear-delts", "lower-back"],
+    "requires": ["barbell"], "loadFrom": "barbell", "loadMode": "total",
+    "metric": "reps", "kind": "compound", "restClass": "heavy", "rank": 70, "ratio": 1,
+    "start": { "beginner": 45, "intermediate": 95, "advanced": 135 },
+    "stresses": ["lower-back", "elbow"],
+    "form": {
+      "setup": "Hinge forward until your torso is about 45°, back flat, bar hanging at your knees.",
+      "cues": ["Pull the bar to your belly button.", "Keep your back angle fixed.", "Lower under control."],
+      "watch": ["Standing up more each rep to cheat the weight.", "Rounding your lower back."]
+    }
+  },
+  {
+    "id": "trx-row", "name": "Suspension row", "aka": ["trx row"],
+    "pattern": "horizontal-pull", "primary": ["back"], "secondary": ["biceps", "rear-delts"],
+    "requires": ["suspension-trainer"], "loadMode": "bodyweight",
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 50,
+    "stresses": ["elbow"],
+    "form": {
+      "setup": "Face the anchor, lean back with straight arms, body in one line. Walk your feet forward to make it harder.",
+      "cues": ["Pull your chest to the handles.", "Squeeze your shoulder blades together.", "Lower slowly to straight arms."],
+      "watch": ["Hips sagging.", "Shrugging toward your ears."]
+    }
+  },
+  {
+    "id": "smith-inverted-row", "name": "Smith machine inverted row",
+    "pattern": "horizontal-pull", "primary": ["back"], "secondary": ["biceps", "rear-delts"],
+    "requires": ["smith"], "loadMode": "bodyweight",
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 55,
+    "stresses": ["elbow"], "settings": ["Bar height"],
+    "form": {
+      "setup": "Lock the Smith bar at about hip height. Hang underneath it, body straight, heels on the floor.",
+      "cues": ["Pull your chest to the bar.", "Keep your body in one straight line.", "Lower to straight arms."],
+      "watch": ["Hips sagging toward the floor.", "Half reps."]
+    }
+  },
+
+  {
+    "id": "cable-face-pull", "name": "Face pull",
+    "pattern": "rear-delt", "primary": ["rear-delts"], "secondary": ["back"],
+    "requires": ["cable-station"], "loadFrom": "cable-station", "loadMode": "total",
+    "metric": "reps", "kind": "isolation", "restClass": "small", "rank": 85, "ratio": 1,
+    "start": { "beginner": 15, "intermediate": 25, "advanced": 40 },
+    "stresses": ["shoulder"], "settings": ["Pulley height", "Attachment"],
+    "form": {
+      "setup": "Rope at about face height. Step back until the weight lifts before you pull.",
+      "cues": ["Pull toward your forehead, hands finishing beside your ears.", "Keep your elbows high and wide.", "Light weight, slow reps: feel the back of the shoulders."],
+      "watch": ["Going heavy and turning it into a row.", "Elbows dropping below your shoulders."]
+    }
+  },
+  {
+    "id": "cable-rear-delt-fly", "name": "Cable rear delt fly", "aka": ["reverse cable fly"],
+    "pattern": "rear-delt", "primary": ["rear-delts"], "secondary": ["back"],
+    "requires": ["cable-dual"], "loadFrom": "cable-dual", "loadMode": "per-side",
+    "metric": "reps", "kind": "isolation", "restClass": "small", "rank": 75, "ratio": 0.5,
+    "start": { "beginner": 5, "intermediate": 10, "advanced": 15 },
+    "stresses": ["shoulder"], "settings": ["Arm height"],
+    "form": {
+      "setup": "Pulleys at shoulder height. Cross the cables: left hand holds the right cable, right hand the left.",
+      "cues": ["Pull your arms out and back in a wide arc.", "Keep a soft bend in the elbows.", "Pause when your arms are in line with your body."],
+      "watch": ["Squeezing the shoulder blades instead of moving the arms.", "Too much weight, which shrinks the range."]
+    }
+  },
+  {
+    "id": "db-rear-delt-fly", "name": "Chest-supported rear delt raise",
+    "pattern": "rear-delt", "primary": ["rear-delts"], "secondary": ["back"],
+    "requires": ["dumbbells", "adjustable-bench"], "loadFrom": "dumbbells", "loadMode": "per-hand",
+    "metric": "reps", "kind": "isolation", "restClass": "small", "rank": 70, "ratio": 0.35,
+    "start": { "beginner": 5, "intermediate": 10, "advanced": 15 },
+    "stresses": ["shoulder"], "settings": ["Bench angle"],
+    "form": {
+      "setup": "Lie chest-down on a bench at about 30°, light dumbbells hanging below you.",
+      "cues": ["Raise your arms out to the sides, leading with the elbows.", "Pause at shoulder height.", "Lower slowly."],
+      "watch": ["Swinging the weight.", "Shrugging up toward your ears."]
+    }
+  },
+  {
+    "id": "band-pull-apart", "name": "Band pull-apart",
+    "pattern": "rear-delt", "primary": ["rear-delts"], "secondary": ["back"],
+    "requires": ["loop-bands"], "loadFrom": "loop-bands", "loadMode": "total",
+    "metric": "reps", "kind": "isolation", "restClass": "small", "rank": 40,
+    "start": { "beginner": 1, "intermediate": 1, "advanced": 2 },
+    "stresses": ["shoulder"],
+    "form": {
+      "setup": "Hold a band in front of your chest, arms straight, hands shoulder width apart.",
+      "cues": ["Pull the band apart until it touches your chest.", "Squeeze your shoulder blades together.", "Return slowly."],
+      "watch": ["Bending your elbows to make it easier.", "Arching your lower back."]
+    }
+  },
+
+  {
+    "id": "db-curl", "name": "Dumbbell curl", "aka": ["bicep curl", "alternating curl"],
+    "pattern": "biceps", "primary": ["biceps"], "secondary": ["forearms"],
+    "requires": ["dumbbells"], "loadFrom": "dumbbells", "loadMode": "per-hand",
+    "metric": "reps", "kind": "isolation", "restClass": "isolation", "rank": 80, "ratio": 1,
+    "start": { "beginner": 10, "intermediate": 20, "advanced": 30 },
+    "stresses": ["elbow", "wrist"],
+    "form": {
+      "setup": "Stand tall, dumbbells at your sides, elbows by your ribs.",
+      "cues": ["Curl without letting your elbows move forward.", "Squeeze at the top for a beat.", "Lower on a slow three count."],
+      "watch": ["Swinging your hips and back.", "Half reps that never straighten the arm."]
+    }
+  },
+  {
+    "id": "db-incline-curl", "name": "Incline dumbbell curl",
+    "pattern": "biceps", "primary": ["biceps"], "secondary": [],
+    "requires": ["dumbbells", "adjustable-bench"], "loadFrom": "dumbbells", "loadMode": "per-hand",
+    "metric": "reps", "kind": "isolation", "restClass": "isolation", "rank": 75, "ratio": 0.85,
+    "start": { "beginner": 10, "intermediate": 15, "advanced": 25 },
+    "stresses": ["elbow", "shoulder"], "settings": ["Bench angle"],
+    "form": {
+      "setup": "Bench at 45–60°. Sit back with your arms hanging straight down behind your torso.",
+      "cues": ["Curl without letting your upper arm drift forward.", "Squeeze at the top.", "Feel the stretch at the bottom: that's why this one is here."],
+      "watch": ["Raising your elbows to shorten the range.", "Going so heavy that you shrug."]
+    }
+  },
+  {
+    "id": "db-hammer-curl", "name": "Hammer curl",
+    "pattern": "biceps", "primary": ["biceps", "forearms"], "secondary": [],
+    "requires": ["dumbbells"], "loadFrom": "dumbbells", "loadMode": "per-hand",
+    "metric": "reps", "kind": "isolation", "restClass": "isolation", "rank": 70, "ratio": 1.1,
+    "start": { "beginner": 10, "intermediate": 20, "advanced": 30 },
+    "stresses": ["elbow", "wrist"],
+    "form": {
+      "setup": "Dumbbells at your sides, palms facing each other, and they stay that way.",
+      "cues": ["Curl straight up with your elbows pinned.", "Pause at the top.", "Control the way down."],
+      "watch": ["Turning it into a normal curl by rotating the wrist.", "Rushing the reps."]
+    }
+  },
+  {
+    "id": "cable-curl", "name": "Cable curl",
+    "pattern": "biceps", "primary": ["biceps"], "secondary": ["forearms"],
+    "requires": ["cable-station"], "loadFrom": "cable-station", "loadMode": "total",
+    "metric": "reps", "kind": "isolation", "restClass": "isolation", "rank": 80, "ratio": 1.6,
+    "start": { "beginner": 20, "intermediate": 35, "advanced": 50 },
+    "stresses": ["elbow", "wrist"], "settings": ["Pulley height", "Attachment"],
+    "form": {
+      "setup": "Straight or EZ bar on the low pulley. Stand close, elbows at your sides.",
+      "cues": ["Curl the bar to your shoulders without moving your elbows.", "Squeeze at the top.", "Lower slowly; the cable keeps tension the whole way."],
+      "watch": ["Leaning back to start the rep.", "Letting the elbows drift forward."]
+    }
+  },
+  {
+    "id": "barbell-curl", "name": "Barbell curl", "aka": ["ez bar curl"],
+    "pattern": "biceps", "primary": ["biceps"], "secondary": ["forearms"],
+    "requires": ["barbell"], "loadFrom": "barbell", "loadMode": "total",
+    "metric": "reps", "kind": "isolation", "restClass": "isolation", "rank": 85, "ratio": 1.8,
+    "start": { "beginner": 45, "intermediate": 55, "advanced": 75 },
+    "stresses": ["elbow", "wrist"],
+    "form": {
+      "setup": "Stand tall, bar at your thighs, shoulder-width grip, elbows at your sides.",
+      "cues": ["Curl to your shoulders without your elbows moving forward.", "Squeeze at the top for a beat.", "Lower on a slow three count."],
+      "watch": ["Swinging your hips and back.", "Half reps."]
+    }
+  },
+
+  {
+    "id": "barbell-back-squat", "name": "Barbell back squat", "aka": ["squat"],
+    "pattern": "squat", "primary": ["quads", "glutes"], "secondary": ["adductors", "lower-back"],
+    "requires": ["barbell", "squat-rack"], "loadFrom": "barbell", "loadMode": "total",
+    "metric": "reps", "kind": "compound", "restClass": "heavy", "rank": 90, "ratio": 1,
+    "start": { "beginner": 45, "intermediate": 95, "advanced": 135 },
+    "stresses": ["knee", "hip", "lower-back"], "settings": ["Rack height", "Safety height"],
+    "form": {
+      "setup": "Bar on your upper back, hands close enough to keep your elbows under it. Feet shoulder width, toes slightly out. Brace before you unrack.",
+      "cues": ["Big breath into your belly and brace.", "Sit down between your knees, knees tracking over your toes.", "Drive the floor away through your whole foot."],
+      "watch": ["Knees caving in on the way up.", "Heels lifting off the floor."]
+    }
+  },
+  {
+    "id": "smith-squat", "name": "Smith machine squat",
+    "pattern": "squat", "primary": ["quads", "glutes"], "secondary": ["adductors"],
+    "requires": ["smith"], "loadFrom": "smith", "loadMode": "total",
+    "metric": "reps", "kind": "compound", "restClass": "heavy", "rank": 85, "ratio": 1,
+    "start": { "beginner": 35, "intermediate": 85, "advanced": 135 },
+    "stresses": ["knee", "hip"], "settings": ["Bar hook height", "Foot position", "Safety stop height"],
+    "form": {
+      "setup": "Bar on your upper back. Feet slightly in front of the bar, shoulder width apart. Safety stops just below your lowest squat.",
+      "cues": ["Brace, unhook with a twist, then sit straight down.", "Knees track over your toes.", "Drive up through your whole foot."],
+      "watch": ["Feet too far forward, which puts the load on your lower back.", "Heels lifting at the bottom."]
+    }
+  },
+  {
+    "id": "hack-squat", "name": "Hack squat",
+    "pattern": "squat", "primary": ["quads", "glutes"], "secondary": ["adductors"],
+    "requires": ["hack-squat-machine"], "loadFrom": "hack-squat-machine", "loadMode": "total",
+    "metric": "reps", "kind": "compound", "restClass": "heavy", "rank": 80, "ratio": 1.2,
+    "start": { "beginner": 0, "intermediate": 90, "advanced": 180 },
+    "stresses": ["knee", "hip"],
+    "form": {
+      "setup": "Shoulders and back against the pads, feet shoulder width, mid-platform.",
+      "cues": ["Lower until your knees are near 90°.", "Drive through your whole foot.", "Don't lock your knees hard at the top."],
+      "watch": ["Feet too high or low on the platform.", "Going so deep that your lower back lifts off the pad."]
+    }
+  },
+  {
+    "id": "goblet-squat", "name": "Goblet squat",
+    "pattern": "squat", "primary": ["quads", "glutes"], "secondary": ["adductors", "abs"],
+    "requires": ["dumbbells"], "loadFrom": "dumbbells", "loadMode": "total",
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 60, "ratio": 0.35,
+    "start": { "beginner": 20, "intermediate": 35, "advanced": 50 },
+    "stresses": ["knee", "hip"],
+    "form": {
+      "setup": "Hold one dumbbell upright against your chest, elbows pointing down.",
+      "cues": ["Sit down between your knees; elbows brush the inside of your knees.", "Keep your chest tall.", "Drive up through your whole foot."],
+      "watch": ["Heels lifting.", "Going so heavy that your torso folds forward."]
+    }
+  },
+
+  {
+    "id": "leg-press", "name": "Leg press",
+    "pattern": "leg-press", "primary": ["quads", "glutes"], "secondary": ["adductors", "hamstrings"],
+    "requires": ["leg-press-machine"], "loadFrom": "leg-press-machine", "loadMode": "total",
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 90, "ratio": 1,
+    "start": { "beginner": 80, "intermediate": 160, "advanced": 240 },
+    "stresses": ["knee", "hip", "lower-back"],
+    "form": {
+      "setup": "Feet shoulder width, mid-platform. Back and hips flat against the pad.",
+      "cues": ["Lower until your knees are near 90°, before your hips lift.", "Drive through your whole foot.", "Stop just short of locking your knees."],
+      "watch": ["Going so deep that your lower back rounds off the pad.", "Loading it up and doing short reps."]
+    }
+  },
+
+  {
+    "id": "db-bulgarian-split-squat", "name": "Bulgarian split squat", "aka": ["rear foot elevated split squat"],
+    "pattern": "single-leg", "primary": ["quads", "glutes"], "secondary": ["adductors"],
+    "requires": ["dumbbells", "flat-bench"], "loadFrom": "dumbbells", "loadMode": "per-hand", "unilateral": true,
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 80, "ratio": 1,
+    "start": { "beginner": 10, "intermediate": 20, "advanced": 35 },
+    "stresses": ["knee", "hip"], "settings": ["Foot distance from the bench"],
+    "form": {
+      "setup": "Rear foot on a bench, front foot far enough forward that your shin stays nearly vertical. Dumbbells at your sides.",
+      "cues": ["Drop straight down; your back knee heads for the floor.", "Keep your front heel down and drive through it.", "Lean your torso slightly forward to bring in the glutes."],
+      "watch": ["Front foot too close to the bench.", "Pushing off the back foot."]
+    }
+  },
+  {
+    "id": "db-walking-lunge", "name": "Walking lunge",
+    "pattern": "single-leg", "primary": ["quads", "glutes"], "secondary": ["adductors"],
+    "requires": ["dumbbells"], "loadFrom": "dumbbells", "loadMode": "per-hand", "unilateral": true,
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 75, "ratio": 1.1,
+    "start": { "beginner": 10, "intermediate": 20, "advanced": 35 },
+    "stresses": ["knee", "hip"],
+    "form": {
+      "setup": "Dumbbells at your sides. Take a long step; the count is per leg.",
+      "cues": ["Lower until your back knee almost touches the floor.", "Drive up through your front heel.", "Torso tall, eyes forward."],
+      "watch": ["Short steps that push the front knee far past the toes.", "Leaning forward and rounding your back."]
+    }
+  },
+  {
+    "id": "db-reverse-lunge", "name": "Reverse lunge",
+    "pattern": "single-leg", "primary": ["quads", "glutes"], "secondary": ["adductors"],
+    "requires": ["dumbbells"], "loadFrom": "dumbbells", "loadMode": "per-hand", "unilateral": true,
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 70, "ratio": 1.1,
+    "start": { "beginner": 10, "intermediate": 20, "advanced": 35 },
+    "stresses": ["knee", "hip"],
+    "form": {
+      "setup": "Stand tall with dumbbells at your sides. Lunges in place, stepping back.",
+      "cues": ["Step back and lower until your back knee nearly touches the floor.", "Keep most of your weight on the front foot.", "Drive back up through the front heel."],
+      "watch": ["Front knee caving in.", "Pushing off the back foot."]
+    }
+  },
+  {
+    "id": "db-step-up", "name": "Dumbbell step-up",
+    "pattern": "single-leg", "primary": ["quads", "glutes"], "secondary": [],
+    "requires": ["dumbbells", "flat-bench"], "loadFrom": "dumbbells", "loadMode": "per-hand", "unilateral": true,
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 60, "ratio": 0.9,
+    "start": { "beginner": 10, "intermediate": 20, "advanced": 30 },
+    "stresses": ["knee"],
+    "form": {
+      "setup": "Stand facing a bench, one whole foot on it, dumbbells at your sides.",
+      "cues": ["Drive up through the top foot only.", "Stand fully tall on the bench.", "Lower slowly with the same leg."],
+      "watch": ["Pushing off the bottom foot.", "Knee caving in."]
+    }
+  },
+  {
+    "id": "smith-split-squat", "name": "Smith machine split squat",
+    "pattern": "single-leg", "primary": ["quads", "glutes"], "secondary": ["adductors"],
+    "requires": ["smith"], "loadFrom": "smith", "loadMode": "total", "unilateral": true,
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 65, "ratio": 2.2,
+    "start": { "beginner": 35, "intermediate": 45, "advanced": 85 },
+    "stresses": ["knee", "hip"], "settings": ["Bar hook height", "Stance length"],
+    "form": {
+      "setup": "Bar on your upper back, one foot forward and one back in a long split stance.",
+      "cues": ["Drop straight down until your back knee nearly touches the floor.", "Drive through your front heel.", "Keep your torso tall."],
+      "watch": ["A stance so short your front heel lifts.", "Pushing off the back foot."]
+    }
+  },
+
+  {
+    "id": "barbell-rdl", "name": "Romanian deadlift", "aka": ["rdl"],
+    "pattern": "hinge", "primary": ["hamstrings", "glutes"], "secondary": ["lower-back"],
+    "requires": ["barbell"], "loadFrom": "barbell", "loadMode": "total",
+    "metric": "reps", "kind": "compound", "restClass": "heavy", "rank": 90, "ratio": 1,
+    "start": { "beginner": 65, "intermediate": 115, "advanced": 155 },
+    "stresses": ["lower-back", "hip"],
+    "form": {
+      "setup": "Bar at your hips, double overhand grip, knees soft and staying that way.",
+      "cues": ["Push your hips straight back; the bar slides down your thighs.", "Stop when your hamstrings pull hard, usually around mid-shin.", "Stand up by driving your hips forward."],
+      "watch": ["Rounding your lower back to reach lower.", "Bending your knees and turning it into a squat."]
+    }
+  },
+  {
+    "id": "smith-rdl", "name": "Smith machine Romanian deadlift", "aka": ["smith rdl"],
+    "pattern": "hinge", "primary": ["hamstrings", "glutes"], "secondary": ["lower-back"],
+    "requires": ["smith"], "loadFrom": "smith", "loadMode": "total",
+    "metric": "reps", "kind": "compound", "restClass": "heavy", "rank": 85, "ratio": 1,
+    "start": { "beginner": 35, "intermediate": 85, "advanced": 135 },
+    "stresses": ["lower-back", "hip"], "settings": ["Bar hook height", "Safety stop height"],
+    "form": {
+      "setup": "Unhook the bar at hip height. Stand close, feet hip width, so the bar runs down the front of your thighs.",
+      "cues": ["Push your hips back and let the bar slide down your thighs.", "Stop when your hamstrings pull hard.", "Drive your hips forward to stand tall."],
+      "watch": ["Standing too far back: the fixed bar path then pulls you forward.", "Rounding your lower back."]
+    }
+  },
+  {
+    "id": "db-rdl", "name": "Dumbbell Romanian deadlift",
+    "pattern": "hinge", "primary": ["hamstrings", "glutes"], "secondary": ["lower-back"],
+    "requires": ["dumbbells"], "loadFrom": "dumbbells", "loadMode": "per-hand",
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 75, "ratio": 0.4,
+    "start": { "beginner": 20, "intermediate": 35, "advanced": 50 },
+    "stresses": ["lower-back", "hip"],
+    "form": {
+      "setup": "Dumbbells in front of your thighs, knees soft.",
+      "cues": ["Push your hips back, dumbbells sliding down your legs.", "Stop at a strong hamstring stretch.", "Drive your hips forward to stand."],
+      "watch": ["Dumbbells drifting away from your legs.", "Rounding your back."]
+    }
+  },
+  {
+    "id": "cable-pull-through", "name": "Cable pull-through",
+    "pattern": "hinge", "primary": ["glutes", "hamstrings"], "secondary": [],
+    "requires": ["cable-station"], "loadFrom": "cable-station", "loadMode": "total",
+    "metric": "reps", "kind": "compound", "restClass": "compound", "rank": 50, "ratio": 0.5,
+    "start": { "beginner": 30, "intermediate": 50, "advanced": 80 },
+    "stresses": ["hip"], "settings": ["Pulley height", "Attachment"],
+    "form": {
+      "setup": "Rope on the low pulley. Face away, rope between your legs, walk out two steps.",
+      "cues": ["Push your hips back, letting the rope pull between your legs.", "Snap your hips forward and squeeze your glutes.", "Arms are just hooks."],
+      "watch": ["Squatting instead of hinging.", "Leaning back at the top."]
+    }
+  },
+
+  {
+    "id": "barbell-deadlift", "name": "Deadlift",
+    "pattern": "deadlift", "primary": ["hamstrings", "glutes", "back"], "secondary": ["quads", "lower-back", "forearms"],
+    "requires": ["barbell"], "loadFrom": "barbell", "loadMode": "total",
+    "metric": "reps", "kind": "compound", "restClass": "heavy", "rank": 90, "ratio": 1,
+    "start": { "beginner": 95, "intermediate": 155, "advanced": 225 },
+    "stresses": ["lower-back", "hip"],
+    "form": {
+      "setup": "Bar over your mid-foot, shins an inch away. Hinge down, grip just outside your legs, chest up, lats tight.",
+      "cues": ["Push the floor away; the bar and your hips rise together.", "Keep the bar against your legs.", "Stand tall at the top without leaning back."],
+      "watch": ["Hips shooting up first so your back does the lift.", "Jerking the bar off the floor."]
+    }
+  },
+  {
+    "id": "trap-bar-deadlift", "name": "Trap bar deadlift",
+    "pattern": "deadlift", "primary": ["quads", "glutes", "hamstrings"], "secondary": ["back", "lower-back", "forearms"],
+    "requires": ["trap-bar"], "loadFrom": "trap-bar", "loadMode": "total",
+    "metric": "reps", "kind": "compound", "restClass": "heavy", "rank": 92, "ratio": 1.05,
+    "start": { "beginner": 95, "intermediate": 165, "advanced": 235 },
+    "stresses": ["lower-back", "hip", "knee"],
+    "form": {
+      "setup": "Stand in the middle of the bar, grab the handles, hips down, chest up.",
+      "cues": ["Brace, then push the floor away.", "Hips and shoulders rise together.", "Stand tall and squeeze your glutes."],
+      "watch": ["Rounding your back off the floor.", "Letting your knees cave in."]
+    }
+  },
+  {
+    "id": "smith-deadlift", "name": "Smith machine deadlift",
+    "pattern": "deadlift", "primary": ["hamstrings", "glutes", "back"], "secondary": ["quads", "lower-back", "forearms"],
+    "requires": ["smith"], "loadFrom": "smith", "loadMode": "total",
+    "metric": "reps", "kind": "compound", "restClass": "heavy", "rank": 80, "ratio": 0.95,
+    "start": { "beginner": 85, "intermediate": 135, "advanced": 185 },
+    "stresses": ["lower-back", "hip"], "settings": ["Safety stop height"],
+    "form": {
+      "setup": "Set the safety stops so the bar rests at mid-shin. Stand close, feet hip width, bar over mid-foot.",
+      "cues": ["Hinge down, grip outside your legs, chest up.", "Push the floor away; keep the bar touching your legs.", "Stand tall, then lower back to the stops with control."],
+      "watch": ["Standing too far from the bar: the fixed path pulls you onto your toes.", "Rounding your lower back."]
+    }
+  },
+
+  {
+    "id": "machine-leg-curl", "name": "Leg curl", "aka": ["hamstring curl", "seated leg curl"],
+    "pattern": "leg-curl", "primary": ["hamstrings"], "secondary": [],
+    "requires": ["leg-curl-machine"], "loadFrom": "leg-curl-machine", "loadMode": "total",
+    "metric": "reps", "kind": "isolation", "restClass": "isolation", "rank": 90, "ratio": 1,
+    "start": { "beginner": 30, "intermediate": 60, "advanced": 90 },
+    "stresses": ["knee"],
+    "form": {
+      "setup": "Knee lined up with the machine's pivot. Ankle pad just above your heels, thigh pad snug.",
+      "cues": ["Curl all the way in and pause for a second.", "Lower slowly, about three seconds.", "Let your legs straighten fully between reps."],
+      "watch": ["Lifting your hips to cheat the weight.", "Half reps at the top."]
+    }
+  },
+  {
+    "id": "trx-hamstring-curl", "name": "Suspension hamstring curl",
+    "pattern": "leg-curl", "primary": ["hamstrings"], "secondary": ["glutes"],
+    "requires": ["suspension-trainer"], "loadMode": "bodyweight",
+    "metric": "reps", "kind": "isolation", "restClass": "isolation", "rank": 60,
+    "stresses": ["knee"],
+    "form": {
+      "setup": "Lie on your back, heels in the foot cradles, straps about a foot off the floor. Lift your hips.",
+      "cues": ["Keep your hips up the whole time.", "Pull your heels toward your glutes.", "Extend slowly."],
+      "watch": ["Hips dropping as you tire.", "Rushing the way out."]
+    }
+  },
+
+  {
+    "id": "machine-leg-extension", "name": "Leg extension",
+    "pattern": "leg-extension", "primary": ["quads"], "secondary": [],
+    "requires": ["leg-extension-machine"], "loadFrom": "leg-extension-machine", "loadMode": "total",
+    "metric": "reps", "kind": "isolation", "restClass": "isolation", "rank": 90, "ratio": 1,
+    "start": { "beginner": 30, "intermediate": 60, "advanced": 90 },
+    "stresses": ["knee"],
+    "form": {
+      "setup": "Knee lined up with the pivot, ankle pad just above your ankles, back against the seat.",
+      "cues": ["Extend fully and squeeze your quads hard for a second.", "Lower under control.", "Toes pointed slightly up."],
+      "watch": ["Kicking the weight up with momentum.", "Lifting your hips off the seat."]
+    }
+  },
+
+  {
+    "id": "machine-calf-raise", "name": "Calf raise machine",
+    "pattern": "calves", "primary": ["calves"], "secondary": [],
+    "requires": ["calf-machine"], "loadFrom": "calf-machine", "loadMode": "total",
+    "metric": "reps", "kind": "isolation", "restClass": "small", "rank": 90, "ratio": 1,
+    "start": { "beginner": 60, "intermediate": 120, "advanced": 180 },
+    "stresses": ["ankle"],
+    "form": {
+      "setup": "Balls of your feet on the edge, heels free.",
+      "cues": ["Lower all the way into a stretch and pause.", "Rise all the way onto your big toe and pause.", "No bouncing: the pauses are the exercise."],
+      "watch": ["Rapid half reps.", "Bending your knees to help."]
+    }
+  },
+  {
+    "id": "leg-press-calf-press", "name": "Calf press on the leg press",
+    "pattern": "calves", "primary": ["calves"], "secondary": [],
+    "requires": ["leg-press-machine"], "loadFrom": "leg-press-machine", "loadMode": "total",
+    "metric": "reps", "kind": "isolation", "restClass": "small", "rank": 85, "ratio": 1.2,
+    "start": { "beginner": 60, "intermediate": 140, "advanced": 200 },
+    "stresses": ["ankle"], "settings": ["Foot position"],
+    "form": {
+      "setup": "Balls of your feet on the bottom edge of the platform, legs straight but not locked.",
+      "cues": ["Let your heels sink into a deep stretch.", "Press up onto your toes and pause.", "Slow and full range."],
+      "watch": ["Bending your knees, which turns it into a leg press.", "Feet slipping off the edge: start light."]
+    }
+  },
+  {
+    "id": "smith-calf-raise", "name": "Smith machine calf raise",
+    "pattern": "calves", "primary": ["calves"], "secondary": [],
+    "requires": ["smith"], "loadFrom": "smith", "loadMode": "total",
+    "metric": "reps", "kind": "isolation", "restClass": "small", "rank": 75, "ratio": 1,
+    "start": { "beginner": 35, "intermediate": 85, "advanced": 135 },
+    "stresses": ["ankle"], "settings": ["Bar hook height", "Step or plate under feet"],
+    "form": {
+      "setup": "Bar on your upper back, balls of your feet on a plate or step so your heels can drop.",
+      "cues": ["Lower your heels into a full stretch and pause.", "Rise onto your big toes and pause.", "Knees straight but soft."],
+      "watch": ["Bouncing.", "Rolling onto the outside of your feet."]
+    }
+  },
+  {
+    "id": "db-single-leg-calf-raise", "name": "Single-leg calf raise",
+    "pattern": "calves", "primary": ["calves"], "secondary": [],
+    "requires": ["dumbbells"], "loadFrom": "dumbbells", "loadMode": "per-hand", "unilateral": true,
+    "metric": "reps", "kind": "isolation", "restClass": "small", "rank": 60, "ratio": 0.25,
+    "start": { "beginner": 0, "intermediate": 15, "advanced": 30 },
+    "stresses": ["ankle"],
+    "form": {
+      "setup": "Ball of one foot on a step or plate, a dumbbell in the same-side hand, the other hand holding on for balance.",
+      "cues": ["Full stretch at the bottom.", "Rise all the way up and pause.", "Slow reps."],
+      "watch": ["Bouncing.", "Short range."]
+    }
+  },
+
+  {
+    "id": "cable-crunch", "name": "Cable crunch", "aka": ["kneeling cable crunch", "rope crunch"],
+    "pattern": "abs", "primary": ["abs"], "secondary": [],
+    "requires": ["cable-station"], "loadFrom": "cable-station", "loadMode": "total",
+    "metric": "reps", "kind": "isolation", "restClass": "small", "rank": 85, "ratio": 1,
+    "start": { "beginner": 30, "intermediate": 50, "advanced": 70 },
+    "stresses": ["lower-back", "neck"], "settings": ["Pulley height", "Attachment"],
+    "form": {
+      "setup": "Kneel facing a high pulley, rope held beside your head, hips fixed in place.",
+      "cues": ["Round your spine, bringing your ribs toward your hips.", "Your hips don't move; only your trunk folds.", "Uncurl slowly and feel your abs stretch."],
+      "watch": ["Pulling with your arms.", "Sitting back onto your heels instead of crunching."]
+    }
+  },
+  {
+    "id": "hanging-knee-raise", "name": "Hanging knee raise",
+    "pattern": "abs", "primary": ["abs"], "secondary": ["forearms"],
+    "requires": ["pull-up-bar"], "loadMode": "bodyweight",
+    "metric": "reps", "kind": "isolation", "restClass": "small", "rank": 75,
+    "stresses": ["shoulder", "lower-back"],
+    "form": {
+      "setup": "Hang from the bar with straight arms, shoulders slightly engaged.",
+      "cues": ["Curl your knees up toward your chest, tilting your pelvis.", "Pause at the top.", "Lower slowly without swinging."],
+      "watch": ["Swinging for momentum.", "Only lifting your thighs without curling the pelvis."]
+    }
+  },
+  {
+    "id": "hanging-leg-raise", "name": "Hanging leg raise",
+    "pattern": "abs", "primary": ["abs"], "secondary": ["forearms"],
+    "requires": ["pull-up-bar"], "loadMode": "bodyweight",
+    "metric": "reps", "kind": "isolation", "restClass": "small", "rank": 70, "level": "intermediate",
+    "stresses": ["shoulder", "lower-back"],
+    "form": {
+      "setup": "Dead hang from the bar, legs straight together.",
+      "cues": ["Raise your legs to at least hip height, curling your pelvis up.", "Control the way down.", "Stay still between reps."],
+      "watch": ["Swinging.", "Arching your lower back at the bottom."]
+    }
+  },
+  {
+    "id": "trx-body-saw", "name": "Suspension body saw", "aka": ["trx fallout"],
+    "pattern": "abs", "primary": ["abs"], "secondary": ["front-delts"],
+    "requires": ["suspension-trainer"], "loadMode": "bodyweight",
+    "metric": "reps", "kind": "isolation", "restClass": "small", "rank": 65, "level": "intermediate",
+    "stresses": ["shoulder", "lower-back"],
+    "form": {
+      "setup": "Forearm plank with your feet in the foot cradles, straps about a foot off the floor.",
+      "cues": ["Push your body back by moving at the shoulders.", "Keep your lower back flat; stop before it sags.", "Pull back to the start with your abs."],
+      "watch": ["Hips sagging.", "Piking your hips up."]
+    }
+  },
+  {
+    "id": "ab-wheel", "name": "Ab wheel rollout",
+    "pattern": "abs", "primary": ["abs"], "secondary": ["front-delts"],
+    "requires": ["ab-wheel"], "loadMode": "bodyweight",
+    "metric": "reps", "kind": "isolation", "restClass": "small", "rank": 80, "level": "intermediate",
+    "stresses": ["shoulder", "lower-back"],
+    "form": {
+      "setup": "Kneel on a pad, wheel under your shoulders, hips slightly tucked.",
+      "cues": ["Roll out while keeping your lower back flat.", "Pull back with your abs, not your arms.", "A shorter clean rep beats a long sagging one."],
+      "watch": ["Hips sagging and your lower back arching.", "Piking your hips up on the way back."]
+    }
+  },
+  {
+    "id": "plank", "name": "Plank",
+    "pattern": "abs", "primary": ["abs"], "secondary": [],
+    "requires": [], "loadMode": "none",
+    "metric": "time", "kind": "isolation", "restClass": "small", "rank": 40,
+    "stresses": ["shoulder", "lower-back"],
+    "form": {
+      "setup": "Forearms under your shoulders, body in a straight line from head to heels.",
+      "cues": ["Squeeze your glutes and brace like someone is about to poke your belly.", "Breathe slowly.", "Stop when your hips start to drop."],
+      "watch": ["Hips sagging.", "Holding your breath."]
+    }
+  },
+  {
+    "id": "cable-woodchop", "name": "Cable woodchop",
+    "pattern": "abs", "primary": ["abs"], "secondary": [],
+    "requires": ["cable-station"], "loadFrom": "cable-station", "loadMode": "total", "unilateral": true,
+    "metric": "reps", "kind": "isolation", "restClass": "small", "rank": 60, "ratio": 0.5,
+    "start": { "beginner": 15, "intermediate": 25, "advanced": 35 },
+    "stresses": ["lower-back"], "settings": ["Pulley height"],
+    "form": {
+      "setup": "Pulley high, handle in both hands, stand side-on with feet wide.",
+      "cues": ["Rotate through your trunk to pull the handle down and across.", "Pivot your back foot.", "Control the return."],
+      "watch": ["Pulling only with your arms.", "Twisting at the lower back instead of the hips and trunk."]
+    }
+  },
+  {
+    "id": "pallof-press", "name": "Pallof press",
+    "pattern": "abs", "primary": ["abs"], "secondary": [],
+    "requires": ["cable-station"], "loadFrom": "cable-station", "loadMode": "total", "unilateral": true,
+    "metric": "reps", "kind": "isolation", "restClass": "small", "rank": 50, "ratio": 0.4,
+    "start": { "beginner": 10, "intermediate": 20, "advanced": 30 },
+    "stresses": [], "settings": ["Pulley height"],
+    "form": {
+      "setup": "Pulley at chest height. Stand side-on, handle held at your chest with both hands.",
+      "cues": ["Press the handle straight out and hold for two seconds.", "Don't let the cable rotate you.", "Bring it back to your chest slowly."],
+      "watch": ["Leaning away from the cable.", "Holding your breath."]
+    }
+  },
+
+  {
+    "id": "kb-swing", "name": "Kettlebell swing",
+    "pattern": "conditioning", "primary": ["glutes", "hamstrings"], "secondary": ["lower-back", "abs"],
+    "requires": ["kettlebells"], "loadFrom": "kettlebells", "loadMode": "total",
+    "metric": "reps", "kind": "conditioning", "restClass": "compound", "rank": 70,
+    "start": { "beginner": 15, "intermediate": 25, "advanced": 35 },
+    "stresses": ["lower-back", "hip"],
+    "form": {
+      "setup": "Kettlebell a foot in front of you, feet a little wider than shoulders. Hinge and grab it.",
+      "cues": ["Hike it back between your legs like a football snap.", "Snap your hips forward to float the bell to chest height.", "Let it fall and hinge again; arms stay relaxed."],
+      "watch": ["Squatting the swing instead of hinging.", "Lifting with your arms."]
+    }
+  },
+  {
+    "id": "slam-ball-slam", "name": "Slam ball slam",
+    "pattern": "conditioning", "primary": ["abs"], "secondary": ["back", "glutes"],
+    "requires": ["slam-balls"], "loadFrom": "slam-balls", "loadMode": "total",
+    "metric": "reps", "kind": "conditioning", "restClass": "compound", "rank": 60,
+    "start": { "beginner": 10, "intermediate": 15, "advanced": 20 },
+    "stresses": ["lower-back", "shoulder"],
+    "form": {
+      "setup": "Ball overhead in both hands, feet shoulder width.",
+      "cues": ["Slam it down hard in front of your feet.", "Hinge to pick it up with a flat back.", "Breathe out on every slam."],
+      "watch": ["Rounding your back to pick it up.", "Standing too close, so the ball bounces into you."]
+    }
+  },
+  {
+    "id": "battle-rope-waves", "name": "Battle rope waves",
+    "pattern": "conditioning", "primary": ["front-delts"], "secondary": ["abs", "forearms"],
+    "requires": ["battle-ropes"], "loadMode": "none",
+    "metric": "time", "kind": "conditioning", "restClass": "compound", "rank": 60,
+    "stresses": ["shoulder"],
+    "form": {
+      "setup": "One rope end in each hand, knees bent, hips back, chest up.",
+      "cues": ["Fast, alternating arm waves that travel to the anchor.", "Stay low in your athletic stance.", "Breathe steadily."],
+      "watch": ["Standing upright and using only your arms.", "Shrugging."]
+    }
+  },
+  {
+    "id": "farmer-carry", "name": "Farmer carry",
+    "pattern": "conditioning", "primary": ["forearms"], "secondary": ["abs", "back"],
+    "requires": ["dumbbells"], "loadFrom": "dumbbells", "loadMode": "per-hand",
+    "metric": "time", "kind": "conditioning", "restClass": "compound", "rank": 55,
+    "start": { "beginner": 25, "intermediate": 45, "advanced": 60 },
+    "stresses": [],
+    "form": {
+      "setup": "A heavy dumbbell in each hand, standing tall.",
+      "cues": ["Walk with short, quick steps.", "Shoulders down and back, chest up.", "Don't let the weights swing."],
+      "watch": ["Leaning to one side.", "Shrugging."]
+    }
+  },
+  {
+    "id": "sandbag-carry", "name": "Sandbag bear-hug carry",
+    "pattern": "conditioning", "primary": ["abs"], "secondary": ["back", "forearms"],
+    "requires": ["sandbags"], "loadFrom": "sandbags", "loadMode": "total",
+    "metric": "time", "kind": "conditioning", "restClass": "compound", "rank": 50,
+    "start": { "beginner": 25, "intermediate": 50, "advanced": 75 },
+    "stresses": ["lower-back"],
+    "form": {
+      "setup": "Hug the sandbag high against your chest.",
+      "cues": ["Walk tall with short steps.", "Brace your abs.", "Breathe behind the brace."],
+      "watch": ["Leaning back.", "Letting the bag slide down to your belly."]
+    }
+  },
+
+  {
+    "id": "rower", "name": "Rower", "aka": ["rowing machine", "erg"],
+    "pattern": "cardio", "primary": [], "secondary": [],
+    "requires": ["rower"], "loadMode": "none",
+    "metric": "cardio", "kind": "cardio", "restClass": "none", "rank": 70,
+    "stresses": ["lower-back"],
+    "form": {
+      "setup": "Feet strapped across the balls of your feet. Sit tall, arms straight.",
+      "cues": ["Legs, then body, then arms on the way back.", "Arms, then body, then legs on the way forward.", "Most of the power comes from your legs."],
+      "watch": ["Pulling with your arms first.", "Hunching your back at the catch."]
+    }
+  },
+  {
+    "id": "skierg", "name": "SkiErg",
+    "pattern": "cardio", "primary": [], "secondary": [],
+    "requires": ["skierg"], "loadMode": "none",
+    "metric": "cardio", "kind": "cardio", "restClass": "none", "rank": 60,
+    "stresses": ["shoulder", "lower-back"],
+    "form": {
+      "setup": "Stand facing the machine, handles overhead, feet hip width.",
+      "cues": ["Drive the handles down by hinging your hips and crunching slightly.", "Finish with your hands past your hips.", "Let the handles rise as you stand tall."],
+      "watch": ["Pulling only with your arms.", "Squatting deep on every stroke."]
+    }
+  },
+  {
+    "id": "stair-climber", "name": "Stair climber", "aka": ["stairmaster", "stepmill"],
+    "pattern": "cardio", "primary": [], "secondary": [],
+    "requires": ["stair-climber"], "loadMode": "none",
+    "metric": "cardio", "kind": "cardio", "restClass": "none", "rank": 75,
+    "stresses": ["knee"],
+    "form": {
+      "setup": "Hold the rails lightly for balance only.",
+      "cues": ["Step through your whole foot.", "Stand tall.", "Pick a speed you can hold with steady breathing."],
+      "watch": ["Leaning on the rails, which takes away most of the work.", "Bouncing on your toes."]
+    }
+  },
+  {
+    "id": "bike", "name": "Bike", "aka": ["exercise bike", "peloton"],
+    "pattern": "cardio", "primary": [], "secondary": [],
+    "requires": ["bike"], "loadMode": "none",
+    "metric": "cardio", "kind": "cardio", "restClass": "none", "rank": 75,
+    "stresses": [],
+    "form": {
+      "setup": "Seat height so your knee is slightly bent at the bottom of the pedal stroke.",
+      "cues": ["Smooth circles, not stomps.", "Relax your shoulders.", "Hard intervals: add resistance before cadence."],
+      "watch": ["Seat too low, which loads the knees.", "Rocking your hips side to side."]
+    }
+  },
+  {
+    "id": "elliptical", "name": "Elliptical",
+    "pattern": "cardio", "primary": [], "secondary": [],
+    "requires": ["elliptical"], "loadMode": "none",
+    "metric": "cardio", "kind": "cardio", "restClass": "none", "rank": 60,
+    "stresses": [],
+    "form": {
+      "setup": "Feet flat on the pedals, hands on the moving handles.",
+      "cues": ["Push and pull with your arms as well as your legs.", "Stand tall.", "Keep a pace you could talk at for easy sessions."],
+      "watch": ["Leaning on the handles.", "Lifting your heels off the pedals."]
+    }
+  },
+  {
+    "id": "treadmill-incline-walk", "name": "Incline walk",
+    "pattern": "cardio", "primary": [], "secondary": [],
+    "requires": ["treadmill"], "loadMode": "none",
+    "metric": "cardio", "kind": "cardio", "restClass": "none", "rank": 70,
+    "stresses": [],
+    "form": {
+      "setup": "Incline 8–12%, a brisk walking pace.",
+      "cues": ["Swing your arms naturally.", "Stand tall.", "Hands off the rails."],
+      "watch": ["Holding the rails and leaning back.", "An incline so steep you can't keep a steady pace."]
+    }
+  }
+]

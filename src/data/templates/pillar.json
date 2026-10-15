@@ -1,0 +1,87 @@
+{
+  "id": "pillar",
+  "name": "Pillar",
+  "description": "Your Pillar II plan: a five-day split tilted toward the things that show (upper chest, shoulder width, arms, lats) with legs kept in proportion. Lateral raises three times a week.",
+  "goals": ["muscle", "fat-loss"],
+  "daysPerWeek": 5,
+  "blockWeeks": 6,
+  "schedule": ["upper-a", "lower-a", "pull", "lower-b", "upper-b", null, null],
+  "days": [
+    {
+      "id": "upper-a",
+      "name": "Upper A",
+      "subtitle": "Push, shoulders lead",
+      "slots": [
+        { "id": "incline", "pattern": "incline-press", "prefer": ["barbell-incline-press", "smith-incline-press", "db-incline-press"], "role": "main", "sets": 4, "reps": [6, 8], "purpose": "Upper chest: the shelf under the collarbone." },
+        { "id": "flat-press", "pattern": "horizontal-press", "prefer": ["db-bench-press", "machine-chest-press", "smith-bench-press"], "role": "secondary", "sets": 3, "reps": [8, 10], "purpose": "Chest: fullness and the line down the middle." },
+        { "id": "row", "pattern": "horizontal-pull", "prefer": ["cable-row", "seated-row-machine", "chest-supported-db-row"], "role": "secondary", "sets": 3, "reps": [10, 12], "purpose": "Back thickness. Posture reads as confidence." },
+        { "id": "lateral", "pattern": "lateral-raise", "prefer": ["db-lateral-raise", "cable-lateral-raise"], "role": "accessory", "sets": 4, "reps": [12, 15], "purpose": "Side delts: shoulder width, the biggest lever after body fat." },
+        { "id": "triceps", "pattern": "triceps", "prefer": ["cable-pushdown", "cable-overhead-extension", "db-skull-crusher"], "role": "accessory", "sets": 3, "reps": [12, 15], "purpose": "Triceps: two-thirds of the arm." }
+      ],
+      "extras": [
+        { "id": "finisher", "prefer": ["hanging-leg-raise", "hanging-knee-raise"], "label": "Hanging leg raise", "detail": "3 × 10–12" }
+      ]
+    },
+    {
+      "id": "lower-a",
+      "name": "Lower A",
+      "subtitle": "Squat",
+      "slots": [
+        { "id": "squat", "pattern": "squat", "prefer": ["barbell-back-squat", "smith-squat", "hack-squat", "goblet-squat"], "role": "main", "sets": 4, "reps": [6, 8], "purpose": "Quads and glutes: keeps the legs in proportion with the back." },
+        { "id": "rdl", "pattern": "hinge", "prefer": ["barbell-rdl", "smith-rdl", "db-rdl"], "role": "secondary", "sets": 3, "reps": [8, 10], "purpose": "Hamstrings and glutes: shape from the side." },
+        { "id": "lunge", "pattern": "single-leg", "prefer": ["db-walking-lunge", "db-reverse-lunge"], "role": "accessory", "sets": 3, "reps": [10, 12], "purpose": "Glutes, each side." },
+        { "id": "leg-curl", "pattern": "leg-curl", "prefer": ["machine-leg-curl", "trx-hamstring-curl"], "role": "accessory", "sets": 3, "reps": [12, 15], "purpose": "Hamstrings." },
+        { "id": "calves", "pattern": "calves", "prefer": ["machine-calf-raise", "smith-calf-raise", "leg-press-calf-press"], "role": "accessory", "sets": 3, "reps": [15, 20], "purpose": "Calves (standing)." },
+        { "id": "abs", "pattern": "abs", "prefer": ["cable-crunch"], "role": "accessory", "sets": 3, "reps": [12, 15], "purpose": "Abs, trained like a muscle so they show when the fat comes off." }
+      ],
+      "extras": [
+        { "id": "finisher", "prefer": ["treadmill-incline-walk", "stair-climber", "elliptical"], "label": "10 minutes easy cardio", "detail": "After the crunches" }
+      ]
+    },
+    {
+      "id": "pull",
+      "name": "Pull and arms",
+      "subtitle": "Width, arms, rear delts",
+      "slots": [
+        { "id": "vertical-pull", "pattern": "vertical-pull", "prefer": ["pull-up", "lat-pulldown"], "role": "main", "sets": 4, "reps": [6, 10], "purpose": "Lats: back width, the top of the V." },
+        { "id": "cs-row", "pattern": "horizontal-pull", "prefer": ["chest-supported-db-row", "seated-row-machine", "cable-row"], "role": "secondary", "sets": 3, "reps": [10, 12], "purpose": "Upper back." },
+        { "id": "face-pull", "pattern": "rear-delt", "prefer": ["cable-face-pull", "cable-rear-delt-fly", "db-rear-delt-fly"], "role": "accessory", "sets": 3, "reps": [15, 20], "purpose": "Rear delts: round the shoulder from behind and keep it healthy." },
+        { "id": "curl", "pattern": "biceps", "prefer": ["barbell-curl", "cable-curl", "db-curl"], "role": "accessory", "sets": 3, "reps": [8, 10], "purpose": "Biceps: the peak." },
+        { "id": "hammer", "pattern": "biceps", "prefer": ["db-hammer-curl", "db-curl"], "role": "accessory", "sets": 3, "reps": [10, 12], "purpose": "Brachialis and forearm: arm thickness from the side." },
+        { "id": "lateral", "pattern": "lateral-raise", "prefer": ["db-lateral-raise", "cable-lateral-raise"], "role": "accessory", "sets": 3, "reps": [15, 20], "purpose": "Side delts, second dose: light, strict, high reps." },
+        { "id": "abs", "pattern": "abs", "prefer": ["ab-wheel", "trx-body-saw", "plank"], "role": "accessory", "sets": 3, "reps": [8, 12], "purpose": "Abs." }
+      ]
+    },
+    {
+      "id": "lower-b",
+      "name": "Lower B",
+      "subtitle": "Hinge",
+      "slots": [
+        { "id": "deadlift", "pattern": "deadlift", "prefer": ["trap-bar-deadlift", "barbell-deadlift", "smith-deadlift"], "role": "main", "sets": 3, "reps": [5, 5], "purpose": "The whole back of the body: the lift that keeps muscle on during a cut." },
+        { "id": "leg-press", "pattern": "leg-press", "prefer": ["leg-press"], "role": "secondary", "sets": 3, "reps": [10, 12], "purpose": "Quads: sweep." },
+        { "id": "bss", "pattern": "single-leg", "prefer": ["db-bulgarian-split-squat", "smith-split-squat"], "role": "accessory", "sets": 3, "reps": [8, 10], "purpose": "Glutes and quads, each side." },
+        { "id": "leg-ext", "pattern": "leg-extension", "prefer": ["machine-leg-extension"], "role": "accessory", "sets": 3, "reps": [12, 15], "purpose": "Quads: the teardrop above the knee." },
+        { "id": "calves", "pattern": "calves", "prefer": ["leg-press-calf-press", "machine-calf-raise", "smith-calf-raise"], "role": "accessory", "sets": 3, "reps": [15, 20], "purpose": "Calves (bent-knee or press variation)." }
+      ],
+      "extras": [
+        { "id": "finisher", "prefer": ["bike", "rower"], "label": "12 minutes bike intervals", "detail": "30 s hard, 60 s easy" }
+      ]
+    },
+    {
+      "id": "upper-b",
+      "name": "Upper B",
+      "subtitle": "Shoulders, arms, abs",
+      "slots": [
+        { "id": "ohp", "pattern": "vertical-press", "prefer": ["barbell-overhead-press", "machine-shoulder-press", "db-shoulder-press", "smith-seated-press"], "role": "main", "sets": 4, "reps": [6, 8], "purpose": "Front and side delts: the cap on the shoulder." },
+        { "id": "dips", "pattern": "dip", "prefer": ["dip", "close-grip-smith-press"], "role": "secondary", "sets": 3, "reps": [8, 12], "purpose": "Lower chest and triceps." },
+        { "id": "wide-row", "pattern": "horizontal-pull", "prefer": ["chest-supported-wide-row", "seated-row-machine", "cable-row"], "role": "accessory", "sets": 3, "reps": [10, 12], "purpose": "Upper back and rear delts." },
+        { "id": "fly", "pattern": "chest-fly", "prefer": ["cable-fly", "pec-deck", "db-fly"], "role": "accessory", "sets": 3, "reps": [12, 15], "purpose": "Chest: the inner line." },
+        { "id": "lateral", "pattern": "lateral-raise", "prefer": ["db-lateral-raise", "cable-lateral-raise"], "role": "accessory", "sets": 4, "reps": [15, 20], "purpose": "Side delts, third dose: width is built on frequency." },
+        { "id": "incline-curl", "pattern": "biceps", "prefer": ["db-incline-curl", "cable-curl"], "role": "accessory", "sets": 3, "reps": [10, 12], "purpose": "Biceps long head: fills the sleeve when the arm hangs." }
+      ],
+      "extras": [
+        { "id": "finisher", "prefer": ["hanging-knee-raise", "plank", "cable-woodchop"], "label": "Abs circuit, 3 rounds", "detail": "Hanging knee raise 12, plank 45 s, cable woodchop 10 each side" }
+      ]
+    }
+  ]
+}

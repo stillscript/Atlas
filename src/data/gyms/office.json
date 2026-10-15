@@ -1,0 +1,29 @@
+{
+  "id": "office",
+  "name": "Office",
+  "units": "lb",
+  "equipment": [
+    { "catalogId": "precor-resolute-converging-chest-press" },
+    { "catalogId": "precor-resolute-converging-shoulder-press" },
+    { "catalogId": "precor-resolute-diverging-lat-pulldown" },
+    { "catalogId": "precor-resolute-leg-press" },
+    { "catalogId": "precor-fts-glide" },
+    { "catalogId": "tag-leg-extension-curl" },
+    { "catalogId": "smith-machine" },
+    { "catalogId": "precor-adjustable-bench" },
+    { "catalogId": "dumbbells-5-65" },
+    { "catalogId": "pull-up-bar", "name": "Pull-up bars (TRX zone)" },
+    { "catalogId": "suspension-trainer", "name": "Suspension trainers (TRX zone)" },
+    { "catalogId": "slam-balls" },
+    { "catalogId": "medicine-balls" },
+    { "catalogId": "sandbags" },
+    { "catalogId": "kettlebells" },
+    { "catalogId": "battle-rope" },
+    { "catalogId": "loop-bands" },
+    { "catalogId": "stairmaster-hiit-rower" },
+    { "catalogId": "concept2-skierg" },
+    { "catalogId": "stairmaster-stair-climber" },
+    { "catalogId": "peloton-bike", "name": "Peloton bikes" },
+    { "catalogId": "elliptical" }
+  ]
+}

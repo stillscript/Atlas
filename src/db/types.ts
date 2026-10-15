@@ -80,22 +80,40 @@ export interface KvRecord<K extends KvKey = KvKey> {
 
 // ---------------------------------------------------------------- gyms and equipment
 
-/** How a piece of equipment can be loaded. Only loads this model can produce are ever suggested. */
+/**
+ * How a piece of equipment can be loaded. Only loads this model can produce are ever suggested.
+ * - stack: selectorized pin weights, plus optional add-on weights that can be stacked on any pin.
+ * - plates: a bar (Smith or barbell) plus pairs of plates, loaded evenly on both sides.
+ * - dumbbells / fixed: a rack of fixed weights (dumbbells per hand; kettlebells, balls, sandbags).
+ * - bodyweight: reps only, optionally with added weight (vest, belt).
+ * - levels: named resistance (loop bands), stored as the level's index.
+ */
 export type LoadModel =
   | { kind: 'stack'; weights: number[]; addOns: number[] }
   | { kind: 'plates'; barWeight: number; plates: { weight: number; pairs: number }[] }
   | { kind: 'dumbbells'; weights: number[] }
   | { kind: 'fixed'; weights: number[] }
   | { kind: 'bodyweight'; addedWeights?: number[] }
+  | { kind: 'levels'; levels: string[] }
   | { kind: 'none' };
+
+export type EquipmentCategory = 'machine' | 'cable' | 'free-weight' | 'bodyweight' | 'cardio' | 'support' | 'other';
 
 export interface EquipmentItem {
   id: string;
   /** Catalog entry this came from, if any. */
   catalogId?: string;
   name: string;
-  category: 'machine' | 'cable' | 'free-weight' | 'bodyweight' | 'cardio' | 'support' | 'other';
+  category: EquipmentCategory;
+  /** Capability tags exercises look for, e.g. "smith", "cable-dual", "leg-press-machine". */
+  provides: string[];
   load: LoadModel;
+  /** The weight steps haven't been confirmed on the real machine yet; ask once, on first use. */
+  verifyLoad?: boolean;
+  /** Something worth knowing about the numbers, e.g. a 2:1 cable ratio. */
+  loadNote?: string;
+  /** What to remember per exercise on this machine (seat height, pad position…). */
+  settingsFields?: string[];
   /** Cardio metrics this machine reports. */
   cardioMetrics?: CardioMetric[];
   notes?: string;
@@ -113,11 +131,14 @@ export interface Gym {
 
 // ---------------------------------------------------------------- programs
 
+export type SlotRole = 'main' | 'secondary' | 'accessory';
+
 export interface ProgramSlot {
   id: string;
   /** Movement pattern, used to find swaps (e.g. "incline-press"). */
   pattern?: string;
   exerciseId: string;
+  role?: SlotRole;
   sets: number;
   repsLow: number;
   repsHigh: number;
@@ -126,9 +147,18 @@ export interface ProgramSlot {
   restSec?: number;
   /** Lower = more important; kept first when time is short. */
   priority?: number;
+  /** Why this exercise is in the plan, in one line ("Side delts: shoulder width"). */
+  purpose?: string;
   /** Slots sharing a superset id are done back to back. */
   superset?: string;
   notes?: string;
+}
+
+export interface ProgramExtra {
+  id: string;
+  exerciseId: string;
+  label: string;
+  detail?: string;
 }
 
 export interface ProgramDay {
@@ -137,13 +167,15 @@ export interface ProgramDay {
   subtitle?: string;
   slots: ProgramSlot[];
   /** Optional cardio or finisher items. */
-  extras?: { id: string; exerciseId: string; label: string; detail?: string }[];
+  extras?: ProgramExtra[];
 }
 
 export interface Program {
   id: string;
   name: string;
   templateId?: string;
+  /** Gym the exercises were picked for. */
+  gymId?: string;
   goal: Goal;
   days: ProgramDay[];
   /** Mon..Sun → ProgramDay id, or null for rest. */

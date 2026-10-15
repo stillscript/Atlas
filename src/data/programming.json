@@ -1,0 +1,54 @@
+{
+  "_about": "Programming defaults used by the program generator. Numbers follow docs/coach-proposal.md (approved 2026-10-14): ACSM 2026 for frequency, load ranges and effort; Pelland 2025 / Baz-Valle 2022 for weekly sets; Singer 2024 / Schoenfeld 2016 for rest; Iversen 2021 for time-efficient sessions.",
+  "reps": {
+    "muscle": { "main": [6, 10], "secondary": [8, 12], "accessory": [10, 15], "small": [12, 20] },
+    "fat-loss": { "main": [6, 10], "secondary": [8, 12], "accessory": [10, 15], "small": [12, 20] },
+    "strength": { "main": [4, 6], "secondary": [6, 8], "accessory": [8, 12], "small": [10, 15] },
+    "general": { "main": [8, 12], "secondary": [8, 12], "accessory": [10, 15], "small": [12, 20] }
+  },
+  "beginnerReps": {
+    "muscle": { "main": [8, 12], "secondary": [8, 12], "accessory": [10, 15], "small": [12, 15] },
+    "fat-loss": { "main": [8, 12], "secondary": [8, 12], "accessory": [10, 15], "small": [12, 15] },
+    "strength": { "main": [5, 8], "secondary": [8, 10], "accessory": [10, 12], "small": [12, 15] },
+    "general": { "main": [8, 12], "secondary": [10, 12], "accessory": [10, 15], "small": [12, 15] }
+  },
+  "sets": {
+    "beginner": { "main": 3, "secondary": 3, "accessory": 2 },
+    "intermediate": { "main": 3, "secondary": 3, "accessory": 3 },
+    "advanced": { "main": 4, "secondary": 3, "accessory": 3 }
+  },
+  "strengthMainSets": 4,
+  "rir": {
+    "muscle": { "compound": 2, "isolation": 1 },
+    "fat-loss": { "compound": 2, "isolation": 2 },
+    "strength": { "compound": 2, "isolation": 2 },
+    "general": { "compound": 3, "isolation": 2 }
+  },
+  "beginnerRirBonus": 1,
+  "rest": { "heavy": 150, "compound": 120, "isolation": 75, "small": 60, "none": 0 },
+  "strengthMainRest": 180,
+  "volumeBands": {
+    "beginner": { "major": [8, 12], "minor": [4, 10] },
+    "intermediate": { "major": [10, 16], "minor": [6, 14] },
+    "advanced": { "major": [12, 20], "minor": [8, 16] }
+  },
+  "majorMuscles": ["chest", "back", "quads", "hamstrings", "glutes"],
+  "minorMuscles": ["side-delts", "rear-delts", "biceps", "triceps", "calves", "abs"],
+  "timing": {
+    "warmupMin": 5,
+    "mainLiftWarmupMin": 2,
+    "transitionSec": 75,
+    "workSec": { "compound": 45, "isolation": 35, "conditioning": 40 },
+    "timedSetSec": 40,
+    "supersetSwitchSec": 20
+  },
+  "defaultTrainingDays": {
+    "2": [0, 3],
+    "3": [0, 2, 4],
+    "4": [0, 1, 3, 4],
+    "5": [0, 1, 2, 3, 4],
+    "6": [0, 1, 2, 3, 4, 5]
+  },
+  "blockWeeks": { "beginner": 8, "intermediate": 6, "advanced": 5 },
+  "maxSetsPerSlot": 5
+}

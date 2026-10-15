@@ -9,9 +9,9 @@ IndexedDB on the phone.
 | Stage | State |
 |---|---|
 | 0. Foundation: shell, design tokens, data layer, migrations, snapshots, backups, service worker, update flow, release tooling | Done |
-| Coach rules proposal (`docs/coach-proposal.md`) | Awaiting approval. Don't build the Coach until it's approved |
-| 1. Catalogs: equipment, exercises (with form notes), Office gym preset, Pillar template, program generator | Next |
-| 2. Onboarding (Home Screen guide first), Today | |
+| Coach rules proposal (`docs/coach-proposal.md`) | Approved as proposed (2026-10-14). Build the Coach to it |
+| 1. Catalogs: equipment, exercises (with form notes), Office gym preset, Pillar template, program generator | Done (branch `stage-1-catalogs`); domain code not wired into the UI yet |
+| 2. Onboarding (Home Screen guide first), Today, read-only Plan view | Next |
 | 3. Workout: focus mode, rest timer, machine settings, swaps, cardio, resume, check-in | |
 | 4. Coach engine + tests + UI | |
 | 5. Progress: week view, charts, PRs, body measurements | |
@@ -25,7 +25,8 @@ IndexedDB on the phone.
 | `npm run dev` | Dev server (no service worker in dev) |
 | `npm run build` | Production build into `dist/`, plus generated `dist/sw.js` |
 | `npm run preview` | Serve `dist/` on :4173 (service worker active: use this to test offline/updates) |
-| `npm test` | Vitest: data layer, migrations, backups, changelog, service worker guards (and later the Coach) |
+| `npm test` | Vitest: data layer, migrations, backups, changelog, service worker guards, catalogs, loads, resolver, generator (and later the Coach) |
+| `$env:ATLAS_PREVIEW="1"; npx vitest run tests/domain/preview.test.ts` | Regenerates `docs/program-samples.md` (Pillar at the Office + generated plans) for a human review |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run icons` | Re-render app icons from the mark in `scripts/icons.mjs` |
 | `npm run release -- patch\|minor\|major` | Checks, tests, bumps version, dates the changelog, builds |
@@ -50,11 +51,16 @@ src/
   pwa/                  Service worker registration, update flow, changelog parsing, What's new
   sw/service-worker.js  SW template (plain JS); the build injects the precache list
   lib/                  Small helpers: ids, dates/format, haptics, platform
-  (coming) data/        Equipment catalog, exercises, templates, coach knowledge + phrases (JSON)
-  (coming) coach/       Pure-function Coach engine
+  data/                 Catalogs as JSON: equipment, exercises, patterns, gyms/office, templates/
+                        (pillar + generator blueprints), programming.json (reps/sets/rest/volume bands)
+  domain/               Pure functions over the catalogs: catalog (typed access), gym (presets,
+                        capability tags), loads (equipment-aware load math), strength (e1RM),
+                        resolver (pattern → exercise, swaps, start loads), generator, volume
+  (coming) coach/       Pure-function Coach engine; knowledge + phrases JSON in data/coach/
 vite-plugins/atlas-pwa.ts  Generates dist/sw.js + dist/version.json after each build
 tests/                  Vitest; tests/db/fixtures/vN.json = sample data for every schema version
-docs/coach-proposal.md  Evidence-based Coach rules with sources
+docs/coach-proposal.md  Evidence-based Coach rules with sources (approved)
+docs/program-samples.md Generated plans for review (regenerate after catalog/generator changes)
 ```
 
 ## Design system
@@ -142,9 +148,42 @@ thresholds in `src/data/coach/knowledge.json` (each with sources), wording in
 Readiness check is optional and must stay one tap to switch off (sheet: "Stop asking"; Settings ›
 Workouts) and back on; the wearable score is off by default.
 
-## Adding equipment or exercises (once stage 1 lands)
+## Catalogs: equipment, exercises, templates
 
-Equipment, exercises, gym presets and program templates live in `src/data/*.json`. Each equipment
-item declares its load model, so suggestions only use loads that machine can produce. Exercises
-declare movement pattern, muscles (direct/secondary), required equipment, form notes
-(Setup / Cues / Watch for) and rest class. No app logic changes needed for new entries.
+Everything is data in `src/data/`; types in `src/domain/types.ts`. `tests/domain/catalog.test.ts`
+validates every cross-reference, so a typo fails `npm test` instead of the app.
+
+**How the pieces connect.** Equipment *provides* capability tags (`smith`, `cable-station`,
+`cable-dual`, `leg-press-machine`…). Exercises *require* tags and name the one that sets the load
+(`loadFrom`). Programs are written as movement *patterns* (`incline-press`, `hinge`…), and
+`resolver.resolvePattern` picks the best exercise the gym can do (template `prefer` list first, then
+catalog `rank`, demoting exercises above the user's level or loading a flagged pain area, then the
+pattern's `fallbacks`). That's how Pillar becomes Smith/machine work at the Office and barbell work
+elsewhere, and how "Station taken?" works (`swapOptions` excludes everything on the busy machine).
+
+**Loads.** `loads.ts` turns an equipment load model into the exact list of possible loads
+(stack pins × add-ons, bar + even plate pairs, the dumbbell rack). Every suggestion must go through
+`snapLoad`/`stepLoad`. `nextStepFraction` tells the Coach when a jump is too big and reps should
+progress first (rule A5). Stack plate steps for Office machines are unconfirmed (`verifyLoad: true`):
+the UI must ask the user to confirm the real steps on first use.
+
+- **Add equipment:** append to `equipment.json` with `provides`, a `load` spec, `settingsFields`
+  (what to remember per machine), `cardioMetrics` for cardio, `checklist: true` to offer it in the
+  "what's in your gym" list, and a `source` note for specs.
+- **Add an exercise:** append to `exercises.json`: `pattern`, `primary`/`secondary` muscles (used for
+  weekly fractional sets), `requires`, `loadFrom` + `loadMode` (`total`/`per-hand`/`per-side`/
+  `bodyweight`/`none`), `metric`, `kind`, `restClass`, `rank` within the pattern, `level` if it's not
+  for beginners, `ratio` (strength vs the pattern's reference lift, for swap start estimates),
+  `start` (conservative first-session guesses), `stresses` (body areas, for pain swaps) and `form`
+  (setup sentence, ≥2 cues, ≥1 watch-for; plain words, full sentences).
+- **Add a gym preset:** a file in `data/gyms/` listing catalog ids with optional name/load overrides;
+  register it in `domain/catalog.ts`.
+- **Add a template:** a file in `data/templates/` (days → slots with pattern, `prefer`, role, sets,
+  reps, purpose; schedule Mon..Sun); register it in `domain/catalog.ts`.
+
+**Generator** (`generator.ts`): blueprint by days/week → resolve exercises (varying repeat patterns
+across the week) → prescribe sets/reps/reps-left/rest from `programming.json` by goal, experience
+and role → fit the session length (supersets of non-competing accessories on different stations,
+then drop lowest-priority exercises, then trim sets) → balance weekly sets per muscle into the
+experience band → fat-loss cardio finishers. After changing catalogs or the generator, regenerate
+`docs/program-samples.md` and read it like a coach would.

@@ -1,0 +1,255 @@
+[
+  {
+    "daysPerWeek": 2,
+    "name": "Full body, twice a week",
+    "days": [
+      {
+        "id": "full-a", "name": "Full body A", "subtitle": "Squat and press",
+        "slots": [
+          { "pattern": "squat", "role": "main" },
+          { "pattern": "horizontal-press", "role": "main" },
+          { "pattern": "horizontal-pull", "role": "secondary" },
+          { "pattern": "hinge", "role": "secondary" },
+          { "pattern": "vertical-press", "role": "accessory" },
+          { "pattern": "lateral-raise", "role": "accessory" },
+          { "pattern": "biceps", "role": "accessory" },
+          { "pattern": "abs", "role": "accessory" }
+        ]
+      },
+      {
+        "id": "full-b", "name": "Full body B", "subtitle": "Hinge and pull",
+        "slots": [
+          { "pattern": "deadlift", "role": "main" },
+          { "pattern": "vertical-pull", "role": "main" },
+          { "pattern": "incline-press", "role": "secondary" },
+          { "pattern": "leg-press", "role": "secondary" },
+          { "pattern": "rear-delt", "role": "accessory" },
+          { "pattern": "triceps", "role": "accessory" },
+          { "pattern": "leg-curl", "role": "accessory" },
+          { "pattern": "calves", "role": "accessory" }
+        ]
+      }
+    ]
+  },
+  {
+    "daysPerWeek": 3,
+    "name": "Full body, three times a week",
+    "days": [
+      {
+        "id": "full-a", "name": "Full body A", "subtitle": "Squat and press",
+        "slots": [
+          { "pattern": "squat", "role": "main" },
+          { "pattern": "horizontal-press", "role": "main" },
+          { "pattern": "horizontal-pull", "role": "secondary" },
+          { "pattern": "leg-curl", "role": "accessory" },
+          { "pattern": "lateral-raise", "role": "accessory" },
+          { "pattern": "triceps", "role": "accessory" },
+          { "pattern": "abs", "role": "accessory" }
+        ]
+      },
+      {
+        "id": "full-b", "name": "Full body B", "subtitle": "Hinge and pull",
+        "slots": [
+          { "pattern": "hinge", "role": "main" },
+          { "pattern": "vertical-pull", "role": "main" },
+          { "pattern": "incline-press", "role": "secondary" },
+          { "pattern": "single-leg", "role": "secondary" },
+          { "pattern": "rear-delt", "role": "accessory" },
+          { "pattern": "biceps", "role": "accessory" },
+          { "pattern": "calves", "role": "accessory" }
+        ]
+      },
+      {
+        "id": "full-c", "name": "Full body C", "subtitle": "Legs and shoulders",
+        "slots": [
+          { "pattern": "leg-press", "role": "main" },
+          { "pattern": "vertical-press", "role": "main" },
+          { "pattern": "horizontal-pull", "role": "secondary" },
+          { "pattern": "leg-extension", "role": "accessory" },
+          { "pattern": "chest-fly", "role": "accessory" },
+          { "pattern": "lateral-raise", "role": "accessory" },
+          { "pattern": "biceps", "role": "accessory" },
+          { "pattern": "abs", "role": "accessory" }
+        ]
+      }
+    ]
+  },
+  {
+    "daysPerWeek": 4,
+    "name": "Upper and lower, twice each",
+    "days": [
+      {
+        "id": "upper-a", "name": "Upper A", "subtitle": "Chest and back",
+        "slots": [
+          { "pattern": "horizontal-press", "role": "main" },
+          { "pattern": "horizontal-pull", "role": "main" },
+          { "pattern": "vertical-press", "role": "secondary" },
+          { "pattern": "vertical-pull", "role": "secondary" },
+          { "pattern": "lateral-raise", "role": "accessory" },
+          { "pattern": "triceps", "role": "accessory" },
+          { "pattern": "biceps", "role": "accessory" }
+        ]
+      },
+      {
+        "id": "lower-a", "name": "Lower A", "subtitle": "Squat",
+        "slots": [
+          { "pattern": "squat", "role": "main" },
+          { "pattern": "hinge", "role": "secondary" },
+          { "pattern": "single-leg", "role": "accessory" },
+          { "pattern": "leg-curl", "role": "accessory" },
+          { "pattern": "calves", "role": "accessory" },
+          { "pattern": "abs", "role": "accessory" }
+        ]
+      },
+      {
+        "id": "upper-b", "name": "Upper B", "subtitle": "Shoulders and lats",
+        "slots": [
+          { "pattern": "incline-press", "role": "main" },
+          { "pattern": "vertical-pull", "role": "main" },
+          { "pattern": "horizontal-pull", "role": "secondary" },
+          { "pattern": "chest-fly", "role": "accessory" },
+          { "pattern": "rear-delt", "role": "accessory" },
+          { "pattern": "lateral-raise", "role": "accessory" },
+          { "pattern": "biceps", "role": "accessory" },
+          { "pattern": "triceps", "role": "accessory" }
+        ]
+      },
+      {
+        "id": "lower-b", "name": "Lower B", "subtitle": "Hinge",
+        "slots": [
+          { "pattern": "deadlift", "role": "main" },
+          { "pattern": "leg-press", "role": "secondary" },
+          { "pattern": "leg-extension", "role": "accessory" },
+          { "pattern": "leg-curl", "role": "accessory" },
+          { "pattern": "calves", "role": "accessory" },
+          { "pattern": "abs", "role": "accessory" }
+        ]
+      }
+    ]
+  },
+  {
+    "daysPerWeek": 5,
+    "name": "Upper, lower and pull",
+    "days": [
+      {
+        "id": "upper-a", "name": "Upper A", "subtitle": "Push, shoulders lead",
+        "slots": [
+          { "pattern": "incline-press", "role": "main" },
+          { "pattern": "horizontal-press", "role": "secondary" },
+          { "pattern": "horizontal-pull", "role": "secondary" },
+          { "pattern": "lateral-raise", "role": "accessory" },
+          { "pattern": "triceps", "role": "accessory" },
+          { "pattern": "abs", "role": "accessory" }
+        ]
+      },
+      {
+        "id": "lower-a", "name": "Lower A", "subtitle": "Squat",
+        "slots": [
+          { "pattern": "squat", "role": "main" },
+          { "pattern": "hinge", "role": "secondary" },
+          { "pattern": "single-leg", "role": "accessory" },
+          { "pattern": "leg-curl", "role": "accessory" },
+          { "pattern": "calves", "role": "accessory" }
+        ]
+      },
+      {
+        "id": "pull", "name": "Pull and arms", "subtitle": "Back, rear delts, arms",
+        "slots": [
+          { "pattern": "vertical-pull", "role": "main" },
+          { "pattern": "horizontal-pull", "role": "secondary" },
+          { "pattern": "rear-delt", "role": "accessory" },
+          { "pattern": "biceps", "role": "accessory" },
+          { "pattern": "lateral-raise", "role": "accessory" },
+          { "pattern": "abs", "role": "accessory" }
+        ]
+      },
+      {
+        "id": "lower-b", "name": "Lower B", "subtitle": "Hinge",
+        "slots": [
+          { "pattern": "deadlift", "role": "main" },
+          { "pattern": "leg-press", "role": "secondary" },
+          { "pattern": "leg-extension", "role": "accessory" },
+          { "pattern": "leg-curl", "role": "accessory" },
+          { "pattern": "calves", "role": "accessory" }
+        ]
+      },
+      {
+        "id": "upper-b", "name": "Upper B", "subtitle": "Shoulders and arms",
+        "slots": [
+          { "pattern": "vertical-press", "role": "main" },
+          { "pattern": "vertical-pull", "role": "secondary" },
+          { "pattern": "chest-fly", "role": "accessory" },
+          { "pattern": "lateral-raise", "role": "accessory" },
+          { "pattern": "biceps", "role": "accessory" },
+          { "pattern": "triceps", "role": "accessory" }
+        ]
+      }
+    ]
+  },
+  {
+    "daysPerWeek": 6,
+    "name": "Push, pull, legs, twice",
+    "days": [
+      {
+        "id": "push-a", "name": "Push A", "subtitle": "Chest focus",
+        "slots": [
+          { "pattern": "horizontal-press", "role": "main" },
+          { "pattern": "vertical-press", "role": "secondary" },
+          { "pattern": "incline-press", "role": "accessory" },
+          { "pattern": "lateral-raise", "role": "accessory" },
+          { "pattern": "triceps", "role": "accessory" }
+        ]
+      },
+      {
+        "id": "pull-a", "name": "Pull A", "subtitle": "Width",
+        "slots": [
+          { "pattern": "vertical-pull", "role": "main" },
+          { "pattern": "horizontal-pull", "role": "secondary" },
+          { "pattern": "rear-delt", "role": "accessory" },
+          { "pattern": "biceps", "role": "accessory" },
+          { "pattern": "abs", "role": "accessory" }
+        ]
+      },
+      {
+        "id": "legs-a", "name": "Legs A", "subtitle": "Squat",
+        "slots": [
+          { "pattern": "squat", "role": "main" },
+          { "pattern": "hinge", "role": "secondary" },
+          { "pattern": "leg-extension", "role": "accessory" },
+          { "pattern": "leg-curl", "role": "accessory" },
+          { "pattern": "calves", "role": "accessory" }
+        ]
+      },
+      {
+        "id": "push-b", "name": "Push B", "subtitle": "Shoulder focus",
+        "slots": [
+          { "pattern": "vertical-press", "role": "main" },
+          { "pattern": "incline-press", "role": "secondary" },
+          { "pattern": "chest-fly", "role": "accessory" },
+          { "pattern": "lateral-raise", "role": "accessory" },
+          { "pattern": "triceps", "role": "accessory" }
+        ]
+      },
+      {
+        "id": "pull-b", "name": "Pull B", "subtitle": "Thickness",
+        "slots": [
+          { "pattern": "horizontal-pull", "role": "main" },
+          { "pattern": "vertical-pull", "role": "secondary" },
+          { "pattern": "rear-delt", "role": "accessory" },
+          { "pattern": "biceps", "role": "accessory" },
+          { "pattern": "abs", "role": "accessory" }
+        ]
+      },
+      {
+        "id": "legs-b", "name": "Legs B", "subtitle": "Hinge",
+        "slots": [
+          { "pattern": "deadlift", "role": "main" },
+          { "pattern": "leg-press", "role": "secondary" },
+          { "pattern": "single-leg", "role": "accessory" },
+          { "pattern": "leg-curl", "role": "accessory" },
+          { "pattern": "calves", "role": "accessory" }
+        ]
+      }
+    ]
+  }
+]

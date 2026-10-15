@@ -55,20 +55,26 @@
             "catalogId": "precor-resolute-leg-press",
             "name": "Precor Resolute Leg Press",
             "category": "machine",
-            "load": { "kind": "stack", "weights": [20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240], "addOns": [10] }
+            "provides": ["leg-press-machine"],
+            "load": { "kind": "stack", "weights": [20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240], "addOns": [10] },
+            "verifyLoad": true,
+            "settingsFields": ["Seat back position", "Foot position"]
           },
           {
             "id": "eq-smith",
             "catalogId": "smith-machine",
             "name": "Smith machine",
             "category": "free-weight",
-            "load": { "kind": "plates", "barWeight": 35, "plates": [{ "weight": 45, "pairs": 6 }, { "weight": 25, "pairs": 4 }] }
+            "provides": ["smith"],
+            "load": { "kind": "plates", "barWeight": 35, "plates": [{ "weight": 45, "pairs": 6 }, { "weight": 25, "pairs": 4 }] },
+            "loadNote": "Logged as the total: bar plus plates."
           },
           {
             "id": "eq-dumbbells",
             "catalogId": "dumbbells",
             "name": "Dumbbells",
             "category": "free-weight",
+            "provides": ["dumbbells"],
             "load": { "kind": "dumbbells", "weights": [5, 7.5, 10, 12.5, 15, 17.5, 20, 22.5, 25, 30, 35, 40, 45, 50, 55, 60, 65] }
           },
           {
@@ -76,6 +82,7 @@
             "catalogId": "stairmaster-hiit-rower",
             "name": "StairMaster HIIT Rower",
             "category": "cardio",
+            "provides": ["rower"],
             "load": { "kind": "none" },
             "cardioMetrics": ["duration", "distance", "calories", "pace"]
           }
@@ -89,6 +96,7 @@
         "id": "prg-pillar",
         "name": "Pillar",
         "templateId": "pillar",
+        "gymId": "gym-office",
         "goal": "fat-loss",
         "days": [
           {
@@ -96,8 +104,8 @@
             "name": "Lower A",
             "subtitle": "Squat focus",
             "slots": [
-              { "id": "s1", "pattern": "squat", "exerciseId": "smith-squat", "sets": 4, "repsLow": 6, "repsHigh": 8, "rir": 2, "restSec": 180, "priority": 1 },
-              { "id": "s2", "pattern": "leg-press", "exerciseId": "leg-press", "sets": 3, "repsLow": 10, "repsHigh": 12, "rir": 2, "restSec": 120, "priority": 2 }
+              { "id": "s1", "pattern": "squat", "exerciseId": "smith-squat", "role": "main", "sets": 4, "repsLow": 6, "repsHigh": 8, "rir": 2, "restSec": 180, "priority": 1, "purpose": "Quads and glutes." },
+              { "id": "s2", "pattern": "leg-press", "exerciseId": "leg-press", "role": "secondary", "sets": 3, "repsLow": 10, "repsHigh": 12, "rir": 2, "restSec": 120, "priority": 2 }
             ],
             "extras": [{ "id": "x1", "exerciseId": "stair-climber", "label": "10 min easy stairs" }]
           }

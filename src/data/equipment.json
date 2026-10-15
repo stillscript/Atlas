@@ -1,0 +1,523 @@
+[
+  {
+    "id": "precor-resolute-converging-chest-press",
+    "name": "Precor Resolute Converging Chest Press",
+    "shortName": "Chest press machine",
+    "category": "machine",
+    "provides": ["chest-press-machine"],
+    "load": { "kind": "stack", "min": 10, "max": 240, "step": 10, "addOns": [5] },
+    "verifyLoad": true,
+    "settingsFields": ["Seat height", "Handle start position"],
+    "source": "Precor RSL0414 spec: 240 lb stack; dealer sheets: 5 lb add-on. Plate steps unconfirmed."
+  },
+  {
+    "id": "precor-resolute-converging-shoulder-press",
+    "name": "Precor Resolute Converging Shoulder Press",
+    "shortName": "Shoulder press machine",
+    "category": "machine",
+    "provides": ["shoulder-press-machine"],
+    "load": { "kind": "stack", "min": 10, "max": 200, "step": 10, "addOns": [5] },
+    "verifyLoad": true,
+    "settingsFields": ["Seat height", "Handle position"],
+    "source": "Precor RSL0515 spec: 200 lb stack; dealer sheets: 5 lb add-on. Plate steps unconfirmed."
+  },
+  {
+    "id": "precor-resolute-diverging-lat-pulldown",
+    "name": "Precor Resolute Diverging Lat Pulldown",
+    "shortName": "Lat pulldown",
+    "category": "machine",
+    "provides": ["lat-pulldown-machine"],
+    "load": { "kind": "stack", "min": 10, "max": 240, "step": 10, "addOns": [5] },
+    "verifyLoad": true,
+    "settingsFields": ["Seat height", "Thigh pad"],
+    "source": "Precor RSL0314 spec: 240 lb stack; dealer sheets: 5 lb add-on. Plate steps unconfirmed."
+  },
+  {
+    "id": "precor-resolute-leg-press",
+    "name": "Precor Resolute Leg Press",
+    "shortName": "Leg press",
+    "category": "machine",
+    "provides": ["leg-press-machine"],
+    "load": { "kind": "stack", "min": 20, "max": 400, "step": 20, "addOns": [10] },
+    "verifyLoad": true,
+    "settingsFields": ["Seat back position", "Foot position"],
+    "source": "Precor RSL0602: 400 lb stack (dealer listings); 10 lb add-on. Plate steps unconfirmed."
+  },
+  {
+    "id": "precor-fts-glide",
+    "name": "Precor FTS Glide",
+    "shortName": "Cable trainer (FTS Glide)",
+    "category": "cable",
+    "provides": ["cable-station", "cable-dual"],
+    "load": { "kind": "stack", "min": 10, "max": 200, "step": 10 },
+    "verifyLoad": true,
+    "loadNote": "Two 200 lb stacks with a 2:1 ratio: each handle feels about half the pin number. Log the number on the pin.",
+    "settingsFields": ["Arm height", "Arm angle", "Attachment"],
+    "source": "Precor FTS Glide spec sheet: two 200 lb stacks; dealers list a 2:1 ratio. Plate steps unconfirmed."
+  },
+  {
+    "id": "tag-leg-extension-curl",
+    "name": "TAG Fitness Leg Extension / Leg Curl",
+    "shortName": "Leg extension / curl",
+    "category": "machine",
+    "provides": ["leg-extension-machine", "leg-curl-machine"],
+    "load": { "kind": "stack", "min": 10, "max": 200, "step": 10 },
+    "verifyLoad": true,
+    "settingsFields": ["Back pad position", "Ankle pad", "Thigh hold-down"],
+    "source": "TAG combo stacks are listed at 170 lb or 200 lb depending on the line. Confirm on the machine."
+  },
+  {
+    "id": "smith-machine",
+    "name": "Smith machine",
+    "shortName": "Smith machine",
+    "category": "free-weight",
+    "provides": ["smith"],
+    "load": {
+      "kind": "plates",
+      "barWeight": 35,
+      "plates": [
+        { "weight": 45, "pairs": 6 },
+        { "weight": 25, "pairs": 4 }
+      ]
+    },
+    "loadNote": "Logged as the total: bar plus plates. The bar is set to 35 lb; change it if yours differs.",
+    "settingsFields": ["Safety stop height", "Bench position"],
+    "checklist": true,
+    "source": "Office: 35 lb unloaded bar (assumed, editable), 45 and 25 lb plates."
+  },
+  {
+    "id": "precor-adjustable-bench",
+    "name": "Precor adjustable bench",
+    "shortName": "Adjustable bench",
+    "category": "support",
+    "provides": ["adjustable-bench", "flat-bench"],
+    "load": { "kind": "none" },
+    "settingsFields": ["Back angle", "Seat angle"]
+  },
+  {
+    "id": "dumbbells-5-65",
+    "name": "Dumbbells 5–65 lb",
+    "shortName": "Dumbbells",
+    "category": "free-weight",
+    "provides": ["dumbbells"],
+    "load": {
+      "kind": "dumbbells",
+      "weights": [5, 7.5, 10, 12.5, 15, 17.5, 20, 22.5, 25, 30, 35, 40, 45, 50, 55, 60, 65]
+    }
+  },
+  {
+    "id": "pull-up-bar",
+    "name": "Pull-up bar",
+    "shortName": "Pull-up bar",
+    "category": "bodyweight",
+    "provides": ["pull-up-bar"],
+    "load": { "kind": "bodyweight" },
+    "checklist": true
+  },
+  {
+    "id": "suspension-trainer",
+    "name": "Suspension trainer (TRX)",
+    "shortName": "Suspension trainer",
+    "category": "bodyweight",
+    "provides": ["suspension-trainer"],
+    "load": { "kind": "bodyweight" },
+    "settingsFields": ["Strap length", "Foot position"],
+    "checklist": true
+  },
+  {
+    "id": "kettlebells",
+    "name": "Kettlebells",
+    "shortName": "Kettlebells",
+    "category": "free-weight",
+    "provides": ["kettlebells"],
+    "load": { "kind": "fixed", "weights": [10, 15, 20, 25, 30, 35, 40, 45, 50] },
+    "verifyLoad": true,
+    "checklist": true
+  },
+  {
+    "id": "slam-balls",
+    "name": "Slam balls",
+    "shortName": "Slam balls",
+    "category": "free-weight",
+    "provides": ["slam-balls"],
+    "load": { "kind": "fixed", "weights": [10, 15, 20, 25, 30] },
+    "verifyLoad": true,
+    "checklist": true
+  },
+  {
+    "id": "medicine-balls",
+    "name": "Medicine balls",
+    "shortName": "Medicine balls",
+    "category": "free-weight",
+    "provides": ["medicine-balls"],
+    "load": { "kind": "fixed", "weights": [6, 8, 10, 12, 14, 20] },
+    "verifyLoad": true,
+    "checklist": true
+  },
+  {
+    "id": "sandbags",
+    "name": "Sandbags",
+    "shortName": "Sandbags",
+    "category": "free-weight",
+    "provides": ["sandbags"],
+    "load": { "kind": "fixed", "weights": [25, 50, 75] },
+    "verifyLoad": true,
+    "checklist": true
+  },
+  {
+    "id": "battle-rope",
+    "name": "Battle rope",
+    "shortName": "Battle rope",
+    "category": "other",
+    "provides": ["battle-ropes"],
+    "load": { "kind": "none" },
+    "checklist": true
+  },
+  {
+    "id": "loop-bands",
+    "name": "Loop bands",
+    "shortName": "Loop bands",
+    "category": "other",
+    "provides": ["loop-bands"],
+    "load": { "kind": "levels", "levels": ["Light", "Medium", "Heavy", "Extra heavy"] },
+    "checklist": true
+  },
+  {
+    "id": "stairmaster-hiit-rower",
+    "name": "StairMaster HIIT Rower",
+    "shortName": "Rower",
+    "category": "cardio",
+    "provides": ["rower"],
+    "load": { "kind": "none" },
+    "cardioMetrics": ["duration", "distance", "calories", "watts", "intervals"]
+  },
+  {
+    "id": "concept2-skierg",
+    "name": "Concept2 SkiErg",
+    "shortName": "SkiErg",
+    "category": "cardio",
+    "provides": ["skierg"],
+    "load": { "kind": "none" },
+    "cardioMetrics": ["duration", "distance", "calories", "pace", "watts", "intervals"],
+    "checklist": true
+  },
+  {
+    "id": "stairmaster-stair-climber",
+    "name": "StairMaster stair climber",
+    "shortName": "Stair climber",
+    "category": "cardio",
+    "provides": ["stair-climber"],
+    "load": { "kind": "none" },
+    "cardioMetrics": ["duration", "floors", "level", "calories"]
+  },
+  {
+    "id": "peloton-bike",
+    "name": "Peloton bike",
+    "shortName": "Bike",
+    "category": "cardio",
+    "provides": ["bike"],
+    "load": { "kind": "none" },
+    "cardioMetrics": ["duration", "distance", "calories", "watts", "intervals"]
+  },
+  {
+    "id": "elliptical",
+    "name": "Elliptical",
+    "shortName": "Elliptical",
+    "category": "cardio",
+    "provides": ["elliptical"],
+    "load": { "kind": "none" },
+    "cardioMetrics": ["duration", "distance", "calories", "level"],
+    "checklist": true
+  },
+
+  {
+    "id": "barbell-and-plates",
+    "name": "Barbell and plates",
+    "shortName": "Barbell",
+    "category": "free-weight",
+    "provides": ["barbell"],
+    "load": {
+      "kind": "plates",
+      "barWeight": 45,
+      "plates": [
+        { "weight": 45, "pairs": 6 },
+        { "weight": 35, "pairs": 1 },
+        { "weight": 25, "pairs": 2 },
+        { "weight": 10, "pairs": 2 },
+        { "weight": 5, "pairs": 2 },
+        { "weight": 2.5, "pairs": 1 }
+      ]
+    },
+    "loadNote": "Logged as the total: bar plus plates.",
+    "checklist": true
+  },
+  {
+    "id": "trap-bar",
+    "name": "Trap bar",
+    "shortName": "Trap bar",
+    "category": "free-weight",
+    "provides": ["trap-bar"],
+    "load": {
+      "kind": "plates",
+      "barWeight": 55,
+      "plates": [
+        { "weight": 45, "pairs": 6 },
+        { "weight": 25, "pairs": 2 },
+        { "weight": 10, "pairs": 2 },
+        { "weight": 5, "pairs": 2 }
+      ]
+    },
+    "verifyLoad": true,
+    "checklist": true
+  },
+  {
+    "id": "squat-rack",
+    "name": "Squat rack or power rack",
+    "shortName": "Squat rack",
+    "category": "support",
+    "provides": ["squat-rack"],
+    "load": { "kind": "none" },
+    "settingsFields": ["J-hook height", "Safety height"],
+    "checklist": true
+  },
+  {
+    "id": "flat-bench",
+    "name": "Flat bench",
+    "shortName": "Flat bench",
+    "category": "support",
+    "provides": ["flat-bench"],
+    "load": { "kind": "none" },
+    "checklist": true
+  },
+  {
+    "id": "adjustable-bench",
+    "name": "Adjustable bench",
+    "shortName": "Adjustable bench",
+    "category": "support",
+    "provides": ["adjustable-bench", "flat-bench"],
+    "load": { "kind": "none" },
+    "settingsFields": ["Back angle", "Seat angle"],
+    "checklist": true
+  },
+  {
+    "id": "dumbbells-5-100",
+    "name": "Dumbbells 5–100 lb",
+    "shortName": "Dumbbells",
+    "category": "free-weight",
+    "provides": ["dumbbells"],
+    "load": {
+      "kind": "dumbbells",
+      "weights": [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]
+    },
+    "checklist": true
+  },
+  {
+    "id": "cable-station",
+    "name": "Cable station (single stack, adjustable pulley)",
+    "shortName": "Cable station",
+    "category": "cable",
+    "provides": ["cable-station"],
+    "load": { "kind": "stack", "min": 10, "max": 200, "step": 10 },
+    "verifyLoad": true,
+    "settingsFields": ["Pulley height", "Attachment"],
+    "checklist": true
+  },
+  {
+    "id": "dual-cable-machine",
+    "name": "Dual cable machine (two adjustable pulleys)",
+    "shortName": "Dual cable machine",
+    "category": "cable",
+    "provides": ["cable-station", "cable-dual"],
+    "load": { "kind": "stack", "min": 5, "max": 150, "step": 5 },
+    "verifyLoad": true,
+    "settingsFields": ["Pulley height", "Attachment"],
+    "checklist": true
+  },
+  {
+    "id": "lat-pulldown-machine",
+    "name": "Lat pulldown machine",
+    "shortName": "Lat pulldown",
+    "category": "machine",
+    "provides": ["lat-pulldown-machine"],
+    "load": { "kind": "stack", "min": 10, "max": 250, "step": 10 },
+    "verifyLoad": true,
+    "settingsFields": ["Thigh pad"],
+    "checklist": true
+  },
+  {
+    "id": "seated-row-machine",
+    "name": "Seated row machine",
+    "shortName": "Seated row",
+    "category": "machine",
+    "provides": ["seated-row-machine"],
+    "load": { "kind": "stack", "min": 10, "max": 250, "step": 10 },
+    "verifyLoad": true,
+    "settingsFields": ["Seat height", "Chest pad"],
+    "checklist": true
+  },
+  {
+    "id": "chest-press-machine",
+    "name": "Chest press machine",
+    "shortName": "Chest press machine",
+    "category": "machine",
+    "provides": ["chest-press-machine"],
+    "load": { "kind": "stack", "min": 10, "max": 250, "step": 10 },
+    "verifyLoad": true,
+    "settingsFields": ["Seat height"],
+    "checklist": true
+  },
+  {
+    "id": "shoulder-press-machine",
+    "name": "Shoulder press machine",
+    "shortName": "Shoulder press machine",
+    "category": "machine",
+    "provides": ["shoulder-press-machine"],
+    "load": { "kind": "stack", "min": 10, "max": 200, "step": 10 },
+    "verifyLoad": true,
+    "settingsFields": ["Seat height"],
+    "checklist": true
+  },
+  {
+    "id": "leg-press-machine",
+    "name": "Leg press",
+    "shortName": "Leg press",
+    "category": "machine",
+    "provides": ["leg-press-machine"],
+    "load": { "kind": "stack", "min": 20, "max": 400, "step": 20 },
+    "verifyLoad": true,
+    "settingsFields": ["Seat back position", "Foot position"],
+    "checklist": true
+  },
+  {
+    "id": "leg-extension-machine",
+    "name": "Leg extension machine",
+    "shortName": "Leg extension",
+    "category": "machine",
+    "provides": ["leg-extension-machine"],
+    "load": { "kind": "stack", "min": 10, "max": 200, "step": 10 },
+    "verifyLoad": true,
+    "settingsFields": ["Back pad position", "Ankle pad"],
+    "checklist": true
+  },
+  {
+    "id": "leg-curl-machine",
+    "name": "Leg curl machine",
+    "shortName": "Leg curl",
+    "category": "machine",
+    "provides": ["leg-curl-machine"],
+    "load": { "kind": "stack", "min": 10, "max": 200, "step": 10 },
+    "verifyLoad": true,
+    "settingsFields": ["Back pad position", "Ankle pad"],
+    "checklist": true
+  },
+  {
+    "id": "pec-deck",
+    "name": "Pec deck / rear delt fly",
+    "shortName": "Pec deck",
+    "category": "machine",
+    "provides": ["pec-deck"],
+    "load": { "kind": "stack", "min": 10, "max": 200, "step": 10 },
+    "verifyLoad": true,
+    "settingsFields": ["Seat height", "Handle position"],
+    "checklist": true
+  },
+  {
+    "id": "hack-squat-machine",
+    "name": "Hack squat",
+    "shortName": "Hack squat",
+    "category": "machine",
+    "provides": ["hack-squat-machine"],
+    "load": {
+      "kind": "plates",
+      "barWeight": 0,
+      "plates": [
+        { "weight": 45, "pairs": 6 },
+        { "weight": 25, "pairs": 2 },
+        { "weight": 10, "pairs": 2 },
+        { "weight": 5, "pairs": 2 }
+      ]
+    },
+    "loadNote": "Logged as the plates you load; the sled's own weight isn't counted.",
+    "settingsFields": ["Shoulder pad", "Foot position"],
+    "checklist": true
+  },
+  {
+    "id": "calf-raise-machine",
+    "name": "Calf raise machine",
+    "shortName": "Calf machine",
+    "category": "machine",
+    "provides": ["calf-machine"],
+    "load": { "kind": "stack", "min": 10, "max": 300, "step": 10 },
+    "verifyLoad": true,
+    "checklist": true
+  },
+  {
+    "id": "lateral-raise-machine",
+    "name": "Lateral raise machine",
+    "shortName": "Lateral raise machine",
+    "category": "machine",
+    "provides": ["lateral-raise-machine"],
+    "load": { "kind": "stack", "min": 5, "max": 150, "step": 5 },
+    "verifyLoad": true,
+    "settingsFields": ["Seat height"],
+    "checklist": true
+  },
+  {
+    "id": "dip-station",
+    "name": "Dip station",
+    "shortName": "Dip bars",
+    "category": "bodyweight",
+    "provides": ["dip-station"],
+    "load": { "kind": "bodyweight" },
+    "checklist": true
+  },
+  {
+    "id": "ab-wheel",
+    "name": "Ab wheel",
+    "shortName": "Ab wheel",
+    "category": "other",
+    "provides": ["ab-wheel"],
+    "load": { "kind": "none" },
+    "checklist": true
+  },
+  {
+    "id": "treadmill",
+    "name": "Treadmill",
+    "shortName": "Treadmill",
+    "category": "cardio",
+    "provides": ["treadmill"],
+    "load": { "kind": "none" },
+    "cardioMetrics": ["duration", "distance", "calories", "level"],
+    "checklist": true
+  },
+  {
+    "id": "rowing-machine",
+    "name": "Rowing machine",
+    "shortName": "Rower",
+    "category": "cardio",
+    "provides": ["rower"],
+    "load": { "kind": "none" },
+    "cardioMetrics": ["duration", "distance", "calories", "pace", "watts", "intervals"],
+    "checklist": true
+  },
+  {
+    "id": "exercise-bike",
+    "name": "Exercise bike",
+    "shortName": "Bike",
+    "category": "cardio",
+    "provides": ["bike"],
+    "load": { "kind": "none" },
+    "cardioMetrics": ["duration", "distance", "calories", "watts", "level", "intervals"],
+    "checklist": true
+  },
+  {
+    "id": "stair-climber",
+    "name": "Stair climber",
+    "shortName": "Stair climber",
+    "category": "cardio",
+    "provides": ["stair-climber"],
+    "load": { "kind": "none" },
+    "cardioMetrics": ["duration", "floors", "level", "calories"],
+    "checklist": true
+  }
+]
