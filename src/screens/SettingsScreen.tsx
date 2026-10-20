@@ -14,7 +14,7 @@ import {
 } from '../app/state';
 import { importBackup, parseBackup, type BackupFile, type BackupPreview } from '../db/backup';
 import { listSnapshots } from '../db/snapshot';
-import type { ThemePreference } from '../db/types';
+import type { Palette, ThemePreference } from '../db/types';
 import { goalName } from '../domain/generator';
 import { WEEKDAY_SHORT } from '../domain/schedule';
 import { currentBackupStatus } from './BackupReminder';
@@ -30,6 +30,12 @@ import { ScreenHeader } from '../ui/ScreenHeader';
 import { Sheet } from '../ui/Sheet';
 
 const EXPERIENCE_NAMES = { beginner: 'New to lifting', intermediate: 'Some experience', advanced: 'Experienced' } as const;
+
+/** Swatch colors are fixed (not tokens): each card previews its own palette. */
+const PALETTES: { value: Palette; name: string; detail: string; colors: [string, string, string] }[] = [
+  { value: 'forest', name: 'Forest', detail: 'Deep green, mint and brass', colors: ['#10251c', '#7fcfa0', '#ddb667'] },
+  { value: 'classic', name: 'Classic', detail: 'Warm paper, blue and ember', colors: ['#f5f4f0', '#2e4bdb', '#e0562a'] },
+];
 
 const THEMES: { value: ThemePreference; label: string }[] = [
   { value: 'system', label: 'System' },
@@ -172,8 +178,34 @@ export function SettingsScreen() {
       </ListGroup>
 
       <ListGroup title="Appearance">
-        <ControlRow label="Theme">
-          <Segmented label="Theme" options={THEMES} value={current.theme} onChange={(value) => void updateSettings({ theme: value })} />
+        <div class="row row-stacked">
+          <span class="row-text">
+            <span class="row-label">Palette</span>
+          </span>
+          <div class="palette-picker" role="radiogroup" aria-label="Palette">
+            {PALETTES.map((p) => (
+              <button
+                key={p.value}
+                type="button"
+                role="radio"
+                aria-checked={current.palette === p.value}
+                class={current.palette === p.value ? 'palette-option is-selected' : 'palette-option'}
+                onClick={() => void updateSettings({ palette: p.value })}
+              >
+                <span class="palette-swatch" style={{ background: p.colors[0] }} aria-hidden="true">
+                  <span style={{ background: p.colors[1] }} />
+                  <span style={{ background: p.colors[2] }} />
+                </span>
+                <span class="palette-text">
+                  <span class="palette-name">{p.name}</span>
+                  <span class="palette-detail">{p.detail}</span>
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+        <ControlRow label="Light or dark">
+          <Segmented label="Light or dark" options={THEMES} value={current.theme} onChange={(value) => void updateSettings({ theme: value })} />
         </ControlRow>
       </ListGroup>
 

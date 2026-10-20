@@ -156,7 +156,7 @@ function StreakCard({ streak, week }: { streak: number; week?: WeekSummary }) {
         <Icon name="flame" size={22} />
       </span>
       <div class="streak-text">
-        <p class="streak-title num">{streak === 1 ? '1 full week' : `${streak}-week streak`}</p>
+        <p class="streak-title num">{streak === 0 ? 'No streak yet' : streak === 1 ? '1 full week' : `${streak}-week streak`}</p>
         <p class="streak-body num">
           {week ? `This week: ${week.done} of ${week.planned} sessions` : ''}
           {streak === 0 && week && week.done < week.planned ? '. Every planned session this week starts a streak.' : ''}

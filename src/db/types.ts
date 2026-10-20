@@ -17,6 +17,8 @@ export type Goal = 'muscle' | 'fat-loss' | 'strength' | 'general';
 export type Experience = 'beginner' | 'intermediate' | 'advanced';
 export type Units = 'lb' | 'kg';
 export type ThemePreference = 'system' | 'light' | 'dark';
+/** Color palette: Forest (default) or Classic (the original paper and blue). */
+export type Palette = 'forest' | 'classic';
 /** Asked at setup; only sets the plan's default leg exercises. */
 export type Sex = 'male' | 'female' | 'unspecified';
 /** Leg exercises: free weights (squats, deadlifts, lunges) or machines (leg press, curls, extensions). */
@@ -42,6 +44,7 @@ export interface Profile {
 export interface Settings {
   units: Units;
   theme: ThemePreference;
+  palette: Palette;
   sound: boolean;
   haptics: boolean;
   /** Keep the screen awake during workouts so the rest chime can play. */

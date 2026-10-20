@@ -6,9 +6,10 @@ import sharp from 'sharp';
 const MARK_PATH = 'M16 92 50 32 84 92H66.76L50 62.42 33.24 92Z';
 const ORB = { cx: 50, cy: 18, r: 10.5 };
 
-const BG = '#111318';
-const MARK = '#f2f0ea';
-const ORB_COLOR = '#6a83f7';
+// Forest: deep green, cream figure, mint sphere (matches the default palette).
+const BG = '#10251c';
+const MARK = '#f0eee6';
+const ORB_COLOR = '#7fcfa0';
 
 const out = new URL('../public/icons/', import.meta.url);
 
@@ -27,7 +28,7 @@ function iconSvg(size, scale) {
 }
 
 const favicon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <style>.m{fill:#111318}.o{fill:#2e4bdb}@media (prefers-color-scheme:dark){.m{fill:#f2f0ea}.o{fill:#7c93ff}}</style>
+  <style>.m{fill:#0f1c16}.o{fill:#1f5c42}@media (prefers-color-scheme:dark){.m{fill:#f0eee6}.o{fill:#7fcfa0}}</style>
   <path class="m" d="${MARK_PATH}"/>
   <circle class="o" cx="${ORB.cx}" cy="${ORB.cy}" r="${ORB.r}"/>
 </svg>

@@ -10,6 +10,13 @@ Work in progress goes under `## [Unreleased]`. `npm run release` turns that sect
 version with today's date.
 
 ## [Unreleased]
+### Highlights
+- A new look: Forest, deep green with mint for actions and brass for your wins, in light and dark
+- Prefer the original? It stays in Settings › Appearance as Classic
+- A green app icon to match
+### Internal
+- Palettes: Forest is the default (`:root`), Classic via `data-palette="classic"`; `settings.palette`;
+  tests/styles/tokens.test.ts checks AA contrast for every palette and that the dark copies match
 
 ## [1.1.0] - 2026-10-15
 ### Highlights

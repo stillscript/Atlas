@@ -1,50 +1,55 @@
 /*
  * Atlas design tokens.
  *
- * Brand: strong, calm, premium. Warm paper neutrals, near-black ink, one confident blue ("Atlas
- * blue") for action, and a warm ember reserved for wins (PRs, streaks). Everything else is neutral.
+ * Two palettes, each with a light and a dark appearance:
+ * - Forest (default): deep green and warm paper. Mint (dark) or forest green (light) for action,
+ *   brass reserved for wins (PRs, streaks).
+ * - Classic (`data-palette="classic"`): warm paper, near-black ink, Atlas blue, ember wins.
  *
- * Dark values are declared twice (system preference, and an explicit choice in Settings). Keep the
- * two dark blocks identical.
+ * Appearance follows the phone unless Settings picks one (`data-theme="light|dark"`). Each dark
+ * set is declared twice (system preference, and an explicit choice); keep each pair identical
+ * (tests/styles/tokens.test.ts checks). Every text color passes WCAG AA on bg, surface and
+ * surface-2; check new values the same way.
  */
 
 :root {
   color-scheme: light;
   --font-sans: 'Geist Variable', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
 
-  --bg: #f5f4f0;
+  /* ---------- Forest, light ---------- */
+  --bg: #f1f0e9;
   --surface: #ffffff;
-  --surface-2: #edebe5;
-  --surface-3: #e3e0d8;
-  --ink: #111318;
-  --ink-2: #555b67;
-  --ink-3: #666b77;
-  --line: rgba(17, 19, 24, 0.09);
-  --line-strong: rgba(17, 19, 24, 0.16);
+  --surface-2: #e5e8e0;
+  --surface-3: #d9ded4;
+  --ink: #0f1c16;
+  --ink-2: #4b5a52;
+  --ink-3: #5c6b63;
+  --line: rgba(15, 28, 22, 0.09);
+  --line-strong: rgba(15, 28, 22, 0.16);
 
-  --accent: #2e4bdb;
-  --accent-pressed: #2440c4;
+  --accent: #1f5c42;
+  --accent-pressed: #184c36;
   --on-accent: #ffffff;
-  --accent-soft: #e7ebfc;
-  --accent-text: #2440c4;
+  --accent-soft: #e1ece4;
+  --accent-text: #1f5c42;
 
-  --win: #e0562a;
-  --win-soft: #fcebe3;
-  --good: #147951;
-  --good-soft: #e1f3ea;
-  --warn: #955f09;
-  --warn-soft: #fbf0dc;
-  --danger: #c4352b;
-  --danger-soft: #fbe7e5;
+  --win: #a9741c;
+  --win-soft: #f5ecda;
+  --good: #167349;
+  --good-soft: #dff0e5;
+  --warn: #8f5b0a;
+  --warn-soft: #f8edd8;
+  --danger: #b5372d;
+  --danger-soft: #f9e5e2;
   /* Text and icons on a solid win/good/danger fill. */
   --on-status: #ffffff;
 
-  --scrim: rgba(12, 14, 18, 0.36);
-  --shadow-1: 0 1px 2px rgba(17, 19, 24, 0.05), 0 1px 1px rgba(17, 19, 24, 0.03);
-  --shadow-2: 0 12px 32px rgba(17, 19, 24, 0.14), 0 2px 6px rgba(17, 19, 24, 0.06);
-  --bar-bg: rgba(245, 244, 240, 0.84);
-  --mark: #111318;
-  --mark-orb: #2e4bdb;
+  --scrim: rgba(8, 16, 12, 0.38);
+  --shadow-1: 0 1px 2px rgba(15, 28, 22, 0.05), 0 1px 1px rgba(15, 28, 22, 0.03);
+  --shadow-2: 0 12px 32px rgba(15, 28, 22, 0.14), 0 2px 6px rgba(15, 28, 22, 0.06);
+  --bar-bg: rgba(241, 240, 233, 0.84);
+  --mark: #0f1c16;
+  --mark-orb: #1f5c42;
 
   /* Type: iOS-like sizes so the app feels native; 17px body. */
   --text-xs: 12px;
@@ -88,8 +93,114 @@
   --safe-right: env(safe-area-inset-right, 0px);
 }
 
+/* ---------- Forest, dark (twice: system, then explicit) ---------- */
+
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --bg: #0b1310;
+    --surface: #121c17;
+    --surface-2: #19251f;
+    --surface-3: #213029;
+    --ink: #e8eee9;
+    --ink-2: #a5b4ab;
+    --ink-3: #879990;
+    --line: rgba(232, 238, 233, 0.08);
+    --line-strong: rgba(232, 238, 233, 0.15);
+    --accent: #7fcfa0;
+    --accent-pressed: #6cc291;
+    --on-accent: #0b1310;
+    --accent-soft: rgba(127, 207, 160, 0.14);
+    --accent-text: #93dab0;
+    --win: #ddb667;
+    --win-soft: rgba(221, 182, 103, 0.15);
+    --good: #5cc48f;
+    --good-soft: rgba(92, 196, 143, 0.14);
+    --warn: #e7a04f;
+    --warn-soft: rgba(231, 160, 79, 0.14);
+    --danger: #ef7b6f;
+    --danger-soft: rgba(239, 123, 111, 0.14);
+    --on-status: #0b1310;
+    --scrim: rgba(0, 0, 0, 0.56);
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-2: 0 14px 36px rgba(0, 0, 0, 0.55), 0 2px 6px rgba(0, 0, 0, 0.3);
+    --bar-bg: rgba(11, 19, 16, 0.82);
+    --mark: #f0eee6;
+    --mark-orb: #7fcfa0;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0b1310;
+  --surface: #121c17;
+  --surface-2: #19251f;
+  --surface-3: #213029;
+  --ink: #e8eee9;
+  --ink-2: #a5b4ab;
+  --ink-3: #879990;
+  --line: rgba(232, 238, 233, 0.08);
+  --line-strong: rgba(232, 238, 233, 0.15);
+  --accent: #7fcfa0;
+  --accent-pressed: #6cc291;
+  --on-accent: #0b1310;
+  --accent-soft: rgba(127, 207, 160, 0.14);
+  --accent-text: #93dab0;
+  --win: #ddb667;
+  --win-soft: rgba(221, 182, 103, 0.15);
+  --good: #5cc48f;
+  --good-soft: rgba(92, 196, 143, 0.14);
+  --warn: #e7a04f;
+  --warn-soft: rgba(231, 160, 79, 0.14);
+  --danger: #ef7b6f;
+  --danger-soft: rgba(239, 123, 111, 0.14);
+  --on-status: #0b1310;
+  --scrim: rgba(0, 0, 0, 0.56);
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 14px 36px rgba(0, 0, 0, 0.55), 0 2px 6px rgba(0, 0, 0, 0.3);
+  --bar-bg: rgba(11, 19, 16, 0.82);
+  --mark: #f0eee6;
+  --mark-orb: #7fcfa0;
+}
+
+/* ---------- Classic, light ---------- */
+
+:root[data-palette='classic'] {
+  --bg: #f5f4f0;
+  --surface: #ffffff;
+  --surface-2: #edebe5;
+  --surface-3: #e3e0d8;
+  --ink: #111318;
+  --ink-2: #555b67;
+  --ink-3: #646975;
+  --line: rgba(17, 19, 24, 0.09);
+  --line-strong: rgba(17, 19, 24, 0.16);
+  --accent: #2e4bdb;
+  --accent-pressed: #2440c4;
+  --on-accent: #ffffff;
+  --accent-soft: #e7ebfc;
+  --accent-text: #2440c4;
+  --win: #e0562a;
+  --win-soft: #fcebe3;
+  --good: #147951;
+  --good-soft: #e1f3ea;
+  --warn: #925d09;
+  --warn-soft: #fbf0dc;
+  --danger: #c4352b;
+  --danger-soft: #fbe7e5;
+  --on-status: #ffffff;
+  --scrim: rgba(12, 14, 18, 0.36);
+  --shadow-1: 0 1px 2px rgba(17, 19, 24, 0.05), 0 1px 1px rgba(17, 19, 24, 0.03);
+  --shadow-2: 0 12px 32px rgba(17, 19, 24, 0.14), 0 2px 6px rgba(17, 19, 24, 0.06);
+  --bar-bg: rgba(245, 244, 240, 0.84);
+  --mark: #111318;
+  --mark-orb: #2e4bdb;
+}
+
+/* ---------- Classic, dark (twice: system, then explicit) ---------- */
+
+@media (prefers-color-scheme: dark) {
+  :root[data-palette='classic']:not([data-theme='light']) {
     color-scheme: dark;
     --bg: #0b0d11;
     --surface: #15181e;
@@ -123,7 +234,7 @@
   }
 }
 
-:root[data-theme='dark'] {
+:root[data-palette='classic'][data-theme='dark'] {
   color-scheme: dark;
   --bg: #0b0d11;
   --surface: #15181e;

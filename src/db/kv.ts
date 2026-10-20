@@ -5,6 +5,7 @@ import { newId } from '../lib/ids';
 export const DEFAULT_SETTINGS: Settings = {
   units: 'lb',
   theme: 'system',
+  palette: 'forest',
   sound: true,
   haptics: true,
   keepAwake: true,

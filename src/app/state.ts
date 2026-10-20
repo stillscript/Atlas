@@ -1,7 +1,7 @@
 import { computed, signal } from '@preact/signals';
 import { DEFAULT_SETTINGS, saveSettings, updateAppMeta } from '../db/kv';
 import type { AtlasDB } from '../db/schema';
-import type { AppMeta, Gym, Profile, Program, Settings, ThemePreference } from '../db/types';
+import type { AppMeta, Gym, Palette, Profile, Program, Settings, ThemePreference } from '../db/types';
 import { setHapticsEnabled } from '../lib/haptics';
 import { isMobile, isStandalone } from '../lib/platform';
 
@@ -56,7 +56,7 @@ export const installPrompt = signal<InstallPromptEvent | null>(null);
 export async function updateSettings(patch: Partial<Settings>): Promise<void> {
   const next = await saveSettings(getDb(), patch);
   settings.value = next;
-  if (patch.theme !== undefined) applyTheme(next.theme);
+  if (patch.theme !== undefined || patch.palette !== undefined) applyTheme(next.theme, next.palette);
   if (patch.haptics !== undefined) setHapticsEnabled(next.haptics);
 }
 
@@ -64,17 +64,27 @@ export async function patchAppMeta(patch: Partial<AppMeta>): Promise<void> {
   appMeta.value = await updateAppMeta(getDb(), patch);
 }
 
-const THEME_COLORS = { light: '#f5f4f0', dark: '#0b0d11' } as const;
+/** Each palette's page background, for the browser and status bar (same as `--bg` in tokens.css). */
+const THEME_COLORS: Record<Palette, { light: string; dark: string }> = {
+  forest: { light: '#f1f0e9', dark: '#0b1310' },
+  classic: { light: '#f5f4f0', dark: '#0b0d11' },
+};
 
-/** Applies a theme choice: "system" follows the phone; light/dark override it. */
-export function applyTheme(preference: ThemePreference): void {
+/**
+ * Applies the palette and appearance. Forest is the default (no attribute); "system" follows the
+ * phone, light/dark override it.
+ */
+export function applyTheme(preference: ThemePreference, palette: Palette = 'forest'): void {
   const root = document.documentElement;
   if (preference === 'system') delete root.dataset.theme;
   else root.dataset.theme = preference;
+  if (palette === 'forest') delete root.dataset.palette;
+  else root.dataset.palette = palette;
 
+  const colors = THEME_COLORS[palette];
   for (const meta of document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]')) {
     const media = meta.getAttribute('media') ?? '';
-    const systemColor = media.includes('dark') ? THEME_COLORS.dark : THEME_COLORS.light;
-    meta.content = preference === 'system' ? systemColor : THEME_COLORS[preference];
+    const systemColor = media.includes('dark') ? colors.dark : colors.light;
+    meta.content = preference === 'system' ? systemColor : colors[preference];
   }
 }

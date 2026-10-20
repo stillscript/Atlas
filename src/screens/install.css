@@ -26,9 +26,9 @@
   height: 76px;
   margin-bottom: var(--space-2);
   border-radius: 20px;
-  background: #111318;
-  --mark: #f2f0ea;
-  --mark-orb: #6a83f7;
+  background: #10251c;
+  --mark: #f0eee6;
+  --mark-orb: #7fcfa0;
   box-shadow: var(--shadow-2);
 }
 

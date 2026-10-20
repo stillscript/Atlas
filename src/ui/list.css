@@ -137,3 +137,68 @@
   align-items: stretch;
   gap: var(--space-3);
 }
+
+/* ---------- Palette picker (Settings › Appearance) ---------- */
+
+.palette-picker {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.palette-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+  min-height: var(--tap-lg);
+  padding: var(--space-2) var(--space-3);
+  border: 1.5px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease);
+}
+
+.palette-option.is-selected {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.palette-swatch {
+  position: relative;
+  display: grid;
+  flex: none;
+  grid-template-columns: repeat(2, 10px);
+  gap: 4px;
+  place-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+}
+
+.palette-swatch > span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.palette-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.palette-name {
+  font-size: var(--text-md);
+  font-weight: 650;
+}
+
+.palette-detail {
+  color: var(--ink-2);
+  font-size: var(--text-xs);
+  line-height: 1.3;
+}

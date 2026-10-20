@@ -18,6 +18,7 @@ IndexedDB on the phone.
 | 6. Plan editing, gyms/equipment editing, backup reminder | Done (branch `stage-6-editing`, cut from stage 5) |
 | 7. QA (393×852, both themes, offline, cold start, update with data), README, deploy | Done. v1.0.0 live at https://stillscript.github.io/Atlas/ (Pages via Actions, remote `origin` = github.com/stillscript/Atlas) |
 | v1.1 strength focus: cardio removed, fix/delete past workouts, leg style (gender default, Plan settings switch) | Released as v1.1.0 (2026-10-15), merged into `main` and deployed |
+| v1.2 elevated look (`docs/v1.2-plan.md`): A Forest theme, B exercise icons, C form visuals, D muscle map + rest ring + warm-ups, E QA and release | A built on branch `v1.2-forest`, awaiting review |
 
 Pushing: this shell can't sign in to GitHub; run `git push` in the user's Terminal panel (Git
 Credential Manager opens the browser sign-in). Always ask before pushing.
@@ -74,12 +75,16 @@ docs/program-samples.md Generated plans for review (regenerate after catalog/gen
 
 ## Design system
 
-- Brand: strong, calm, premium. Warm paper neutrals, near-black ink, **Atlas blue** (`--accent`) for
-  actions, **ember** (`--win`) only for wins (PRs, streaks). Font: Geist Variable (self-hosted
+- Brand: strong, calm, premium. Two palettes (`styles/tokens.css`, `settings.palette`): **Forest**
+  (default: deep green and warm paper; mint or forest green `--accent` for actions, **brass**
+  `--win` only for wins) and **Classic** (`data-palette="classic"`: paper, near-black ink, Atlas
+  blue, ember). Appearance (System/Light/Dark) is separate (`data-theme`). New colors go in every
+  palette set; `tests/styles/tokens.test.ts` enforces AA and the matching dark copies. The app
+  icon is Forest (a web app has one Home Screen icon). Font: Geist Variable (self-hosted
   Latin subsets in `styles/fonts.css`, precached). Body 17px; large titles 34px; numbers use
   tabular figures (`.num`).
 - Contrast: every text color passes WCAG AA (4.5:1) on `--bg`, `--surface` and `--surface-2` in
-  both themes; `--ink-3` is the lightest text allowed. Ember is for icons and fills (3:1), not small
+  every palette and appearance; `--ink-3` is the lightest text allowed. Ember is for icons and fills (3:1), not small
   text. Text or icons on a solid good/win/danger fill use `--on-status`.
 - The mark (`src/ui/Logo.tsx`): a figure bearing a sphere. Geometry is duplicated in
   `scripts/icons.mjs`; change both and run `npm run icons`.

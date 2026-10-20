@@ -76,7 +76,7 @@ async function boot(): Promise<void> {
   activeGym.value = training.gym;
   activeProgram.value = training.program;
   completedSessions.value = training.completedSessions;
-  applyTheme(loadedSettings.theme);
+  applyTheme(loadedSettings.theme, loadedSettings.palette);
   setHapticsEnabled(loadedSettings.haptics);
   await Promise.all([loadWorkoutState(db, meta, loadedSettings.activeGymId), loadCoachState(db), loadGymList(db)]);
 
