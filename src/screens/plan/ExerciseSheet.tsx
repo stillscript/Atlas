@@ -4,15 +4,13 @@ import { loadSourceFor } from '../../domain/gym';
 import { describeLoad } from '../../domain/loads';
 import { swapOptions } from '../../domain/resolver';
 import { startSuggestion } from '../../domain/start';
-import type { ExerciseDef } from '../../domain/types';
-import { muscleName } from '../../domain/volume';
 import { effortLabel, formatLoad, restLabel, setsAndReps } from '../../lib/training-format';
 import { profile } from '../../app/state';
 import { exerciseHistory } from '../../app/workout';
 import { lastExposure } from '../../domain/workout';
 import { Sheet } from '../../ui/Sheet';
 import './plan.css';
-import { ExerciseIcon } from '../../ui/ExerciseIcon';
+import { FormGuide, MovementStage } from './FormGuide';
 
 interface ExerciseSheetProps {
   slot: ProgramSlot | null;
@@ -30,28 +28,6 @@ export function ExerciseSheet({ slot, gym, onClose }: ExerciseSheetProps) {
   );
 }
 
-/** Setup, cues and what to watch for. */
-export function FormNotes({ exercise }: { exercise: ExerciseDef }) {
-  return (
-    <section class="ex-form">
-      <p class="ex-section-title">Setup</p>
-      <p>{exercise.form.setup}</p>
-      <p class="ex-section-title">Cues</p>
-      <ol>
-        {exercise.form.cues.map((cue) => (
-          <li key={cue}>{cue}</li>
-        ))}
-      </ol>
-      <p class="ex-section-title">Watch for</p>
-      <ul>
-        {exercise.form.watch.map((item) => (
-          <li key={item}>{item}</li>
-        ))}
-      </ul>
-    </section>
-  );
-}
-
 function ExerciseDetail({ slot, gym }: { slot: ProgramSlot; gym: Gym }) {
   const exercise = requireExercise(slot.exerciseId);
   const source = loadSourceFor(exercise, gym);
@@ -66,14 +42,11 @@ function ExerciseDetail({ slot, gym }: { slot: ProgramSlot; gym: Gym }) {
     const detail = describeLoad(source.model, load, exercise.loadMode).detail;
     return /^Pin at [\d.]+$/.test(detail) ? '' : ` · ${detail}`;
   };
-  const muscles = [...exercise.primary.map(muscleName), ...exercise.secondary.map((m) => `${muscleName(m)} (assists)`)];
 
   return (
     <div class="ex-detail">
-      <div class="ex-hero">
-        <ExerciseIcon exerciseId={exercise.id} size="lg" />
-        {slot.purpose && <p class="ex-purpose">{slot.purpose}</p>}
-      </div>
+      <MovementStage exercise={exercise} />
+      {slot.purpose && <p class="ex-purpose">{slot.purpose}</p>}
 
       <div class="ex-facts">
         <div class="ex-fact">
@@ -121,14 +94,7 @@ function ExerciseDetail({ slot, gym }: { slot: ProgramSlot; gym: Gym }) {
         </div>
       )}
 
-      <FormNotes exercise={exercise} />
-
-      {muscles.length > 0 && (
-        <section>
-          <p class="ex-section-title">Works</p>
-          <p class="ex-muted">{muscles.join(', ')}</p>
-        </section>
-      )}
+      <FormGuide exercise={exercise} />
 
       {source && (
         <section>

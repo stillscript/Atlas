@@ -12,7 +12,7 @@ import { Button, Segmented } from '../../ui/controls';
 import { EmptyState } from '../../ui/feedback';
 import { ScreenHeader } from '../../ui/ScreenHeader';
 import { Sheet } from '../../ui/Sheet';
-import { FormNotes } from '../plan/ExerciseSheet';
+import { FormGuide, MovementStage } from '../plan/FormGuide';
 import { effortTag } from '../workout/helpers';
 import './progress.css';
 
@@ -157,7 +157,8 @@ export function ExerciseProgress({ exerciseId }: { exerciseId: string }) {
       </div>
       <Sheet open={formOpen} onClose={() => setFormOpen(false)} title={exercise.name}>
         <div class="ex-detail">
-          <FormNotes exercise={exercise} />
+          <MovementStage exercise={exercise} />
+          <FormGuide exercise={exercise} />
         </div>
       </Sheet>
     </main>

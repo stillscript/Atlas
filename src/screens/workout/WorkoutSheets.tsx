@@ -30,7 +30,7 @@ import { showToast } from '../../ui/feedback';
 import { Icon } from '../../ui/Icon';
 import { ListGroup, ListRow } from '../../ui/List';
 import { Sheet } from '../../ui/Sheet';
-import { FormNotes } from '../plan/ExerciseSheet';
+import { FormGuide, MovementStage } from '../plan/FormGuide';
 import { CheckoutSheet } from './Checkout';
 import { Dial } from './Dial';
 import { EquipmentCheckSheet } from './EquipmentCheck';
@@ -200,16 +200,10 @@ function OverviewSheet({ open, onClose, onOpen, session, gym }: { open: boolean;
 function FormContent({ entry, gym }: { entry: ExerciseEntry; gym: Gym }) {
   const ctx = loadContext(entry, gym);
   const item = gym.equipment.find((e) => e.id === entry.equipmentId);
-  const muscles = [...ctx.exercise.primary.map(muscleName), ...ctx.exercise.secondary.map((m) => `${muscleName(m)} (assists)`)];
   return (
     <div class="ex-detail">
-      <FormNotes exercise={ctx.exercise} />
-      {muscles.length > 0 && (
-        <section>
-          <p class="ex-section-title">Works</p>
-          <p class="ex-muted">{muscles.join(', ')}</p>
-        </section>
-      )}
+      <MovementStage exercise={ctx.exercise} />
+      <FormGuide exercise={ctx.exercise} />
       {item?.loadNote && (
         <section>
           <p class="ex-section-title">About the numbers</p>

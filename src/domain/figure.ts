@@ -228,7 +228,8 @@ function dumbbell(at: Point, angle: number): Shape[] {
 }
 
 /** Everything to draw for a pose and its props, back to front. */
-export function shapes(pose: Pose, props: Prop[] = []): Shape[] {
+/** `groundY` pins the floor line (a moving figure keeps the floor where the start pose put it). */
+export function shapes(pose: Pose, props: Prop[] = [], groundY?: number): Shape[] {
   const j = joints(pose);
   const front = pose.view === 'front';
   const out: Shape[] = [];
@@ -280,7 +281,7 @@ export function shapes(pose: Pose, props: Prop[] = []): Shape[] {
   if (pose.ground) {
     const body = out.filter((s) => s.layer === 'body' || s.layer === 'far' || s.layer === 'arm').flatMap((s) => s.points!);
     const xs = body.map((p) => p[0]);
-    const y = round(Math.max(...body.map((p) => p[1])) + STROKES.body / 2 + 0.7);
+    const y = groundY ?? round(Math.max(...body.map((p) => p[1])) + STROKES.body / 2 + 0.7);
     out.unshift({ kind: 'line', layer: 'ground', points: [[round(Math.min(...xs) - 2), y], [round(Math.max(...xs) + 2), y]] });
   }
   return out;
@@ -331,8 +332,8 @@ function element(s: Shape, extra = ''): string {
  * crosses them, and around the head), the head (gapped where an arm passes in front of it), the
  * arms, then the held load on top. The gaps keep overlapping parts readable at icon size.
  */
-export function svgMarkup(list: Shape[], size: number, label?: string): string {
-  const box = viewBox(list);
+export function svgMarkup(list: Shape[], size: number, label?: string, frame?: [number, number, number, number], overlay = ''): string {
+  const box = frame ?? viewBox(list);
   const [x, y, w, h] = box;
   const id = `pg${++uid}`;
   const head = list.find((s) => s.layer === 'head')!;
@@ -352,6 +353,53 @@ export function svgMarkup(list: Shape[], size: number, label?: string): string {
     `<g mask="url(#${id}h)">${element(head)}</g>` +
     arms.map((s) => element(s)).join('') +
     loads.map((s) => element(s)).join('') +
+    overlay +
     `</svg>`
   );
+}
+
+// ---------------------------------------------------------------- motion
+
+/** Turns from one angle to another the short way round. */
+function lerpAngle(a: number, b: number, t: number): number {
+  const d = ((((b - a) % 360) + 540) % 360) - 180;
+  return a + d * t;
+}
+
+const lerpPair = (a: [number, number], b: [number, number], t: number): [number, number] => [lerpAngle(a[0], b[0], t), lerpAngle(a[1], b[1], t)];
+
+/**
+ * The pose a fraction `t` of the way from `a` to `b` (joint angles turn, so bones keep their
+ * length). `anchor` stays where it is in `a`: the feet stay on the floor, the hands on the bar.
+ */
+export function interpolate(a: Pose, b: Pose, t: number, anchor: JointName = 'hip'): Pose {
+  const pose: Pose = {
+    ...a,
+    torso: lerpAngle(a.torso, b.torso, t),
+    arm: lerpPair(a.arm, b.arm, t),
+    leg: lerpPair(a.leg, b.leg, t),
+    foot: lerpAngle(a.foot ?? 90, b.foot ?? 90, t),
+    at: undefined,
+  };
+  if (a.arm2 || b.arm2) pose.arm2 = lerpPair(a.arm2 ?? a.arm, b.arm2 ?? b.arm, t);
+  if (a.leg2 || b.leg2) pose.leg2 = lerpPair(a.leg2 ?? a.leg, b.leg2 ?? b.leg, t);
+  if (a.foot2 !== undefined || b.foot2 !== undefined) pose.foot2 = lerpAngle(a.foot2 ?? a.foot ?? 90, b.foot2 ?? b.foot ?? 90, t);
+  if (a.thighScale !== undefined || b.thighScale !== undefined) pose.thighScale = (a.thighScale ?? 1) + ((b.thighScale ?? 1) - (a.thighScale ?? 1)) * t;
+  const fixed = joints(a)[anchor];
+  const moved = joints(pose)[anchor];
+  const base = a.at ?? [0, 0];
+  // A pose can also move as a whole (rising onto the toes in a front view): `at` in `b` minus `a`.
+  const rise = [((b.at?.[0] ?? 0) - (a.at?.[0] ?? 0)) * t, ((b.at?.[1] ?? 0) - (a.at?.[1] ?? 0)) * t];
+  pose.at = [round(base[0] + fixed[0] - moved[0] + rise[0]!), round(base[1] + fixed[1] - moved[1] + rise[1]!)];
+  return pose;
+}
+
+/** Where the floor line sits for a pose (undefined without one). */
+export function groundOf(pose: Pose, props: Prop[] = []): number | undefined {
+  return shapes(pose, props).find((s) => s.layer === 'ground')?.points?.[0]?.[1];
+}
+
+/** One frame that holds every shape of every given list (so a moving figure doesn't zoom). */
+export function unionBox(lists: Shape[][]): [number, number, number, number] {
+  return viewBox(lists.flat());
 }

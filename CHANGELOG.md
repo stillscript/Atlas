@@ -15,6 +15,7 @@ version with today's date.
 - Prefer the original? It stays in Settings › Appearance as Classic
 - A green app icon to match
 - Every exercise has its own icon, a small figure doing the movement on its equipment, in your plan, workouts and Progress. Side-to-side moves like lateral raises are shown from the front
+- How to do it: every exercise shows the movement looping slowly from start to finish, with numbered markers that match the cues, and a front and back body map of the muscles it works. With Reduce Motion on, you see the start and finish side by side
 ### Internal
 - Palettes: Forest is the default (`:root`), Classic via `data-palette="classic"`; `settings.palette`;
   tests/styles/tokens.test.ts checks AA contrast for every palette and that the dark copies match

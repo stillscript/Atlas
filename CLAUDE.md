@@ -18,7 +18,7 @@ IndexedDB on the phone.
 | 6. Plan editing, gyms/equipment editing, backup reminder | Done (branch `stage-6-editing`, cut from stage 5) |
 | 7. QA (393×852, both themes, offline, cold start, update with data), README, deploy | Done. v1.0.0 live at https://stillscript.github.io/Atlas/ (Pages via Actions, remote `origin` = github.com/stillscript/Atlas) |
 | v1.1 strength focus: cardio removed, fix/delete past workouts, leg style (gender default, Plan settings switch) | Released as v1.1.0 (2026-10-15), merged into `main` and deployed |
-| v1.2 elevated look (`docs/v1.2-plan.md`): A Forest theme, B exercise icons, C form visuals, D muscle map + rest ring + warm-ups, E QA and release | A (Forest) and B (icons) built on branch `v1.2-forest`; C next |
+| v1.2 elevated look (`docs/v1.2-plan.md`): A Forest theme, B exercise icons, C form visuals, D muscle map + rest ring + warm-ups, E QA and release | A (Forest), B (icons) and C (form visuals) built on branch `v1.2-forest`; D next |
 
 Pushing: this shell can't sign in to GitHub; run `git push` in the user's Terminal panel (Git
 Credential Manager opens the browser sign-in). Always ask before pushing.
@@ -344,6 +344,18 @@ Entries can build on another with `base`. All `currentColor`, so icons follow th
 Reviewed with blind recognition tests and expert reviews by agents from labelled contact sheets:
 `$env:ATLAS_SHEETS="<dir>"` (add `ATLAS_BLIND=1` for numbered, unlabelled sheets) with
 `npx vitest run tests/domain/pictograms.sheets.test.ts`, then convert the SVGs to PNG with sharp.
+**Form visuals** ("How to do it": `screens/plan/FormGuide.tsx`, in the plan sheet, the workout
+Form sheet and Progress): each pictogram entry has `motion` (pose fields at the other end of the
+movement) and optionally `anchor` (the joint that stays put; default ankle for floor lifts, else
+hip) or `hold` (no motion). `figure.interpolate` turns joint angles the short way round and keeps
+the anchor fixed; `motionBox` frames the whole movement so it doesn't zoom. When two points must
+stay fixed (hip thrust: shoulders and feet; split squat: front foot and the bench), solve the
+angles (two-bone geometry) rather than guessing. Numbered markers come from the cues:
+`domain/formGuide.cueSpot` points a cue at the first body part it names (one marker per body
+part, three at most). Muscles: `ui/BodyMap` (front and back capsules; every catalog muscle must
+have a region, tests/domain/bodymap.test.ts). Reduce Motion shows start and finish side by side.
+Review every loop as images: `$env:ATLAS_MOTION="<dir>"; npx vitest run tests/domain/pictograms.motion.test.ts`.
+
 To review all of them on one page:
 `$env:ATLAS_ART="dist/art-review.html"; npx vitest run tests/domain/pictograms.review.test.ts`.
 

@@ -1,0 +1,43 @@
+/* Front and back body (ui/BodyMap): the body in a quiet surface tone, muscles in the accent. */
+
+.bodymap {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-6);
+}
+
+.bodymap-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0;
+}
+
+.bodymap-svg {
+  display: block;
+  width: 72px;
+  height: 144px;
+  overflow: visible;
+  stroke-linecap: round;
+}
+
+.bodymap-view figcaption {
+  color: var(--ink-2);
+  font-size: var(--text-xs);
+  font-weight: 650;
+}
+
+.bm-body {
+  fill: var(--surface-3);
+  stroke: var(--surface-3);
+}
+
+rect.bm-body,
+circle.bm-body {
+  stroke: none;
+}
+
+.bm-on {
+  stroke: var(--accent);
+}
