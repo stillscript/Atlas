@@ -50,6 +50,38 @@ export function spotPoint(spot: CueSpot, j: Joints): Point {
 }
 
 /**
+ * Moves marker points apart until no two are closer than `gap` (centre to centre), each pair sharing
+ * the push, so markers on joints that meet mid-movement (shoulder, chest and bar at the bottom of a
+ * press) stay readable. A few rounds are enough for three markers.
+ */
+export function spreadPoints(points: Point[], gap: number): Point[] {
+  const out = points.map(([x, y]) => [x, y] as Point);
+  for (let round = 0; round < 8; round++) {
+    let moved = false;
+    for (let i = 0; i < out.length; i++) {
+      for (let j = i + 1; j < out.length; j++) {
+        const a = out[i]!;
+        const b = out[j]!;
+        let dx = b[0] - a[0];
+        let dy = b[1] - a[1];
+        let dist = Math.hypot(dx, dy);
+        if (dist >= gap - 1e-6) continue;
+        // Same spot: separate sideways, later markers to the right.
+        if (dist < 1e-6) [dx, dy, dist] = [1, 0, 1];
+        const push = (gap - dist) / 2;
+        const ux = dx / dist;
+        const uy = dy / dist;
+        out[i] = [a[0] - ux * push, a[1] - uy * push];
+        out[j] = [b[0] + ux * push, b[1] + uy * push];
+        moved = true;
+      }
+    }
+    if (!moved) break;
+  }
+  return out;
+}
+
+/**
  * Each cue's spot, by cue index: at most `limit` markers, and one per spot (a second cue about the
  * knees keeps its number in the list but adds no marker on top of the first).
  */

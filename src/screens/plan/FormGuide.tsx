@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { groundOf, joints, shapes, svgMarkup } from '../../domain/figure';
-import { cueSpots, spotPoint, type CueSpot } from '../../domain/formGuide';
+import { cueSpots, spotPoint, spreadPoints, type CueSpot } from '../../domain/formGuide';
 import { motionBox, motionFrames, pictogramFor, type PictogramArt } from '../../domain/pictograms';
 import type { ExerciseDef } from '../../domain/types';
 import { muscleName } from '../../domain/volume';
@@ -18,6 +18,9 @@ import './plan.css';
 const HOLD = 700;
 const MOVE = 1600;
 const CYCLE = 2 * (HOLD + MOVE);
+
+/** Cue marker radius, in figure units. */
+const MARKER_R = 2.35;
 
 /** Where in the movement we are (0 = start, 1 = finish) at a point in the loop, eased. */
 function phase(ms: number): number {
@@ -37,11 +40,15 @@ function prefersReducedMotion(): boolean {
 function frameMarkup(art: PictogramArt, t: number, frame: [number, number, number, number], spots: (CueSpot | null)[], label: string): string {
   const [pose] = motionFrames(art, [t]);
   const j = joints(pose!);
-  const markers = spots
-    .map((spot, i) => {
-      if (!spot) return '';
-      const [x, y] = spotPoint(spot, j);
-      return `<g class="cue-marker"><circle cx="${x}" cy="${y}" r="2.35"/><text x="${x}" y="${y + 1.05}" text-anchor="middle">${i + 1}</text></g>`;
+  const marked = spots.flatMap((spot, i) => (spot ? [{ n: i + 1, at: spotPoint(spot, j) }] : []));
+  const placed = spreadPoints(
+    marked.map((m) => m.at),
+    MARKER_R * 2 + 0.5,
+  );
+  const markers = marked
+    .map(({ n }, k) => {
+      const [x, y] = placed[k]!;
+      return `<g class="cue-marker"><circle cx="${x}" cy="${y}" r="${MARKER_R}"/><text x="${x}" y="${y + 1.05}" text-anchor="middle">${n}</text></g>`;
     })
     .join('');
   return svgMarkup(shapes(pose!, art.props, groundOf(art.pose, art.props)), 240, label, frame, markers);

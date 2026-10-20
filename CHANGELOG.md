@@ -10,6 +10,8 @@ Work in progress goes under `## [Unreleased]`. `npm run release` turns that sect
 version with today's date.
 
 ## [Unreleased]
+
+## [1.2.0] - 2026-10-20
 ### Highlights
 - A new look: Forest, deep green with mint for actions and brass for your wins, in light and dark
 - Prefer the original? It stays in Settings › Appearance as Classic
