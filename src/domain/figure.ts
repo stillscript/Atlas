@@ -37,6 +37,18 @@ export interface Pose {
   foot2?: number;
   /** Where the hip sits, to place the figure against props (default [0, 0]). */
   at?: Point;
+  /**
+   * `front`: seen from the front, for side-to-side moves (lateral raises, flyes, pull-aparts). Arm
+   * and leg angles are then in the body's plane: 90 = out to the figure's side. The far side
+   * mirrors the near one unless `arm2` / `leg2` say otherwise.
+   */
+  view?: 'side' | 'front';
+  /** Front view, seated: thighs point at the viewer, so they're drawn short. */
+  thighScale?: number;
+  /** A faint floor line under the figure, for lifts done standing or on the floor. */
+  ground?: boolean;
+  /** Draw the near arm behind the head (hanging from a bar), instead of in front of it. */
+  armBehind?: boolean;
 }
 
 export interface Joints {
@@ -65,7 +77,13 @@ export function step(from: Point, angle: number, length: number): Point {
   return [round(from[0] + Math.sin(angle * RAD) * length), round(from[1] + Math.cos(angle * RAD) * length)];
 }
 
+/** Front view: half the shoulder and hip widths. */
+const FRONT = { shoulder: 2.2, hip: 1.3 } as const;
+
+const mirror = ([x, y]: Point, about = 0): Point => [round(2 * about - x), y];
+
 export function joints(pose: Pose): Joints {
+  if (pose.view === 'front') return frontJoints(pose);
   const hip = pose.at ?? [0, 0];
   const shoulder = step(hip, pose.torso, BODY.torso);
   const neck = step(shoulder, pose.torso, BODY.neck);
@@ -98,6 +116,36 @@ export function joints(pose: Pose): Joints {
   };
 }
 
+/**
+ * Front view. `shoulder`, `elbow`, `hand`, `knee`, `ankle`, `toe` are the figure's right side (screen
+ * right); the `2` joints its left, mirrored unless given. `hip` and `neck` are on the centre line.
+ */
+function frontJoints(pose: Pose): Joints {
+  const [cx, cy] = pose.at ?? [0, 0];
+  const hip: Point = [cx, cy];
+  const neck: Point = [cx, round(cy - BODY.torso)];
+  const shoulder: Point = [round(cx + FRONT.shoulder), round(cy - BODY.torso + 0.6)];
+  const head = step(neck, 180, BODY.neck + BODY.head);
+  // Each side is worked out as the right side, then mirrored for the left.
+  const arm = (side: 1 | -1, [ua, fa]: [number, number]) => {
+    const e = step(shoulder, ua, BODY.upperArm);
+    const h = step(e, fa, BODY.forearm);
+    return side === 1 ? [e, h] : [mirror(e, cx), mirror(h, cx)];
+  };
+  const leg = (side: 1 | -1, [th, sh]: [number, number]) => {
+    const hp: Point = [round(cx + FRONT.hip), cy];
+    const k = step(hp, th, BODY.thigh * (pose.thighScale ?? 1));
+    const a = step(k, sh, BODY.shin);
+    const t = step(a, 90, 1.2);
+    return side === 1 ? [k, a, t] : [mirror(k, cx), mirror(a, cx), mirror(t, cx)];
+  };
+  const [elbow, hand] = arm(1, pose.arm);
+  const [elbow2, hand2] = arm(-1, pose.arm2 ?? pose.arm);
+  const [knee, ankle, toe] = leg(1, pose.leg);
+  const [knee2, ankle2, toe2] = leg(-1, pose.leg2 ?? pose.leg);
+  return { hip, shoulder, neck, head, elbow, hand, elbow2, hand2, knee, ankle, toe, knee2, ankle2, toe2 } as Joints;
+}
+
 // ---------------------------------------------------------------- props
 
 /** A point in figure space: a joint name, a joint plus an offset, or absolute coordinates. */
@@ -111,11 +159,14 @@ export type At = JointName | [JointName, number, number] | Point;
  * - pulley: a small wheel, for cable stations.
  */
 export type Prop =
-  | { line: [At, At] }
-  | { path: At[] }
+  /** `front`: drawn over the body, with no gap (a band between the hands). */
+  | { line: [At, At]; front?: boolean }
+  | { path: At[]; front?: boolean }
   | { plate: At; r?: number }
-  | { dumbbell: At }
+  /** Drawn side-on (a handle with two heads) so it never reads as a barbell; `angle` turns the handle. */
+  | { dumbbell: At; angle?: number }
   | { kettlebell: At }
+  /** A solid disc: slam ball, medicine ball, sandbag. */
   | { ball: At; r?: number }
   | { pulley: At }
   | { pad: At; length: number; angle: number; width?: number }
@@ -143,8 +194,11 @@ export function point(at: At, j: Joints): Point {
 
 export interface Shape {
   kind: 'line' | 'circle' | 'rect';
-  /** Body parts are drawn bold; the far limbs and props quieter. */
-  layer: 'far' | 'prop' | 'body' | 'head';
+  /**
+   * Drawing layers, back to front: floor, far limbs, equipment, body (legs and torso), the near
+   * arm(s), head. The body and arms get a small gap where they cross something behind them.
+   */
+  layer: 'ground' | 'far' | 'prop' | 'body' | 'arm' | 'head';
   points?: Point[];
   center?: Point;
   r?: number;
@@ -152,29 +206,51 @@ export interface Shape {
   length?: number;
   width?: number;
   angle?: number;
+  /** Stroke width override (default by layer). */
+  weight?: number;
+  /** Solid fill (balls). */
+  filled?: boolean;
+  /** A held load (bar, dumbbell, ball, band): drawn last, over the hands, never cut by a gap. */
+  load?: boolean;
+}
+
+/** Stroke widths by layer, in figure units. */
+export const STROKES = { ground: 1.1, far: 2.7, prop: 1.5, body: 2.7, arm: 2.7, head: 0 } as const;
+
+function dumbbell(at: Point, angle: number): Shape[] {
+  const a = step(at, angle, 1.9);
+  const b = step(at, angle + 180, 1.9);
+  return [
+    { kind: 'line', layer: 'prop', points: [a, b], weight: 1.4 },
+    { kind: 'line', layer: 'prop', points: [step(a, angle + 90, 1.4), step(a, angle - 90, 1.4)], weight: 2.2 },
+    { kind: 'line', layer: 'prop', points: [step(b, angle + 90, 1.4), step(b, angle - 90, 1.4)], weight: 2.2 },
+  ];
 }
 
 /** Everything to draw for a pose and its props, back to front. */
 export function shapes(pose: Pose, props: Prop[] = []): Shape[] {
   const j = joints(pose);
+  const front = pose.view === 'front';
   const out: Shape[] = [];
-  if (pose.arm2) out.push({ kind: 'line', layer: 'far', points: [j.shoulder, j.elbow2, j.hand2] });
-  if (pose.leg2) out.push({ kind: 'line', layer: 'far', points: [j.hip, j.knee2, j.ankle2, j.toe2] });
+  if (!front && pose.arm2) out.push({ kind: 'line', layer: 'far', points: [j.shoulder, j.elbow2, j.hand2] });
+  if (!front && pose.leg2) out.push({ kind: 'line', layer: 'far', points: [j.hip, j.knee2, j.ankle2, j.toe2] });
   for (const prop of props) {
-    if ('line' in prop) out.push({ kind: 'line', layer: 'prop', points: prop.line.map((p) => point(p, j)) });
-    else if ('path' in prop) out.push({ kind: 'line', layer: 'prop', points: prop.path.map((p) => point(p, j)) });
-    else if ('plate' in prop) out.push({ kind: 'circle', layer: 'prop', center: point(prop.plate, j), r: prop.r ?? 3.4 });
-    else if ('dumbbell' in prop) out.push({ kind: 'circle', layer: 'prop', center: point(prop.dumbbell, j), r: 1.7 });
-    else if ('kettlebell' in prop) out.push({ kind: 'circle', layer: 'prop', center: point(prop.kettlebell, j), r: 2.2 });
-    else if ('ball' in prop) out.push({ kind: 'circle', layer: 'prop', center: point(prop.ball, j), r: prop.r ?? 2.6 });
+    if ('line' in prop) out.push({ kind: 'line', layer: 'prop', points: prop.line.map((p) => point(p, j)), load: prop.front });
+    else if ('path' in prop) out.push({ kind: 'line', layer: 'prop', points: prop.path.map((p) => point(p, j)), load: prop.front });
+    else if ('plate' in prop) out.push({ kind: 'circle', layer: 'prop', center: point(prop.plate, j), r: prop.r ?? 3.4, load: true });
+    else if ('dumbbell' in prop) out.push(...dumbbell(point(prop.dumbbell, j), prop.angle ?? 90).map((d) => ({ ...d, load: true })));
+    else if ('kettlebell' in prop) {
+      const c = point(prop.kettlebell, j);
+      out.push({ kind: 'circle', layer: 'prop', center: c, r: 2.1, filled: true, load: true }, { kind: 'line', layer: 'prop', points: [step(c, 220, 1.6), [c[0] - 0.9, round(c[1] - 2.9)], [c[0] + 0.9, round(c[1] - 2.9)], step(c, 140, 1.6)], weight: 1.3, load: true });
+    } else if ('ball' in prop) out.push({ kind: 'circle', layer: 'prop', center: point(prop.ball, j), r: prop.r ?? 2.6, filled: true, load: true });
     else if ('pulley' in prop) out.push({ kind: 'circle', layer: 'prop', center: point(prop.pulley, j), r: 1.2 });
     else if ('backrest' in prop) {
       const length = prop.backrest.length ?? 11;
       const mid = step(j.hip, pose.torso, BODY.torso / 2 + (prop.backrest.shift ?? 0));
       out.push({ kind: 'rect', layer: 'prop', center: step(mid, pose.torso + 90, 2.6), length, width: 2.2, angle: pose.torso });
     } else if ('seat' in prop) {
-      const thigh = pose.leg[0];
-      out.push({ kind: 'rect', layer: 'prop', center: step(step(j.hip, thigh, 1.6), thigh - 90, 2.6), length: prop.seat.length ?? 6, width: 2.2, angle: thigh });
+      const thigh = front ? 90 : pose.leg[0];
+      out.push({ kind: 'rect', layer: 'prop', center: front ? [j.hip[0], round(j.hip[1] + 2.4)] : step(step(j.hip, thigh, 1.6), thigh - 90, 2.6), length: prop.seat.length ?? 6, width: 2.2, angle: thigh });
     } else if ('rail' in prop) {
       const [x, y] = point(prop.rail, j);
       out.push({ kind: 'line', layer: 'prop', points: [[x, round(y - (prop.up ?? 9))], [x, round(y + (prop.down ?? 9))]] });
@@ -187,10 +263,26 @@ export function shapes(pose: Pose, props: Prop[] = []): Shape[] {
       out.push({ kind: 'line', layer: 'prop', points: [step(at, angle, 1.8), step(at, angle + 180, 1.8)] });
     } else out.push({ kind: 'rect', layer: 'prop', center: point(prop.pad, j), length: prop.length, width: prop.width ?? 2.4, angle: prop.angle });
   }
-  out.push({ kind: 'line', layer: 'body', points: [j.hip, j.knee, j.ankle, j.toe] });
-  out.push({ kind: 'line', layer: 'body', points: [j.hip, j.shoulder] });
-  out.push({ kind: 'line', layer: 'body', points: [j.shoulder, j.elbow, j.hand] });
+  if (front) {
+    out.push({ kind: 'line', layer: 'body', points: [[round(j.hip[0] - FRONT.hip), j.hip[1]], j.knee2, j.ankle2, j.toe2] });
+    out.push({ kind: 'line', layer: 'body', points: [[round(j.hip[0] + FRONT.hip), j.hip[1]], j.knee, j.ankle, j.toe] });
+    out.push({ kind: 'line', layer: 'body', points: [[round(j.hip[0] - FRONT.hip), j.hip[1]], [round(j.hip[0] + FRONT.hip), j.hip[1]]] });
+    out.push({ kind: 'line', layer: 'body', points: [j.hip, j.neck] });
+    out.push({ kind: 'line', layer: 'body', points: [mirror(j.shoulder, j.hip[0]), j.shoulder] });
+    out.push({ kind: 'line', layer: 'arm', points: [mirror(j.shoulder, j.hip[0]), j.elbow2, j.hand2] });
+    out.push({ kind: 'line', layer: pose.armBehind ? 'body' : 'arm', points: [j.shoulder, j.elbow, j.hand] });
+  } else {
+    out.push({ kind: 'line', layer: 'body', points: [j.hip, j.knee, j.ankle, j.toe] });
+    out.push({ kind: 'line', layer: 'body', points: [j.hip, j.shoulder] });
+    out.push({ kind: 'line', layer: 'arm', points: [j.shoulder, j.elbow, j.hand] });
+  }
   out.push({ kind: 'circle', layer: 'head', center: j.head, r: BODY.head });
+  if (pose.ground) {
+    const body = out.filter((s) => s.layer === 'body' || s.layer === 'far' || s.layer === 'arm').flatMap((s) => s.points!);
+    const xs = body.map((p) => p[0]);
+    const y = round(Math.max(...body.map((p) => p[1])) + STROKES.body / 2 + 0.7);
+    out.unshift({ kind: 'line', layer: 'ground', points: [[round(Math.min(...xs) - 2), y], [round(Math.max(...xs) + 2), y]] });
+  }
   return out;
 }
 
@@ -214,4 +306,52 @@ export function viewBox(list: Shape[], min = 34, pad = 2.6): [number, number, nu
   const cx = (x0 + x1) / 2;
   const cy = (y0 + y1) / 2;
   return [round(cx - size / 2), round(cy - size / 2), round(size), round(size)];
+}
+
+// ---------------------------------------------------------------- SVG
+
+const OPACITY: Record<Shape['layer'], number> = { ground: 0.3, far: 0.38, prop: 0.6, body: 1, arm: 1, head: 1 };
+let uid = 0;
+
+function element(s: Shape, extra = ''): string {
+  const width = s.weight ?? STROKES[s.layer];
+  const opacity = OPACITY[s.layer] < 1 ? ` opacity="${OPACITY[s.layer]}"` : '';
+  if (s.kind === 'line') return `<polyline points="${s.points!.map((p) => p.join(',')).join(' ')}" stroke-width="${width}"${opacity}${extra}/>`;
+  if (s.kind === 'circle') {
+    const solid = s.layer === 'head' || s.filled;
+    return `<circle cx="${s.center![0]}" cy="${s.center![1]}" r="${s.r}"${solid ? ' fill="currentColor" stroke="none"' : ` stroke-width="${STROKES.prop}"`}${opacity}${extra}/>`;
+  }
+  const [cx, cy] = s.center!;
+  // Figure angles have 0 = down; an SVG rect lies along +x (90), so turn it by (90 - angle).
+  return `<rect x="${round(cx - s.length! / 2)}" y="${round(cy - s.width! / 2)}" width="${s.length}" height="${s.width}" rx="${Math.min(1.1, s.width! / 2)}" transform="rotate(${round(90 - s.angle!)} ${cx} ${cy})" stroke-width="${STROKES.prop}"${opacity}${extra}/>`;
+}
+
+/**
+ * The pictogram as SVG markup, back to front: equipment and body (with a small gap where an arm
+ * crosses them, and around the head), the head (gapped where an arm passes in front of it), the
+ * arms, then the held load on top. The gaps keep overlapping parts readable at icon size.
+ */
+export function svgMarkup(list: Shape[], size: number, label?: string): string {
+  const box = viewBox(list);
+  const [x, y, w, h] = box;
+  const id = `pg${++uid}`;
+  const head = list.find((s) => s.layer === 'head')!;
+  const arms = list.filter((s) => s.layer === 'arm');
+  const loads = list.filter((s) => s.load);
+  const gap = 1.2;
+  const cover = `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="white"/>`;
+  const headCut = `<circle cx="${head.center![0]}" cy="${head.center![1]}" r="${round(head.r! + gap)}" fill="black"/>`;
+  const armCut = arms.map((a) => `<polyline points="${a.points!.map((p) => p.join(',')).join(' ')}" stroke="black" stroke-width="${STROKES.arm + gap * 2}" fill="none"/>`).join('');
+  const mask = (suffix: string, body: string) => `<mask id="${id}${suffix}" maskUnits="userSpaceOnUse" x="${x}" y="${y}" width="${w}" height="${h}">${cover}${body}</mask>`;
+  const behind = list.filter((s) => s.layer !== 'arm' && s.layer !== 'head' && !s.load).map((s) => element(s)).join('');
+  const a11y = label ? ` role="img" aria-label="${label.replace(/"/g, '&quot;')}"` : ' aria-hidden="true" focusable="false"';
+  return (
+    `<svg class="pictogram" width="${size}" height="${size}" viewBox="${box.join(' ')}" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"${a11y}>` +
+    `<defs>${mask('b', headCut + armCut)}${mask('h', armCut)}</defs>` +
+    `<g mask="url(#${id}b)">${behind}</g>` +
+    `<g mask="url(#${id}h)">${element(head)}</g>` +
+    arms.map((s) => element(s)).join('') +
+    loads.map((s) => element(s)).join('') +
+    `</svg>`
+  );
 }

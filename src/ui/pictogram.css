@@ -1,21 +1,13 @@
 /* The Atlas figure: bold body, quieter far limbs and equipment (domain/figure.ts). */
 
+.pictogram-box {
+  display: contents;
+}
+
 .pictogram {
   display: block;
   flex: none;
   overflow: visible;
-}
-
-.pg-far {
-  opacity: 0.38;
-}
-
-.pg-prop {
-  opacity: 0.6;
-}
-
-.pg-head {
-  fill: currentColor;
 }
 
 /* ---------- Exercise icon tile ---------- */

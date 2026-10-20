@@ -332,10 +332,19 @@ the UI must ask the user to confirm the real steps on first use.
 
 **Exercise pictograms** (`domain/figure.ts`, `domain/pictograms.ts`, `ui/ExerciseIcon.tsx`): one
 figure, side view facing right, hip at the origin, posed by absolute joint angles (0 down, 90
-forward, 180 up, 270 back) with fixed bone lengths, so every icon shares proportions. Equipment is
-data (`plate`, `dumbbell`, `backrest`, `seat`, `rail`, `cable`, `pad`, `handle`…) placed at joints.
-Entries can build on another with `base`. Body bold, far limbs and equipment quieter, all
-`currentColor`. To review all of them on one page:
+forward, 180 up, 270 back) with fixed bone lengths, so every icon shares proportions. Side-to-side
+moves (lateral raises, flyes, pull-aparts, pull-ups, carries, Smith calf raise) use `view: "front"`
+(90 = out to the side; the far side mirrors). Equipment is data placed at joints; each load has its
+own shape (ring = barbell, capped bar = dumbbell, disc = ball, disc with handle = kettlebell).
+Drawing order (`svgMarkup`): equipment and body with a small gap where an arm crosses them and
+around the head; the head; the arms; held loads last with no gap (`armBehind` draws the near arm
+behind the head, for hanging). `ground` adds a faint floor line. Rows and pulldowns show the
+finish (elbows back), never the hang. Keep plates more than a head radius from the head.
+Entries can build on another with `base`. All `currentColor`, so icons follow the palette.
+Reviewed with blind recognition tests and expert reviews by agents from labelled contact sheets:
+`$env:ATLAS_SHEETS="<dir>"` (add `ATLAS_BLIND=1` for numbered, unlabelled sheets) with
+`npx vitest run tests/domain/pictograms.sheets.test.ts`, then convert the SVGs to PNG with sharp.
+To review all of them on one page:
 `$env:ATLAS_ART="dist/art-review.html"; npx vitest run tests/domain/pictograms.review.test.ts`.
 
 **Generator** (`generator.ts`): blueprint by days/week → resolve exercises (varying repeat patterns

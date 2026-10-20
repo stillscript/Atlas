@@ -14,7 +14,7 @@ version with today's date.
 - A new look: Forest, deep green with mint for actions and brass for your wins, in light and dark
 - Prefer the original? It stays in Settings › Appearance as Classic
 - A green app icon to match
-- Every exercise has its own icon, a small figure doing the movement on its equipment, in your plan, workouts and Progress
+- Every exercise has its own icon, a small figure doing the movement on its equipment, in your plan, workouts and Progress. Side-to-side moves like lateral raises are shown from the front
 ### Internal
 - Palettes: Forest is the default (`:root`), Classic via `data-palette="classic"`; `settings.palette`;
   tests/styles/tokens.test.ts checks AA contrast for every palette and that the dark copies match
