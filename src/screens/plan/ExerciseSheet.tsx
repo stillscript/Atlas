@@ -12,6 +12,7 @@ import { exerciseHistory } from '../../app/workout';
 import { lastExposure } from '../../domain/workout';
 import { Sheet } from '../../ui/Sheet';
 import './plan.css';
+import { ExerciseIcon } from '../../ui/ExerciseIcon';
 
 interface ExerciseSheetProps {
   slot: ProgramSlot | null;
@@ -69,7 +70,10 @@ function ExerciseDetail({ slot, gym }: { slot: ProgramSlot; gym: Gym }) {
 
   return (
     <div class="ex-detail">
-      {slot.purpose && <p class="ex-purpose">{slot.purpose}</p>}
+      <div class="ex-hero">
+        <ExerciseIcon exerciseId={exercise.id} size="lg" />
+        {slot.purpose && <p class="ex-purpose">{slot.purpose}</p>}
+      </div>
 
       <div class="ex-facts">
         <div class="ex-fact">

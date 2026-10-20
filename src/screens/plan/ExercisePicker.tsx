@@ -6,6 +6,7 @@ import { muscleName } from '../../domain/volume';
 import { Icon } from '../../ui/Icon';
 import { Sheet } from '../../ui/Sheet';
 import '../workout/workout.css';
+import { ExerciseIcon } from '../../ui/ExerciseIcon';
 
 interface ExercisePickerProps {
   open: boolean;
@@ -47,6 +48,7 @@ export function ExercisePicker({ open, onClose, title, gym, suggested = [], curr
         onClose();
       }}
     >
+      <ExerciseIcon exerciseId={id} size="sm" />
       <span class="swap-text">
         <span class="swap-name">{name}</span>
         <span class="swap-meta">

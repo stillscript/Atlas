@@ -18,7 +18,7 @@ IndexedDB on the phone.
 | 6. Plan editing, gyms/equipment editing, backup reminder | Done (branch `stage-6-editing`, cut from stage 5) |
 | 7. QA (393×852, both themes, offline, cold start, update with data), README, deploy | Done. v1.0.0 live at https://stillscript.github.io/Atlas/ (Pages via Actions, remote `origin` = github.com/stillscript/Atlas) |
 | v1.1 strength focus: cardio removed, fix/delete past workouts, leg style (gender default, Plan settings switch) | Released as v1.1.0 (2026-10-15), merged into `main` and deployed |
-| v1.2 elevated look (`docs/v1.2-plan.md`): A Forest theme, B exercise icons, C form visuals, D muscle map + rest ring + warm-ups, E QA and release | A built on branch `v1.2-forest`, awaiting review |
+| v1.2 elevated look (`docs/v1.2-plan.md`): A Forest theme, B exercise icons, C form visuals, D muscle map + rest ring + warm-ups, E QA and release | A (Forest) and B (icons) built on branch `v1.2-forest`; C next |
 
 Pushing: this shell can't sign in to GitHub; run `git push` in the user's Terminal panel (Git
 Credential Manager opens the browser sign-in). Always ask before pushing.
@@ -318,7 +318,8 @@ the UI must ask the user to confirm the real steps on first use.
 - **Add equipment:** append to `equipment.json` with `provides`, a `load` spec, `settingsFields`
   (what to remember per machine), `cardioMetrics` for cardio, `checklist: true` to offer it in the
   "what's in your gym" list, and a `source` note for specs.
-- **Add an exercise:** append to `exercises.json`: `pattern`, `primary`/`secondary` muscles (used for
+- **Add an exercise:** add its pictogram to `data/pictograms.json` (the test fails without one; see
+  "Exercise pictograms" below), then append to `exercises.json`: `pattern`, `primary`/`secondary` muscles (used for
   weekly fractional sets), `requires`, `loadFrom` + `loadMode` (`total`/`per-hand`/`per-side`/
   `bodyweight`/`none`), `metric`, `kind`, `restClass`, `rank` within the pattern, `level` if it's not
   for beginners, `ratio` (strength vs the pattern's reference lift, for swap start estimates),
@@ -328,6 +329,14 @@ the UI must ask the user to confirm the real steps on first use.
   register it in `domain/catalog.ts`.
 - **Add a template:** a file in `data/templates/` (days → slots with pattern, `prefer`, role, sets,
   reps, purpose; schedule Mon..Sun); register it in `domain/catalog.ts`.
+
+**Exercise pictograms** (`domain/figure.ts`, `domain/pictograms.ts`, `ui/ExerciseIcon.tsx`): one
+figure, side view facing right, hip at the origin, posed by absolute joint angles (0 down, 90
+forward, 180 up, 270 back) with fixed bone lengths, so every icon shares proportions. Equipment is
+data (`plate`, `dumbbell`, `backrest`, `seat`, `rail`, `cable`, `pad`, `handle`…) placed at joints.
+Entries can build on another with `base`. Body bold, far limbs and equipment quieter, all
+`currentColor`. To review all of them on one page:
+`$env:ATLAS_ART="dist/art-review.html"; npx vitest run tests/domain/pictograms.review.test.ts`.
 
 **Generator** (`generator.ts`): blueprint by days/week → resolve exercises (varying repeat patterns
 across the week) → prescribe sets/reps/reps-left/rest from `programming.json` by goal, experience

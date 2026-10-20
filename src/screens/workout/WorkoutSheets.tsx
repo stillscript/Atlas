@@ -35,6 +35,7 @@ import { CheckoutSheet } from './Checkout';
 import { Dial } from './Dial';
 import { EquipmentCheckSheet } from './EquipmentCheck';
 import { EFFORT_CHOICES, loadContext, loadDetail, loadText, loadUnit, repOptions, setText, supersetLabels } from './helpers';
+import { ExerciseIcon } from '../../ui/ExerciseIcon';
 
 export type OpenSheet =
   | { kind: 'overview' }
@@ -268,6 +269,7 @@ function SwapSheet({
           const last = lastExposure(history, exercise.id);
           return (
             <button key={exercise.id} type="button" class="swap-option" onClick={() => choose(exercise)}>
+              <ExerciseIcon exerciseId={exercise.id} size="sm" />
               <span class="swap-text">
                 <span class="swap-name">{exercise.name}</span>
                 <span class="swap-meta">
@@ -593,6 +595,7 @@ function AddExerciseSheet({ open, onClose, session, gym }: { open: boolean; onCl
               onClose();
             }}
           >
+            <ExerciseIcon exerciseId={exercise.id} size="sm" />
             <span class="swap-text">
               <span class="swap-name">{exercise.name}</span>
               <span class="swap-meta">

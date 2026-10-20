@@ -20,9 +20,9 @@
 .session-group.is-superset::before {
   content: '';
   position: absolute;
-  top: 36px;
-  bottom: 18px;
-  left: 13px;
+  top: 44px;
+  bottom: 30px;
+  left: 22px;
   width: 2px;
   border-radius: 1px;
   background: var(--accent);
@@ -44,7 +44,7 @@
   align-items: center;
   gap: var(--space-3);
   width: 100%;
-  min-height: 60px;
+  min-height: 68px;
   padding: var(--space-3) 0;
   border: 0;
   background: transparent;
@@ -57,29 +57,13 @@ button.slot-row:active {
   opacity: 0.6;
 }
 
-.slot-num {
-  position: relative;
+.slot-row .ex-icon {
   z-index: 1;
-  display: grid;
-  flex: none;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: var(--surface-2);
-  color: var(--ink-2);
-  font-size: var(--text-sm);
-  font-weight: 650;
 }
 
-.is-superset .slot-num {
-  background: var(--accent-soft);
-  color: var(--accent-text);
-}
-
-.slot-row.is-extra .slot-num {
-  background: transparent;
-  border: 1.5px dashed var(--line-strong);
+.is-superset .ex-icon-badge {
+  background: var(--accent);
+  color: var(--on-accent);
 }
 
 .slot-text {
@@ -419,4 +403,14 @@ button.slot-row:active {
 
 .add-equipment-group + .add-equipment-group {
   margin-top: var(--space-3);
+}
+
+.ex-hero {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.ex-hero .ex-purpose {
+  margin: 0;
 }

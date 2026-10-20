@@ -16,6 +16,7 @@ import { Icon } from '../../ui/Icon';
 import { ScreenHeader } from '../../ui/ScreenHeader';
 import { MeasurementSheet, weightUnit } from './MeasurementSheet';
 import './progress.css';
+import { ExerciseIcon } from '../../ui/ExerciseIcon';
 
 const RECORDS_SHOWN = 4;
 const LIFTS_SHOWN = 8;
@@ -115,6 +116,7 @@ export function ProgressScreen() {
               <div class="lift-list">
                 {(allLifts ? lifts : lifts.slice(0, LIFTS_SHOWN)).map((lift) => (
                   <button key={lift.exerciseId} type="button" class="lift-item" onClick={() => navigate({ name: 'progress-exercise', exerciseId: lift.exerciseId })}>
+                    <ExerciseIcon exerciseId={lift.exerciseId} size="sm" />
                     <span class="lift-item-text">
                       <span class="lift-item-name">{lift.name}</span>
                       <span class="lift-item-meta num">

@@ -1261,3 +1261,17 @@ button.wo-set {
 .summary-actions {
   margin-top: var(--space-6);
 }
+
+/* ---------- Exercise icons ---------- */
+
+.wo-title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.wo-title-row .wo-name {
+  margin-top: 0;
+  min-width: 0;
+}

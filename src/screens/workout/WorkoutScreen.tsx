@@ -34,6 +34,7 @@ import {
 import { EntryCoach, SetCoach } from './WorkoutCoach';
 import { WorkoutSheets, type OpenSheet } from './WorkoutSheets';
 import './workout.css';
+import { ExerciseIcon } from '../../ui/ExerciseIcon';
 
 export function WorkoutScreen() {
   const session = activeSession.value;
@@ -209,7 +210,10 @@ function EntryView({ session, index, entry, gym, onOpen }: EntryViewProps) {
         </button>
       </div>
 
-      <h1 class="wo-name">{exercise.name}</h1>
+      <div class="wo-title-row">
+        <ExerciseIcon exerciseId={entry.exerciseId} size="lg" />
+        <h1 class="wo-name">{exercise.name}</h1>
+      </div>
       <p class="wo-target num">
         {targetLine(entry, exercise)}
         {rest ? ` · ${restLabel(rest).toLowerCase()}` : ''}

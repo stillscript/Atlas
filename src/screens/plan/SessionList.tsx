@@ -5,6 +5,7 @@ import { liftingExtras, requireExercise } from '../../domain/catalog';
 import { suggestFirstSet } from '../../domain/workout';
 import { haptic } from '../../lib/haptics';
 import { effortLabel, formatLoad, setsAndReps, uniformEffort } from '../../lib/training-format';
+import { ExerciseIcon } from '../../ui/ExerciseIcon';
 import { Icon } from '../../ui/Icon';
 import './plan.css';
 
@@ -61,9 +62,7 @@ export function SessionList({ day, gym, profile, onOpen, showPurpose = false, pl
       {(liftingExtras(day.extras) ?? []).map((extra) => (
         <li key={extra.id} class="session-group">
           <div class="slot-row is-extra">
-            <span class="slot-num" aria-hidden="true">
-              <Icon name="plus" size={14} />
-            </span>
+            <ExerciseIcon exerciseId={extra.exerciseId} badge="+" />
             <span class="slot-text">
               <span class="slot-name">{extra.label}</span>
               <span class="slot-meta">
@@ -115,9 +114,7 @@ function SlotRow({
         onOpen(slot);
       }}
     >
-      <span class="slot-num num" aria-hidden="true">
-        {number}
-      </span>
+      <ExerciseIcon exerciseId={slot.exerciseId} badge={number} />
       <span class="slot-text">
         <span class="slot-name">{exercise.name}</span>
         <span class="slot-meta num">
