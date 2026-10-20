@@ -1,5 +1,5 @@
 import { exposuresByExercise, liftingSessions, weekStart } from '../coach/measures';
-import type { Exposure, Win } from '../coach/types';
+import type { Exposure, MuscleId, Win } from '../coach/types';
 import { sessionRecords } from '../coach/wins';
 import type { Measurement, Program, Session } from '../db/types';
 import { toISODate } from '../lib/format';
@@ -257,4 +257,28 @@ export function latestValues(measurements: Measurement[]): Partial<Record<BodyMe
     for (const { key } of BODY_METRICS) if (typeof m[key] === 'number' && m[key]! > 0) out[key] = m[key];
   }
   return out;
+}
+
+// ---------------------------------------------------------------- muscle map
+
+export interface WeekMuscles {
+  /** 0–1 per muscle: sets done this week toward the low end of its target range (1 = there). */
+  level: Partial<Record<MuscleId, number>>;
+  onTarget: MuscleId[];
+  /** Planned this week but still below the target range, most behind first. */
+  below: MuscleId[];
+}
+
+/** How far each muscle got this week, for the shaded body map (Coach weekly review and Progress). */
+export function weekMuscles(muscles: { muscle: MuscleId; planned: number; done: number; band: [number, number] }[]): WeekMuscles {
+  const level: Partial<Record<MuscleId, number>> = {};
+  const onTarget: MuscleId[] = [];
+  const behind: { muscle: MuscleId; share: number }[] = [];
+  for (const m of muscles) {
+    const share = m.band[0] > 0 ? Math.min(1, m.done / m.band[0]) : m.done > 0 ? 1 : 0;
+    if (share > 0) level[m.muscle] = share;
+    if (share >= 1) onTarget.push(m.muscle);
+    else if (m.planned > 0) behind.push({ muscle: m.muscle, share });
+  }
+  return { level, onTarget, below: behind.sort((a, b) => a.share - b.share).map((b) => b.muscle) };
 }

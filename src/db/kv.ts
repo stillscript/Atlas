@@ -11,6 +11,7 @@ export const DEFAULT_SETTINGS: Settings = {
   keepAwake: true,
   readinessCheck: true,
   wearableScore: false,
+  warmupSets: true,
 };
 
 export async function getKv<K extends KvKey>(db: AtlasDB, key: K): Promise<KvValues[K] | undefined> {

@@ -12,6 +12,7 @@ import { ListGroup, ListRow } from '../../ui/List';
 import { ScreenHeader } from '../../ui/ScreenHeader';
 import { Sheet } from '../../ui/Sheet';
 import { CoachCard, WinCard } from './CoachCard';
+import { WeekMuscleMap } from './WeekMuscleMap';
 import './coach.css';
 
 /** A short list first: the most important few, the rest one tap away. */
@@ -129,6 +130,8 @@ function WeekCard({ review }: { review: WeeklyReview }) {
           <p class="week-stat-label">Sets</p>
         </div>
       </div>
+
+      <WeekMuscleMap muscles={tracked} />
 
       <div class="muscle-bars" role="list" aria-label="Weekly sets per muscle">
         {tracked.map((m) => (

@@ -18,7 +18,7 @@ IndexedDB on the phone.
 | 6. Plan editing, gyms/equipment editing, backup reminder | Done (branch `stage-6-editing`, cut from stage 5) |
 | 7. QA (393×852, both themes, offline, cold start, update with data), README, deploy | Done. v1.0.0 live at https://stillscript.github.io/Atlas/ (Pages via Actions, remote `origin` = github.com/stillscript/Atlas) |
 | v1.1 strength focus: cardio removed, fix/delete past workouts, leg style (gender default, Plan settings switch) | Released as v1.1.0 (2026-10-15), merged into `main` and deployed |
-| v1.2 elevated look (`docs/v1.2-plan.md`): A Forest theme, B exercise icons, C form visuals, D muscle map + rest ring + warm-ups, E QA and release | A (Forest), B (icons) and C (form visuals) built on branch `v1.2-forest`; D next |
+| v1.2 elevated look (`docs/v1.2-plan.md`): A Forest theme, B exercise icons, C form visuals, D muscle map + rest ring + warm-ups, E QA and release | A (Forest), B (icons), C (form visuals) and D (muscle map, rest ring, warm-ups) built on branch `v1.2-forest`; E (QA and release) next |
 
 Pushing: this shell can't sign in to GitHub; run `git push` in the user's Terminal panel (Git
 Credential Manager opens the browser sign-in). Always ask before pushing.
@@ -181,6 +181,15 @@ Rules:
 - **Readiness** (`ReadinessSheet`): only when `settings.readinessCheck`; "Skip today" for once,
   "Don't ask before workouts" switches it off with a toast pointing to Settings › Workouts.
 - Records (`detectRecords`) compare against earlier sessions only; a first session never counts.
+- **Warm-ups** (`domain/warmup.ts`, `tests/domain/warmup.test.ts`): main compound lifts with a real
+  weight get a ramp (~50/70/85% of the first working weight, 8/5/3 reps, snapped down to loads the
+  equipment makes, repeats dropped; none while the weight is still a catalog guess). A checklist on
+  the exercise (`entry.warmupDone`, `toggleWarmup`), never a `SetLog`, so volume, records and the
+  Coach ignore it. Hidden once the first work set is logged; `settings.warmupSets` (Settings ›
+  Workouts) turns it off.
+- **Rest ring and motion**: `RestRing` empties with the rest (CSS-eased per second); the dock
+  content rises in, a just-logged set (`is-fresh`, < 2 s old) pops its check, and a new exercise
+  settles in (`entry-in` on `.wo-main`, never on the fixed dock).
 
 ## Progress
 
@@ -195,6 +204,9 @@ Rules:
 - Body measurements share the Coach's `measurements` signal (`app/progress.ts` saves/edits/deletes),
   so a weigh-in feeds the fat-loss rules (H3) immediately. Units: the gym's lb/kg; lengths in in/cm.
   Photos are never stored; an entry can only note that one was taken.
+- Muscle map (`progress.weekMuscles`, `screens/coach/WeekMuscleMap`): each muscle shaded by this
+  week's sets toward the low end of its target range (BodyMap `level`); in the Coach's week card
+  and on Progress (tap → Coach). Same numbers as the Coach's per-muscle bars.
 - Routes: `#/progress`, `#/progress/exercise/<id>`, `#/progress/body` (all highlight the Progress tab).
 
 ## Editing plans and gyms

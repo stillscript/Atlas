@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'preact/hooks';
-import { measurements, renderContext } from '../../app/coach';
+import { coachWeeklyState, measurements, renderContext } from '../../app/coach';
 import { navigate } from '../../app/router';
 import { activeProgram, profile, settings } from '../../app/state';
 import { pastSessions } from '../../app/workout';
@@ -17,6 +17,7 @@ import { ScreenHeader } from '../../ui/ScreenHeader';
 import { MeasurementSheet, weightUnit } from './MeasurementSheet';
 import './progress.css';
 import { ExerciseIcon } from '../../ui/ExerciseIcon';
+import { WeekMuscleMap } from '../coach/WeekMuscleMap';
 
 const RECORDS_SHOWN = 4;
 const LIFTS_SHOWN = 8;
@@ -37,6 +38,7 @@ export function ProgressScreen() {
   const records = useMemo(() => recordHistory(sessions), [sessions]);
   const lifts = useMemo(() => exerciseSummaries(sessions, now), [sessions]);
   const streak = program && me ? streakWeeks(program, sessions, now, me.goal === 'general') : 0;
+  const weekly = coachWeeklyState.value;
   const settingsButton = <IconButton icon="settings" label="Settings" onClick={() => navigate('settings')} />;
 
   return (
@@ -51,6 +53,18 @@ export function ProgressScreen() {
         <>
           <StreakCard streak={streak} week={weeks[weeks.length - 1]} />
           <Calendar weeks={weeks} />
+
+          {weekly && weekly.review.muscles.some((m) => m.planned > 0 || m.done > 0) && (
+            <section class="progress-section">
+              <p class="ex-section-title">Muscles this week</p>
+              <button type="button" class="week-map-card" onClick={() => navigate('coach')}>
+                <WeekMuscleMap muscles={weekly.review.muscles.filter((m) => m.planned > 0 || m.done > 0)} />
+                <span class="week-map-more">
+                  Sets per muscle in Coach <Icon name="chevron-right" size={16} />
+                </span>
+              </button>
+            </section>
+          )}
 
           <section class="progress-section">
             <p class="ex-section-title">Workouts</p>

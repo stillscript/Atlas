@@ -151,6 +151,17 @@ export function SettingsScreen() {
         )}
       </ListGroup>
 
+      <ListGroup footer="A short ramp to your first working weight before each main lift. Warm-ups don't count as sets.">
+        <ToggleRow
+          id="set-warmups"
+          icon="flame"
+          label="Warm-up sets"
+          detail="Before main lifts"
+          checked={current.warmupSets}
+          onChange={(value) => void updateSettings({ warmupSets: value })}
+        />
+      </ListGroup>
+
       <ListGroup>
         <ToggleRow
           id="set-awake"

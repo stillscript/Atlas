@@ -147,7 +147,7 @@ export function FormGuide({ exercise }: { exercise: ExerciseDef }) {
           <p class="ex-section-title">Muscles</p>
           <div class="muscles-row">
             <BodyMap primary={exercise.primary} secondary={exercise.secondary} />
-            <dl class="muscle-legend">
+            <dl class="form-legend">
               <div>
                 <dt>
                   <span class="legend-dot is-main" aria-hidden="true" />

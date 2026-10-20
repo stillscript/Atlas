@@ -53,6 +53,8 @@ export interface Settings {
   readinessCheck: boolean;
   /** Ask for a wearable readiness score (Oura, Whoop, Garmin). Off by default. */
   wearableScore: boolean;
+  /** Show a short warm-up ramp before main lifts. */
+  warmupSets: boolean;
   activeGymId?: string;
   activeProgramId?: string;
 }
@@ -269,6 +271,8 @@ export interface ExerciseEntry {
   coachOffer?: { recommendationId: string; load: number | null; repsLow: number; repsHigh: number; swapTo?: string };
   /** Accepted in-session adjustment (B1/B2): the next set's weight and reps. Cleared once used. */
   nextSet?: { load: number | null; reps: number };
+  /** Warm-up steps ticked off (indexes into `warmupPlan`); a checklist, never counted as sets. */
+  warmupDone?: number[];
 }
 
 export type CardioMetric = 'duration' | 'distance' | 'calories' | 'watts' | 'level' | 'floors' | 'pace' | 'intervals';

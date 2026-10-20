@@ -5,7 +5,8 @@ import { activeSession, changeSession, exerciseHistory, machineSettings } from '
 import { machineSettingId } from '../../db/sessions';
 import type { ExerciseEntry, Gym, RepsInReserve, Session, SetLog } from '../../db/types';
 import { summarizeLoad } from '../../domain/loads';
-import { endRest, extendRest, isEntryDone, jumpTo, logSet, prefill, rateSet, workSets } from '../../domain/workout';
+import { warmupPlan } from '../../domain/warmup';
+import { endRest, extendRest, isEntryDone, jumpTo, logSet, prefill, rateSet, toggleWarmup, workSets } from '../../domain/workout';
 import { primeAudio } from '../../lib/chime';
 import { haptic } from '../../lib/haptics';
 import { restLabel } from '../../lib/training-format';
@@ -229,8 +230,48 @@ function EntryView({ session, index, entry, gym, onOpen }: EntryViewProps) {
         </p>
       )}
 
+      <Warmup session={session} index={index} entry={entry} gym={gym} ctx={ctx} />
       <SetList entry={entry} ctx={ctx} onEdit={(set) => onOpen({ kind: 'edit', entryIndex: index, setId: set.id })} />
     </main>
+  );
+}
+
+/** The warm-up ramp before a main lift's first working set: tap each step as you do it. */
+function Warmup({ session, index, entry, gym, ctx }: { session: Session; index: number; entry: ExerciseEntry; gym: Gym; ctx: LoadContext }) {
+  if (!settings.value.warmupSets || workSets(entry).length > 0) return null;
+  const plan = warmupPlan(entry, ctx.exercise, ctx.model, prefill(session, index, gym).load);
+  if (!plan.length) return null;
+  const done = new Set(entry.warmupDone ?? []);
+  const unit = loadUnit(plan[0]!.load, ctx);
+  return (
+    <section class="wu" aria-label="Warm-up sets">
+      <p class="wu-head">
+        <span class="wu-title">Warm-up</span>
+        <span class="wu-note">Not counted as sets{unit ? ` · ${unit}` : ''}</span>
+      </p>
+      <div class="wu-steps">
+        {plan.map((step, i) => (
+          <button
+            key={i}
+            type="button"
+            class={done.has(i) ? 'wu-step is-done' : 'wu-step'}
+            aria-pressed={done.has(i)}
+            aria-label={`Warm-up ${i + 1}: ${loadText(step.load, ctx)} ${unit} for ${step.reps} reps`}
+            onClick={() => {
+              haptic('tap');
+              void changeSession((s, now) => toggleWarmup(s, index, i, now));
+            }}
+          >
+            <span class="wu-step-text num">
+              {loadText(step.load, ctx)} × {step.reps}
+            </span>
+            <span class="wu-tick" aria-hidden="true">
+              <Icon name="check" size={14} />
+            </span>
+          </button>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -299,7 +340,7 @@ function SetList({ entry, ctx, onEdit }: { entry: ExerciseEntry; ctx: LoadContex
         if (set) {
           return (
             <li key={set.id}>
-              <button type="button" class="wo-set is-done" onClick={() => onEdit(set)}>
+              <button type="button" class={Date.now() - set.at < 2000 ? 'wo-set is-done is-fresh' : 'wo-set is-done'} onClick={() => onEdit(set)}>
                 <span class="wo-set-n">{i + 1}</span>
                 <span class="wo-set-main num">
                   {set.load === null && !ctx.model ? (
@@ -467,6 +508,21 @@ function RateStrip({ session, target, gym, compact = false }: { session: Session
   );
 }
 
+/** The time left inside a ring that empties as the rest runs out (one-second steps, eased by CSS). */
+function RestRing({ fraction, remaining }: { fraction: number; remaining: number }) {
+  const r = 42;
+  const length = 2 * Math.PI * r;
+  return (
+    <div class="rest-ring">
+      <svg viewBox="0 0 100 100" aria-hidden="true">
+        <circle class="rest-ring-track" cx="50" cy="50" r={r} />
+        <circle class="rest-ring-left" cx="50" cy="50" r={r} stroke-dasharray={length} stroke-dashoffset={length * fraction} />
+      </svg>
+      <span class="rest-time num">{formatClock(remaining)}</span>
+    </div>
+  );
+}
+
 function RestPanel({ session, gym, now }: { session: Session; gym: Gym; now: number }) {
   const rest = session.rest!;
   const remaining = Math.max(0, (rest.endsAt - now) / 1000);
@@ -486,21 +542,20 @@ function RestPanel({ session, gym, now }: { session: Session; gym: Gym; now: num
   return (
     <div class="rest" role="timer" aria-live="off">
       <div class="rest-top">
-        <div class="rest-clock">
-          <span class="rest-label">Rest</span>
-          <span class="rest-time num">{formatClock(remaining)}</span>
+        <RestRing fraction={fraction} remaining={remaining} />
+        <div class="rest-side">
+          <p class="rest-label">
+            Rest <span class="rest-of num">of {formatClock(rest.durationSec)}</span>
+          </p>
+          <div class="rest-buttons">
+            <Button size="sm" onClick={() => void changeSession((s, at) => extendRest(s, 30, at))}>
+              +30 s
+            </Button>
+            <Button size="sm" variant="ghost" onClick={() => void changeSession((s, at) => endRest(s, at))}>
+              Skip
+            </Button>
+          </div>
         </div>
-        <div class="rest-buttons">
-          <Button size="sm" onClick={() => void changeSession((s, at) => extendRest(s, 30, at))}>
-            +30 s
-          </Button>
-          <Button size="sm" variant="ghost" onClick={() => void changeSession((s, at) => endRest(s, at))}>
-            Skip
-          </Button>
-        </div>
-      </div>
-      <div class="rest-bar">
-        <span style={{ transform: `scaleX(${fraction})` }} />
       </div>
       {latest && <RateStrip session={session} target={latest} gym={gym} />}
       {latest && <SetCoach session={session} entryIndex={latest.entryIndex} showRest />}

@@ -16,12 +16,17 @@ version with today's date.
 - A green app icon to match
 - Every exercise has its own icon, a small figure doing the movement on its equipment, in your plan, workouts and Progress. Side-to-side moves like lateral raises are shown from the front
 - How to do it: every exercise shows the movement looping slowly from start to finish, with numbered markers that match the cues, and a front and back body map of the muscles it works. With Reduce Motion on, you see the start and finish side by side
+- See which muscles you trained this week on a body map, in Coach and Progress
+- Warm-up sets: main lifts start with a short ramp to your working weight (tap each one as you go). They don't count as sets, and you can turn them off in Settings › Workouts
+- The rest timer is now a ring, logged sets check in, and moving between exercises feels smoother
 ### Internal
 - Palettes: Forest is the default (`:root`), Classic via `data-palette="classic"`; `settings.palette`;
   tests/styles/tokens.test.ts checks AA contrast for every palette and that the dark copies match
 - Pictograms: `domain/figure.ts` (one figure posed from joint angles, props), `data/pictograms.json`
   (every exercise), `ui/ExerciseIcon`; tests/domain/figure.test.ts; review page via
   `ATLAS_ART=dist/art-review.html npx vitest run tests/domain/pictograms.review.test.ts`
+- Warm-ups: `domain/warmup.ts` (`warmupPlan`), `entry.warmupDone` checklist via `toggleWarmup` (never a SetLog),
+  `settings.warmupSets` (default on); muscle map: `progress.weekMuscles` + `screens/coach/WeekMuscleMap`
 
 ## [1.1.0] - 2026-10-15
 ### Highlights

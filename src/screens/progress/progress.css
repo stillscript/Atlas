@@ -413,3 +413,34 @@
   flex-direction: column;
   gap: 2px;
 }
+
+/* ---------- Muscles this week ---------- */
+
+.week-map-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-4);
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.week-map-more {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 2px;
+  color: var(--accent-text);
+  font-size: var(--text-sm);
+  font-weight: 650;
+}
+
+.week-map-card .week-map {
+  margin-top: 0;
+}

@@ -400,6 +400,16 @@ export function logSet(
   return { ...next, rest: { startedAt: now, endsAt: now + duration * 1000, durationSec: duration } };
 }
 
+/** Ticks a warm-up step off, or back on. Warm-ups are a checklist: no set, no rest timer. */
+export function toggleWarmup(session: Session, entryIndex: number, step: number, now: number): Session {
+  const entry = session.entries[entryIndex];
+  if (!entry) return session;
+  const done = new Set(entry.warmupDone ?? []);
+  if (done.has(step)) done.delete(step);
+  else done.add(step);
+  return withEntry(session, entryIndex, { ...entry, warmupDone: [...done].sort((a, b) => a - b) }, now);
+}
+
 /** Records how many more reps were left. A set with nothing left earns 30 more seconds of rest. */
 export function rateSet(session: Session, entryIndex: number, setId: string, rir: RepsInReserve, now: number): Session {
   const entry = session.entries[entryIndex];

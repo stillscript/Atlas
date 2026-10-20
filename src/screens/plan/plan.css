@@ -548,7 +548,7 @@ button.slot-row:active {
   height: 112px;
 }
 
-.muscle-legend {
+.form-legend {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
@@ -556,7 +556,7 @@ button.slot-row:active {
   margin: 0;
 }
 
-.muscle-legend dt {
+.form-legend dt {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -565,8 +565,9 @@ button.slot-row:active {
   font-weight: 700;
 }
 
-.muscle-legend dd {
+.form-legend dd {
   margin: 2px 0 0;
+  font-size: 15px;
 }
 
 .legend-dot {

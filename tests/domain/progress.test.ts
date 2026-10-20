@@ -10,6 +10,7 @@ import {
   movingAverage,
   recordHistory,
   weekHistory,
+  weekMuscles,
 } from '../../src/domain/progress';
 import { T0, legs, makeProgram, press, repeat, weights, workout } from '../coach/helpers';
 
@@ -108,5 +109,19 @@ describe('body measurements', () => {
   it('latest value per metric, for logging placeholders', () => {
     const mixed = [...m, { id: 'w', date: '2026-10-10', waist: 34.5, at: T0 - 4 * 86_400_000 }];
     expect(latestValues(mixed)).toEqual({ weight: 186.8, waist: 34.5 });
+  });
+});
+
+describe('weekly muscle map', () => {
+  it('shades each muscle by its sets toward the low end of the target, and lists who is behind', () => {
+    const week = weekMuscles([
+      { muscle: 'chest', planned: 12, done: 12, band: [10, 20] },
+      { muscle: 'back', planned: 12, done: 5, band: [10, 20] },
+      { muscle: 'calves', planned: 6, done: 0, band: [6, 12] },
+      { muscle: 'forearms', planned: 0, done: 2, band: [0, 6] },
+    ]);
+    expect(week.level).toEqual({ chest: 1, back: 0.5, forearms: 1 });
+    expect(week.onTarget).toEqual(['chest', 'forearms']);
+    expect(week.below).toEqual(['calves', 'back']);
   });
 });
